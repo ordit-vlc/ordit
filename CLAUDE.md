@@ -23,7 +23,7 @@ amb dbt ni amb les eines.
 
 | Terme del teixit | Significat al projecte | Realitat tècnica |
 |------------------|------------------------|------------------|
-| Ordit (urdimbre) | La infraestructura base | Este monorepo |
+| Ordit (warp) | La infraestructura base | Este monorepo |
 | Fil | Una font pública | Una font de dbt (BORME, SIGPAC, Catastro, FEGA, Datacomex, llotja) |
 | Madeixa | Dades en brut sense pentinar | Capa raw / landing |
 | Teler | El motor que teixeix | ETL + dbt + DuckDB |
@@ -111,6 +111,14 @@ tinga vida pròpia. Maximitza l'automatització gratuïta, minimitza la complexi
 
 Llengua (la política d'Ordit): el valencià viu al teixit (allò visible), l'anglés
 ASCII a l'ordit (la fontaneria invisible).
+
+L'eix és un de sol: valencià, i si cal una segona llengua, anglés internacional.
+Mai el castellà, ni el francés ni l'italià, com a llengua de redacció, de glossa o
+de fallback. No s'expliquen mai termes valencians amb el seu equivalent castellà
+(p. ex. glossar `ordit` amb `urdimbre`); si un terme necessita aclariment per a un
+públic internacional, s'usa el terme anglés (`ordit` = warp). Excepció factual: els
+noms de columna de les fonts es documenten tal com els publica la font, encara que
+siguen en castellà, perquè això és procedència, no la veu del projecte.
 
 - Valencià amb accents: dades publicades i les seues etiquetes, UI de l'explorador,
   documentació (README, ROADMAP, RUNBOOK, `docs/`), missatges de commit, i comentaris i

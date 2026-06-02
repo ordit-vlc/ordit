@@ -6,7 +6,8 @@ Ordit és una infraestructura de dades oberta i autoallotjada, construïda ínte
 a partir de fonts públiques. Pentina, nua i publica dades rigoroses i llegibles per
 màquina sobre la part forta i poc contada de l'economia valenciana.
 
-L'ordit és la urdimbre: els fils que sostenen el teixit i que no es veuen. Cada
+L'ordit són els fils tensats que sostenen el teixit i que no es veuen al producte
+final. Cada
 **trama** (agroalimentària hui; indústria, ceràmica i exportació demà) es teixeix
 damunt la mateixa base.
 
