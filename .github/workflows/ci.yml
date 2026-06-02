@@ -29,7 +29,9 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync
-      - run: uv run pytest
+      # pytest amb gate de cobertura (>=70% sobre ingest/). test_staging construeix dbt
+      # contra fixtures sintetiques: cap dada de persona fisica entra mai a CI.
+      - run: uv run pytest --cov
 
   dbt:
     runs-on: ubuntu-latest
@@ -39,9 +41,17 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync
-      # Fase 0: nomes verifiquem que el projecte compila (dbt parse).
-      # Des de la Fase 1: dbt build contra una DuckDB xicoteta sembrada.
-      - run: cd ordit_dbt && uv run dbt parse
+      # dbt build contra les fixtures sintetiques (NOMES entitats juridiques/ficticies);
+      # mai contra el fitxer real, que viu al build plane local i no entra a git ni a CI.
+      - name: dbt build (fixtures sintetiques)
+        working-directory: ordit_dbt
+        env:
+          # A CI no existeix data/; la DuckDB efimera viu dins d'ordit_dbt.
+          DUCKDB_PATH: ci.duckdb
+        run: >
+          uv run dbt build
+          --profiles-dir .
+          --vars "{fega_raw_glob: '../tests/fixtures/raw/Beneficiarios_municipio_ejercicio_financiero_*.utf8.txt'}"
 
   contracts:
     runs-on: ubuntu-latest
