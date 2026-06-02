@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: mart_ajudes_pac_juridiques
+    description: >
+      Ajudes de la PAC a persones juridiques de la Comunitat Valenciana, format llarg per
+      fons {FEAGA, FEADER}. Esquema public en valencia ASCII. Nomes entity_type 'legal':
+      cap persona fisica. Vegeu DATA-PROTECTION.md.
+    columns:
+      - name: nom_beneficiari
+        tests:
+          - not_null
+      - name: municipi
+        tests:
+          - not_null
+          # Integritat referencial (#6): cada municipi publicat traça a una fila d'origen.
+          - relationships:
+              arguments:
+                to: ref('int_fega_classified')
+                field: municipality
+      - name: provincia
+        tests:
+          - not_null
+      - name: mesura
+        tests:
+          - not_null
+      - name: import_eur
+        description: Import del fons (contribucio europea). Negatius = recuperacions.
+        tests:
+          - not_null
+      - name: fons
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["FEAGA", "FEADER"]
+      - name: exercici
+        tests:
+          - not_null

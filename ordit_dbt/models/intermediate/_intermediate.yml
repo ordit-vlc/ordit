@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_fega_classified
+    description: >
+      Staging de FEGA amb el grup partit (group_cif, group_name) i entity_type derivat
+      del nom (legal / natural / natural_masked / ambiguous). Capa interna, no publicada.
+    columns:
+      - name: beneficiary_name
+        description: Rao social, nom de persona, o codi anonim ES#...
+        tests:
+          - not_null
+      - name: financial_year
+        description: Exercici financer, injectat des del nom de fitxer.
+        tests:
+          - not_null
+      - name: entity_type
+        description: Classificacio per forma juridica; mana el tipus d'entitat, no el nom.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["legal", "natural", "natural_masked", "ambiguous"]
