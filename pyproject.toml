@@ -32,5 +32,11 @@ select = ["E", "F", "I", "UP", "B"]
 testpaths = ["tests"]
 addopts = "-ra"
 
+# Cobertura: el gate (--cov-fail-under via fail_under) s'aplica sobre ingest/, el primer
+# paquet nucli amb codi real. linkage/ entra a la Fase 3.
 [tool.coverage.run]
-source = ["ingest", "linkage", "contracts"]
+source = ["ingest"]
+
+[tool.coverage.report]
+fail_under = 70
+show_missing = true

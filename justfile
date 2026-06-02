@@ -16,9 +16,9 @@ lint:
     uv run ruff check .
     uv run ruff format --check .
 
-# Proves.
+# Proves (amb gate de cobertura sobre ingest/).
 test:
-    uv run pytest
+    uv run pytest --cov
 
 # Valida la fixture contra els contractes pydantic i la procedencia documentada.
 contracts:

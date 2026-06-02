@@ -19,18 +19,30 @@ Garantia Agrària), en compliment del Reglament (UE) 2021/2116.
 
 ## Format
 
-- **Contenidor**: ZIP (33,8 MiB) amb **un sol fitxer** `.txt`,
-  `Beneficiarios_municipio_ejercicio_financiero_2024.txt` (296 MiB descomprimit).
-- **Codificació**: **ISO-8859-1 (latin-1)**, NO UTF-8. Sense BOM.
+- **Contenidor**: ZIP (~33-34 MiB per exercici) amb **un sol fitxer** `.txt`
+  (~286-296 MiB descomprimit).
+- **Codificació**: **Windows-1252** (latin-1 amb bytes CP1252 dispersos: cometa
+  tipogràfica `0x91` i algun byte de control `0x81`/`0x8d`). Sense BOM. DuckDB **no** el
+  llig com a latin-1 estricte, així que la ingestió el **normalitza a UTF-8**
+  (`*.utf8.txt`, pas tècnic, sense filtrar res); staging consumeix l'UTF-8.
 - **Final de línia**: CRLF.
-- **Delimitador**: punt i coma `;`. **Cada línia acaba en `;`** → 14 camps per `awk`
-  (13 columnes reals + un camp buit final).
+- **Delimitador**: punt i coma `;`. **El `;` final només hi és el 2024** (14 camps); el
+  **2025 no en porta** (13 camps). Staging ho absorbeix amb `null_padding`.
 - **Separador decimal**: coma (`,`), format espanyol, **sense punt de milers**
   (p. ex. `24217,98`).
 - **Abast**: **nacional** (totes les CCAA). El filtre a la Comunitat Valenciana es fa en
-  procés, no en la baixada. La CV apareix amb etiqueta bilingüe a `PROVINCIA`:
+  procés (a staging), no en la baixada. La CV apareix amb etiqueta bilingüe a `PROVINCIA`:
   `València/Valencia`, `Castelló/Castellón`, `Alacant/Alicante`.
-- **Volum**: 2.217.850 files de dades (capçalera inclosa a banda). ~146.539 files de la CV.
+- **Volum**: 2024 = 2.217.850 files (146.539 CV); 2025 = 2.104.682 files (128.859 CV).
+
+## Exercicis i deriva
+
+Disponibles i descarregats: **2024 i 2025** (`ingest/fega/download.py` els mapeja per
+URL, perquè el nom de fitxer del ZIP no és consistent entre anys). Go/no-go de deriva de
+la Fase 1: **capçaleres idèntiques** i mateixa estructura entre 2024 i 2025; l'única
+diferència és el `;` final (gestionada a staging). **Cap deriva d'esquema**: GO. El guard
+`tests/test_staging.py` afirma que les columnes de `staging_fega` igualen els camps del
+contracte (cap deriva silenciosa cap avant).
 
 ## Esquema real (capçalera del fitxer)
 
