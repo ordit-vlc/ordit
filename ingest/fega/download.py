@@ -15,19 +15,59 @@ Els noms de fitxer de la font no son consistents entre anys (guio vs guio baix e
 from __future__ import annotations
 
 import logging
+import re
 import urllib.request
 import zipfile
 from pathlib import Path
 
-# El fitxer de la font es Windows-1252 (latin-1 amb bytes CP1252 dispersos: cometa
-# tipografica 0x91 i algun byte de control). DuckDB no el llig directament, aixi que
-# l'ingest el normalitza a UTF-8 (pas tecnic, sense filtrar ni classificar res: el raw
-# segueix sencer). Staging consumeix el fitxer .utf8.txt.
-_SOURCE_ENCODING = "cp1252"
-_CHUNK = 8 << 20  # 8 MiB; CP1252 es d'un sol byte, partir per blocs es segur
+# El fitxer de la font es d'encoding MIXT: majoritariament latin-1 (un byte per
+# caracter, p. ex. "a" amb accent greu = 0xE0), pero alguns camps ja venen en UTF-8
+# (p. ex. "I" amb accent agut = 0xC3 0x8D). DuckDB no el llig directament, aixi que
+# l'ingest el normalitza a UTF-8 net (pas tecnic, sense filtrar res: el raw segueix
+# sencer). Staging consumeix el fitxer .utf8.txt.
+#
+# Normalitzacio en dos passos, NO una transcodificacio cega:
+#   1. Descodifica com a latin-1: lossless, cap byte es perd (cp1252 perdia 0x8D).
+#   2. Repara el mojibake d'UTF-8 mal interpretat: nomes les subcadenes que formen una
+#      seqüencia UTF-8 valida es reinterpreten; la resta (latin-1) es respecta.
+# Es l'equivalent dirigit del que faria ftfy, sense dependencia nova.
+_UTF8_SEQUENCE = re.compile(
+    "[\xc2-\xdf][\x80-\xbf]"  # 2 bytes
+    "|[\xe0-\xef][\x80-\xbf]{2}"  # 3 bytes
+    "|[\xf0-\xf4][\x80-\xbf]{3}"  # 4 bytes
+)
+
+# Especials de CP1252 al rang C1 (0x80-0x9F): en descodificar latin-1 queden com a
+# codepoints de control; els tornem al seu caracter previst (cometes tipografiques,
+# guions...), com fa ftfy. Els bytes indefinits a CP1252 es respecten tal qual.
+_CP1252_C1 = {
+    cp: bytes([cp]).decode("cp1252")
+    for cp in range(0x80, 0xA0)
+    if bytes([cp]).decode("cp1252", errors="ignore")
+}
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("ingest.fega.download")
+
+
+def _repair_utf8(match: re.Match[str]) -> str:
+    """Reinterpreta una seqüencia latin-1 que de fet era UTF-8 (mojibake)."""
+    try:
+        return match.group(0).encode("latin-1").decode("utf-8")
+    except UnicodeDecodeError:
+        return match.group(0)
+
+
+def decode_mixed(raw: bytes) -> str:
+    """Descodifica bytes d'encoding mixt latin-1 + UTF-8 sense perdre cap byte.
+
+    "AGR\\xc3\\x8dCOLA" (Í en UTF-8) -> "AGRICOLA" amb accent; "Alm\\xe0..." (latin-1)
+    es respecta. Operar per linies garanteix que cap seqüencia UTF-8 quede partida (els
+    bytes UTF-8 son tots >= 0x80, mai un salt de linia).
+    """
+    repaired = _UTF8_SEQUENCE.sub(_repair_utf8, raw.decode("latin-1"))
+    return repaired.translate(_CP1252_C1)
+
 
 _BASE = "https://www.fega.gob.es/sites/default/files/files/document"
 
@@ -67,15 +107,19 @@ def _download_one(year: int, url: str, dest_dir: Path) -> Path:
 
 
 def _normalize_encoding(txt_path: Path) -> Path:
-    """Reescriu el .txt (CP1252) com a UTF-8 en un .utf8.txt germa, de forma idempotent."""
+    """Reescriu el .txt (encoding mixt) com a UTF-8 net en un .utf8.txt germa.
+
+    Idempotent. Processa per linies: cap seqüencia UTF-8 queda partida (els bytes UTF-8
+    son tots >= 0x80, mai un salt de linia), aixi que la reparacio del mojibake es segura.
+    """
     utf8_path = txt_path.with_suffix(".utf8.txt")
     if utf8_path.exists() and utf8_path.stat().st_mtime >= txt_path.stat().st_mtime:
         logger.info("UTF-8 ja existeix, salte la normalitzacio: %s", utf8_path)
         return utf8_path
-    logger.info("Normalitzant encoding CP1252 -> UTF-8: %s", utf8_path)
+    logger.info("Normalitzant encoding mixt latin-1/UTF-8 -> UTF-8: %s", utf8_path)
     with txt_path.open("rb") as src, utf8_path.open("w", encoding="utf-8", newline="") as dst:
-        while chunk := src.read(_CHUNK):
-            dst.write(chunk.decode(_SOURCE_ENCODING, errors="replace"))
+        for raw_line in src:
+            dst.write(decode_mixed(raw_line))
     return utf8_path
 
 
