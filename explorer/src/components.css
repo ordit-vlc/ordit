@@ -1,0 +1,174 @@
+/* ============================================================
+   ORDIT · Components
+   ============================================================ */
+
+/* ---------------- Botons ---------------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-sans); font-size: var(--t-base); font-weight: 500;
+  line-height: 1; padding: 0.6rem 0.9rem; border-radius: var(--r-2);
+  border: 1px solid transparent; background: transparent; color: var(--ink);
+  cursor: pointer; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  white-space: nowrap;
+}
+.btn:focus-visible { box-shadow: var(--ring); }
+.btn-primary { background: var(--blau); color: var(--on-blau); }
+.btn-primary:hover { background: var(--blau-hover); }
+.btn-primary:active { background: var(--blau-press); }
+.btn-secondary { background: var(--paper-raised); border-color: var(--line-strong); color: var(--ink); }
+.btn-secondary:hover { border-color: var(--ink-3); }
+.btn-ghost { color: var(--ink-2); }
+.btn-ghost:hover { background: var(--paper-sunken); color: var(--ink); }
+.btn-sm { padding: 0.4rem 0.6rem; font-size: var(--t-sm); }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------------- Badges / etiquetes ---------------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500;
+  letter-spacing: 0.02em; padding: 0.2rem 0.5rem; border-radius: var(--r-1);
+  background: var(--paper-sunken); color: var(--ink-2); border: 1px solid var(--line);
+}
+.badge-accent { background: var(--blau-tint); color: var(--blau); border-color: transparent; }
+.badge-ok { background: var(--ok-tint); color: var(--ok); border-color: transparent; }
+.badge-avis { background: var(--avis-tint); color: var(--avis-ink); border-color: transparent; }
+.badge-neutral { background: var(--neutral-tint); color: var(--ink-2); border-color: transparent; }
+/* Pastilla d'estat amb punt (icona) — color MAI com a única senyal */
+.status { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-sans); font-size: var(--t-sm); color: var(--ink); white-space: nowrap; }
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; background: var(--neutral); }
+.status.is-ok::before { background: var(--ok); }
+.status.is-avis::before { background: var(--avis); }
+.status.is-neutral::before { background: var(--neutral); box-shadow: inset 0 0 0 1.5px var(--neutral); background: transparent; }
+
+/* ---------------- Insígnia de procedència / font ---------------- */
+.prov {
+  display: inline-flex; align-items: stretch; border: 1px solid var(--line-strong);
+  border-radius: var(--r-2); overflow: hidden; background: var(--paper-raised);
+  font-family: var(--font-mono); font-size: var(--t-2xs); line-height: 1.2;
+}
+.prov-key {
+  display: flex; align-items: center; gap: 0.35rem;
+  background: var(--paper-sunken); padding: 0.3rem 0.5rem; color: var(--ink-3);
+  letter-spacing: 0.04em; text-transform: uppercase; border-right: 1px solid var(--line);
+}
+.prov-val { display: flex; align-items: center; padding: 0.3rem 0.5rem; color: var(--ink); font-weight: 500; white-space: nowrap; }
+.prov-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); flex: 0 0 auto; }
+.prov a { color: var(--blau); text-decoration: none; }
+.prov a:hover { text-decoration: underline; }
+
+/* ---------------- Targetes ---------------- */
+.card {
+  background: var(--paper-raised); border: 1px solid var(--line);
+  border-radius: var(--r-3); box-shadow: var(--sh-1);
+}
+.card-pad { padding: var(--s-5); }
+
+/* KPI / estadística · la veu de dades és monospai tabular */
+.stat .stat-label { font-family: var(--font-mono); font-size: var(--t-2xs); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.stat .stat-num { font-family: var(--font-mono); font-weight: 600; font-size: var(--t-xl); line-height: 1.05; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1; margin-top: 0.45rem; letter-spacing: -0.01em; }
+.stat .stat-sub { font-size: var(--t-sm); color: var(--ink-3); margin-top: 0.25rem; }
+.stat .stat-delta { font-family: var(--font-mono); font-size: var(--t-xs); }
+.delta-up { color: var(--ok); }
+.delta-down { color: var(--err); }
+
+/* ---------------- Camps / inputs ---------------- */
+.field { display: flex; flex-direction: column; gap: 0.3rem; }
+.field > label { font-family: var(--font-mono); font-size: var(--t-2xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); }
+.input, .select {
+  font-family: var(--font-sans); font-size: var(--t-base); color: var(--ink);
+  background: var(--paper-raised); border: 1px solid var(--line-strong);
+  border-radius: var(--r-2); padding: 0.5rem 0.65rem; width: 100%;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.input::placeholder { color: var(--ink-4); }
+.input:focus, .select:focus { outline: none; border-color: var(--blau); box-shadow: var(--ring); }
+.search { position: relative; }
+.search .input { padding-left: 2.1rem; }
+.search svg { position: absolute; left: 0.6rem; top: 50%; transform: translateY(-50%); color: var(--ink-3); }
+
+/* ---------------- Facetes / filtres ---------------- */
+.facet { border-top: 1px solid var(--line); padding: var(--s-4) 0; }
+.facet:first-of-type { border-top: 0; }
+.facet-head { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.facet-title { font-family: var(--font-sans); font-weight: 600; font-size: var(--t-sm); color: var(--ink); }
+.facet-list { display: flex; flex-direction: column; gap: 0.1rem; margin-top: var(--s-3); }
+.facet-opt {
+  display: flex; align-items: center; gap: 0.55rem; padding: 0.3rem 0.4rem;
+  border-radius: var(--r-2); cursor: pointer; user-select: none;
+}
+.facet-opt:hover { background: var(--paper-sunken); }
+.facet-opt input { accent-color: var(--blau); width: 15px; height: 15px; flex: 0 0 auto; }
+.facet-opt .opt-label { flex: 1; font-size: var(--t-sm); color: var(--ink-2); }
+.facet-opt .opt-count { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* Chips de filtre actiu */
+.chip {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-sans); font-size: var(--t-sm); color: var(--ink);
+  background: var(--blau-tint); border: 1px solid transparent;
+  border-radius: var(--r-pill); padding: 0.25rem 0.4rem 0.25rem 0.7rem;
+}
+.chip button { border: 0; background: transparent; color: var(--blau); cursor: pointer; display: inline-flex; padding: 0.1rem; border-radius: 50%; }
+.chip button:hover { background: var(--blau-tint-2); }
+
+/* ---------------- Taula de dades ---------------- */
+.table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-3); background: var(--paper-raised); }
+table.data { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+table.data thead th {
+  position: sticky; top: 0; background: var(--paper-sunken); z-index: 1;
+  text-align: left; font-family: var(--font-mono); font-weight: 500;
+  font-size: var(--t-2xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3);
+  padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line-strong); white-space: nowrap;
+}
+table.data thead th.num, table.data td.num { text-align: right; font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1; }
+table.data th.sortable { cursor: pointer; user-select: none; }
+table.data th.sortable:hover { color: var(--ink); }
+table.data th .sort-ind { color: var(--blau); margin-left: 0.3rem; }
+table.data tbody td { padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line-hair); color: var(--ink); vertical-align: middle; }
+/* Densitat compacta · per defecte a l'explorador (files ~34px) */
+table.data.compact thead th { padding: 0.45rem 0.8rem; }
+table.data.compact tbody td { padding: 0.42rem 0.8rem; }
+table.data tbody tr:hover { background: var(--blau-tint); }
+table.data tbody tr:last-child td { border-bottom: 0; }
+table.data td.num { font-family: var(--font-mono); }
+.cell-strong { font-weight: 600; }
+.cell-sub { color: var(--ink-3); font-size: var(--t-xs); }
+
+/* Mini-barra dins de cel·la */
+.cellbar { position: relative; height: 6px; background: var(--paper-inset); border-radius: var(--r-pill); overflow: hidden; min-width: 60px; }
+.cellbar > i { position: absolute; inset: 0 auto 0 0; background: var(--blau); border-radius: inherit; }
+
+/* ---------------- Mapa de tessel·les (cartograma) ---------------- */
+.tilemap { display: grid; gap: 3px; }
+.tile {
+  aspect-ratio: 1; border-radius: var(--r-1); display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 9px; color: var(--ink); cursor: pointer;
+  border: 1px solid transparent; transition: outline var(--dur) var(--ease);
+}
+.tile:hover { outline: 2px solid var(--ink); outline-offset: 1px; }
+.tile.empty { background: transparent; cursor: default; }
+
+/* Llegenda de rampa */
+.ramp { display: flex; align-items: center; gap: 0; border-radius: var(--r-1); overflow: hidden; }
+.ramp i { width: 26px; height: 12px; display: block; }
+
+/* ---------------- Gràfics (barres CSS) ---------------- */
+.barchart { display: flex; flex-direction: column; gap: 0.55rem; }
+.barrow { display: grid; grid-template-columns: 130px 1fr auto; align-items: center; gap: 0.7rem; }
+.barrow .bl { font-size: var(--t-sm); color: var(--ink-2); text-align: right; }
+.barrow .bt { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--ink); font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1; white-space: nowrap; }
+.bartrack { height: 16px; background: var(--paper-sunken); border-radius: var(--r-1); overflow: hidden; }
+.barfill { height: 100%; background: var(--blau); border-radius: inherit; }
+
+/* ---------------- Segmented control / tabs ---------------- */
+.seg { display: inline-flex; background: var(--paper-sunken); border: 1px solid var(--line); border-radius: var(--r-2); padding: 2px; gap: 2px; }
+.seg button {
+  border: 0; background: transparent; cursor: pointer; padding: 0.35rem 0.7rem;
+  border-radius: var(--r-1); font-size: var(--t-sm); font-weight: 500; color: var(--ink-2);
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.seg button[aria-pressed="true"], .seg button.active { background: var(--paper-raised); color: var(--ink); box-shadow: var(--sh-1); }
+
+/* ---------------- Taula de paginació ---------------- */
+.pager { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; }
+.pager .info { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--ink-3); }

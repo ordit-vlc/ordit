@@ -1,0 +1,114 @@
+/* ============================================================
+   ORDIT · Tokens del Design System
+   Infraestructura de dades obertes · economia productiva valenciana
+   ------------------------------------------------------------
+   Metàfora: l'ordit són els fils tensats i invisibles del teler (warp, en anglés)
+   que sostenen tot el teixit. Color sobri, tipografia rigorosa,
+   graella de monospai com a fil conductor.
+   ============================================================ */
+
+:root {
+  /* ---------- COLOR · superfícies (paper càlid, sobri) ---------- */
+  --paper:        oklch(0.978 0.005 85);   /* fons base, to paper */
+  --paper-raised: oklch(0.992 0.004 85);   /* targetes, fitxes elevades */
+  --paper-sunken: oklch(0.948 0.007 84);   /* pous, capçaleres de taula */
+  --paper-inset:  oklch(0.928 0.008 83);   /* inputs, camps */
+
+  /* ---------- COLOR · tinta (neutre fred, rigor tècnic) ---------- */
+  --ink:    oklch(0.235 0.018 255);  /* text primari */
+  --ink-2:  oklch(0.420 0.020 255);  /* text secundari */
+  --ink-3:  oklch(0.560 0.016 255);  /* text tènue, metadades */
+  --ink-4:  oklch(0.680 0.012 255);  /* placeholders, deshabilitat */
+
+  /* ---------- COLOR · línies i vores ---------- */
+  --line:        oklch(0.890 0.006 85);   /* vores suaus */
+  --line-strong: oklch(0.820 0.008 85);   /* vores marcades */
+  --line-hair:   oklch(0.925 0.005 85);   /* separadors fins */
+
+  /* ---------- COLOR · accent (blau ceràmic / cobalt) ---------- */
+  --blau:        oklch(0.480 0.118 248);   /* accent primari */
+  --blau-press:  oklch(0.400 0.115 248);   /* estat premut */
+  --blau-hover:  oklch(0.440 0.120 248);
+  --blau-tint:   oklch(0.940 0.030 248);   /* fons tènue de l'accent */
+  --blau-tint-2: oklch(0.900 0.045 248);   /* fons accent mitjà */
+  --on-blau:     oklch(0.985 0.004 248);   /* text sobre accent */
+
+  /* ---------- COLOR · estat (paleta semàntica sòbria, desaturada) ----------
+     Vocabulari compartit amb les dades (vegeu CLAUDE.md):
+       · Contracte:          confirmat  → ok    | provisional → avis
+       · Entity resolution:  match      → ok    | possible    → avis | no-match → neutral
+     L'estat MAI es codifica només amb color: sempre amb etiqueta o icona.
+     S'evita el parany roig-verd no usant roig per a "no-match" (gris neutre). */
+  --ok:        oklch(0.520 0.082 155);   /* verd sàlvia · confirmat / match */
+  --ok-tint:   oklch(0.935 0.028 155);
+  --avis:      oklch(0.600 0.080 92);    /* ocre apagat · provisional / possible (no taronja) */
+  --avis-ink:  oklch(0.470 0.085 92);    /* text ocre sobre tint */
+  --avis-tint: oklch(0.945 0.032 92);
+  --neutral:   oklch(0.560 0.006 255);   /* gris neutre · no-match / sense dada */
+  --neutral-tint: oklch(0.935 0.004 255);
+  --err:       oklch(0.520 0.120 25);    /* granat sobri · error de sistema, no estat de dada */
+  --err-tint:  oklch(0.940 0.028 25);
+
+  /* ---------- COLOR · paleta categòrica per a dades (sòbria) ---------- */
+  --cat-1: oklch(0.500 0.110 248);  /* blau */
+  --cat-2: oklch(0.560 0.080 200);  /* turquesa */
+  --cat-3: oklch(0.570 0.080 158);  /* sàlvia */
+  --cat-4: oklch(0.460 0.090 285);  /* indi */
+  --cat-5: oklch(0.530 0.090 318);  /* malva */
+  --cat-6: oklch(0.660 0.090 92);   /* or vell */
+
+  /* ---------- COLOR · rampa seqüencial (coroplètic) ---------- */
+  --seq-0: oklch(0.955 0.012 248);
+  --seq-1: oklch(0.905 0.035 248);
+  --seq-2: oklch(0.820 0.062 248);
+  --seq-3: oklch(0.710 0.088 248);
+  --seq-4: oklch(0.590 0.108 248);
+  --seq-5: oklch(0.460 0.115 248);
+  --seq-6: oklch(0.350 0.100 250);
+
+  /* ---------- TIPOGRAFIA · famílies ---------- */
+  --font-serif: "Spectral", Georgia, "Times New Roman", serif;          /* títols civils */
+  --font-sans:  "IBM Plex Sans", system-ui, -apple-system, sans-serif;   /* interfície */
+  --font-mono:  "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;     /* dades, etiquetes, marca */
+
+  /* ---------- TIPOGRAFIA · escala (rem, base 16px) ---------- */
+  --t-2xs: 0.6875rem;   /* 11px · micro-etiquetes mono */
+  --t-xs:  0.75rem;     /* 12px */
+  --t-sm:  0.8125rem;   /* 13px */
+  --t-base:0.9375rem;   /* 15px · cos UI */
+  --t-md:  1.0625rem;   /* 17px */
+  --t-lg:  1.3125rem;   /* 21px */
+  --t-xl:  1.6875rem;   /* 27px */
+  --t-2xl: 2.1875rem;   /* 35px */
+  --t-3xl: 2.875rem;    /* 46px */
+  --t-4xl: 3.875rem;    /* 62px */
+
+  --lh-tight: 1.08;
+  --lh-snug:  1.28;
+  --lh-base:  1.55;
+  --lh-loose: 1.7;
+
+  --ls-mono: 0.02em;    /* tracking d'etiquetes mono */
+  --ls-caps: 0.14em;    /* versaletes */
+
+  /* ---------- ESPAIAT (base 4px) ---------- */
+  --s-1: 0.25rem;  --s-2: 0.5rem;   --s-3: 0.75rem;  --s-4: 1rem;
+  --s-5: 1.5rem;   --s-6: 2rem;     --s-7: 3rem;     --s-8: 4rem;
+  --s-9: 6rem;     --s-10: 8rem;
+
+  /* ---------- RADIS (sobris, gairebé quadrats) ---------- */
+  --r-0: 0;        --r-1: 2px;      --r-2: 4px;
+  --r-3: 6px;      --r-4: 10px;     --r-pill: 999px;
+
+  /* ---------- OMBRES (suaus, to paper) ---------- */
+  --sh-1: 0 1px 2px oklch(0.235 0.018 255 / 0.06);
+  --sh-2: 0 1px 2px oklch(0.235 0.018 255 / 0.05), 0 4px 12px oklch(0.235 0.018 255 / 0.07);
+  --sh-3: 0 2px 4px oklch(0.235 0.018 255 / 0.06), 0 12px 28px oklch(0.235 0.018 255 / 0.10);
+  --ring: 0 0 0 3px oklch(0.480 0.118 248 / 0.30);  /* focus visible */
+
+  /* ---------- GRAELLA / LLENÇ ---------- */
+  --maxw: 1240px;
+  --warp-gap: 6px;       /* separació base entre "fils" */
+  --dur: 160ms;
+  --ease: cubic-bezier(0.2, 0.6, 0.25, 1);
+}

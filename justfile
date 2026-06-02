@@ -36,10 +36,11 @@ build:
 link:
     @echo "Sense enllac encara (Fase 3+)."
 
-# Export de marts -> GeoParquet a data/dist (publicar el teixit).
+# Export de marts -> Parquet a data/dist (publicar el teixit).
 publish:
-    @echo "Sense publicacio encara (Fase 4)."
+    uv run python -m publish.export
 
-# Serveix l'explorador en local.
-serve:
-    @echo "Sense explorador encara (Fase 4)."
+# Serveix l'explorador en local (publica primer el Parquet). Nomes local, cap desplegament.
+serve: publish
+    @echo "Explorador a http://localhost:8000/explorer/  (Ctrl+C per parar)"
+    uv run python -m http.server 8000
