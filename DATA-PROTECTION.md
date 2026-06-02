@@ -95,18 +95,16 @@ pot aïllar (i, per tant, identificar) un individu.
 ## 9. Classificació jurídica vs física
 
 El criteri és **precision-first i default-deny**: davant el dubte, **no es publica**.
+**Mana el tipus d'entitat, no l'etimologia del nom.**
 
-- **Allowlist conservadora**: només es classifiquen com a jurídiques els noms que casen
-  amb formes societàries clares i inequívoques.
-- **`SC` (societat civil) i `CB` (comunitat de béns) queden FORA en la v1**: massa sovint
-  emmascaren persones físiques.
-- Els noms que **identifiquen persones físiques** encara que porten forma societària
-  (p. ex. `"X E HIJOS SL"`, on `X` és un nom de persona) mereixen **cautela** i no entren
-  per defecte.
-- La **classificació autoritzada i defensable** (amb identificador fiscal) es deixa per a
-  l'**enllaç amb el BORME (Fase 3)**, amb estats match / possible / no-match i
-  traçabilitat per enllaç. Fins llavors, només publiquem el que l'allowlist accepta amb
-  alta confiança.
+- Una entitat amb **forma jurídica registrada** (`SL`, `SLU`, `SA`, `SAU`, `SAT`, `SLL`,
+  `SAL`, `COOP`/`SCOOP`/`S COOP`/`COOPERATIVA`, `AIE`, fundació, associació) és **persona
+  jurídica i és publicable amb nom**, independentment que el nom continga noms o cognoms
+  de persona.
+- **No es publiquen amb nom**: les files **emmascarades pel FEGA** (codi `ES#...`) ni els
+  **noms de persona sense cap marcador d'entitat**.
+- **`CB` (comunitat de béns) i `SC` (societat civil)**: decisió **AJORNADA al moment de
+  publicar (Fase 4)**, quan es valore amb dades reals. Ara no es fixa res.
 
 ## 10. Retenció
 

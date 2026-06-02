@@ -219,10 +219,12 @@ i és vinculant. Ací en queden les regles nucli, impossibles d'oblidar:
   aigües avall de noms de persona física.
 - **Supressió d'agregats**: agregar no anonimitza si la cel·la és xicoteta. Suprimeix tota
   cel·la amb menys de N = 5 beneficiaris (proposat) perquè cap agregat aïlle un individu.
-- **Classificació jurídica vs física**: allowlist conservadora, precision-first,
-  default-deny; SC i CB fora en v1; els noms que identifiquen persones físiques (p. ex.
-  "X E HIJOS SL") mereixen cautela; la classificació autoritzada es deixa per a l'enllaç
-  BORME (Fase 3).
+- **Classificació jurídica vs física**: precision-first, default-deny. Mana el tipus
+  d'entitat, no l'etimologia del nom. Una entitat amb forma jurídica registrada (SL, SLU,
+  SA, SAU, SAT, SLL, SAL, COOP/SCOOP/S COOP/COOPERATIVA, AIE, fundació, associació) és
+  persona jurídica i és publicable amb nom, encara que el nom continga noms o cognoms. No
+  es publiquen amb nom les files emmascarades pel FEGA (ES#...) ni els noms de persona
+  sense marcador d'entitat. CB i SC: decisió ajornada al moment de publicar (Fase 4).
 - **Retenció**: el raw no es guarda més enllà del que cal per al build; defineix una
   finestra i refresca o esborra.
 - **Llicències**: codi MIT (`LICENSE`), dades CC-BY-4.0 (`LICENSE-DATA`). Els termes de
