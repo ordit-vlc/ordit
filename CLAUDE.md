@@ -196,16 +196,50 @@ mergejar.
 
 ## 8. Governança de dades
 
-- Llicències: codi MIT (`LICENSE`), dades CC-BY-4.0 (`LICENSE-DATA`). Els termes de
+La política completa de protecció de dades viu a [`DATA-PROTECTION.md`](DATA-PROTECTION.md)
+i és vinculant. Ací en queden les regles nucli, impossibles d'oblidar:
+
+- **Finalitat única**: derivar estadístiques agregades i un dataset de persones jurídiques
+  de l'economia productiva valenciana a partir de fonts públiques. Res més.
+- **"És públic" no és "es pot reagregar i republicar"**: republicar i reagregar és un
+  tractament nou del qual Ordit és responsable. El cas Schecke (TJUE 2010, C-92/09 i
+  C-93/09) va declarar desproporcionat publicar persones físiques sense ponderació, i
+  Ordit no té el mandat legal del FEGA.
+- **Es publica**: persones jurídiques amb nom (cooperatives, SAT, SL, SA i formes clares)
+  més agregats sense nom.
+- **No es publica MAI**: cap nom de persona física, el fitxer brut, res personal.
+- **Usos prohibits**: ni perfilar, ni buscar o localitzar individus, ni enriquir o
+  enllaçar persones físiques.
+- **Frontera de privacitat = frontera build → serve**: el raw i qualsevol dada personal
+  viuen NOMÉS al build plane (local), gitignored; mai a git, a CI ni al serve plane. El
+  filtre que deixa fora les persones físiques es fa en eixa frontera.
+- **Arquitectura del filtre**: el raw es manté sencer i immutable; la classificació i el
+  filtre es fan a la capa marts (frontera de publicació), no a la ingestió. Staging pot
+  portar-ho tot, però és intern i no es publica mai. Minimitza la retenció duradora
+  aigües avall de noms de persona física.
+- **Supressió d'agregats**: agregar no anonimitza si la cel·la és xicoteta. Suprimeix tota
+  cel·la amb menys de N = 5 beneficiaris (proposat) perquè cap agregat aïlle un individu.
+- **Classificació jurídica vs física**: precision-first, default-deny. Mana el tipus
+  d'entitat, no l'etimologia del nom. Una entitat amb forma jurídica registrada (SL, SLU,
+  SA, SAU, SAT, SLL, SAL, COOP/SCOOP/S COOP/COOPERATIVA, AIE, fundació, associació) és
+  persona jurídica i és publicable amb nom, encara que el nom continga noms o cognoms. No
+  es publiquen amb nom les files emmascarades pel FEGA (ES#...) ni els noms de persona
+  sense marcador d'entitat. CB i SC: decisió ajornada al moment de publicar (Fase 4).
+- **Retenció**: el raw no es guarda més enllà del que cal per al build; defineix una
+  finestra i refresca o esborra.
+- **Llicències**: codi MIT (`LICENSE`), dades CC-BY-4.0 (`LICENSE-DATA`). Els termes de
   reutilització de FEGA, SIGPAC i Catastro exigeixen atribució; CC-BY és compatible.
-  Atribueix cada font a `docs/sources/`.
-- RGPD: la publicació oberta conté només persones jurídiques (cooperatives, SAT, SL).
-  Les persones físiques queden excloses de tot el que es publica. FEGA ja anonimitza les
-  persones físiques per davall de 1.250 EUR i agrega els municipis xicotets a comarca.
-- Entity resolution: mai publiques un enllaç dur entre entitats sense un llindar de
+  Atribueix cada font a `docs/sources/`. La procedència és obligatòria: cap fet es publica
+  sense una font traçable.
+- **Anonimització en origen (FEGA)**: les persones físiques per davall de 1.250 EUR
+  s'anonimitzen amb un codi; els municipis sensibles s'EMMASCAREN (`PPXXX - XXXXX`,
+  mantenint el codi de província), no s'agreguen a comarca. Açò és un detall de la font,
+  no substitueix el nostre filtre propi.
+- **Entity resolution**: mai publiques un enllaç dur entre entitats sense un llindar de
   confiança defensable. Emet estats: match / possible / no-match. Un fals "X controla Y"
-  sobre diners públics és un passiu, no una funcionalitat. Mantín traçabilitat per
-  enllaç.
+  sobre diners públics és un passiu, no una funcionalitat. Mantín traçabilitat per enllaç.
+- **Açò no és assessorament legal**: recomanada revisió per DPO o advocat abans de
+  publicar.
 
 ---
 

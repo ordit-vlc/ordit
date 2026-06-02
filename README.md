@@ -28,6 +28,11 @@ En construcció. Fase 0 (fonaments). Vegeu [`ROADMAP.md`](ROADMAP.md).
 El detall tècnic i les convencions estan a [`CLAUDE.md`](CLAUDE.md). Les fonts, amb la
 seua llicència i procedència, es documenten a `docs/sources/`.
 
+## Protecció de dades
+
+Ordit publica només persones jurídiques i agregats segurs, mai noms de persona física.
+La política completa i vinculant és a [`DATA-PROTECTION.md`](DATA-PROTECTION.md).
+
 ## Llicència
 
 - Codi: MIT (vegeu [`LICENSE`](LICENSE)).
