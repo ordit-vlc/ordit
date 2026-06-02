@@ -1,0 +1,41 @@
+# Dades: mai es committegen (raw/ staging/ dist/).
+/data/
+
+# Entorn i secrets.
+.env
+.env.*
+!.env.example
+
+# Python.
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+
+# uv.
+# (uv.lock SI es committeja per a builds reproduibles.)
+
+# dbt.
+ordit_dbt/target/
+ordit_dbt/dbt_packages/
+ordit_dbt/logs/
+ordit_dbt/.user.yml
+logs/
+
+# DuckDB.
+*.duckdb
+*.duckdb.wal
+
+# macOS.
+.DS_Store
+
+# Eines de Claude: la config local de cada maquina no es committeja.
+# CLAUDE.md SI es committeja (es documentacio del projecte).
+.claude/settings.local.json
+.claude/*.local.json
