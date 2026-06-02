@@ -1,0 +1,36 @@
+[project]
+name = "ordit"
+version = "0.0.0"
+description = "Infraestructura de dades oberta per a l'economia productiva valenciana, a partir de fonts publiques."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+authors = [{ name = "Miquel Matoses", email = "miquelmatoses@gmail.com" }]
+dependencies = [
+    "dbt-duckdb>=1.9,<2.0",
+    "duckdb>=1.1",
+    "pydantic>=2.7",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+    "pre-commit>=3.7",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# E/F (pyflakes + pycodestyle), I (isort), UP (pyupgrade), B (bugbear).
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["ingest", "linkage", "contracts"]

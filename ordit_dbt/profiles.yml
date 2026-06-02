@@ -1,0 +1,11 @@
+# Perfil DuckDB del teler. La ruta del fitxer es configurable via entorn
+# (DUCKDB_PATH) per a no fixar rutes absolutes; per defecte, dins de data/.
+ordit:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', '../data/ordit.duckdb') }}"
+      threads: 4
+      extensions:
+        - spatial

@@ -1,0 +1,28 @@
+# El teler: projecte dbt sobre DuckDB.
+name: "ordit"
+version: "0.0.0"
+config-version: 2
+
+profile: "ordit"
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Identificadors interns en angles (capa ordit). El renom a valencia ASCII
+# es fa exactament a la capa marts, on la madeixa es torna teixit visible.
+models:
+  ordit:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
