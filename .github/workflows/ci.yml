@@ -46,6 +46,11 @@ jobs:
   contracts:
     runs-on: ubuntu-latest
     steps:
-      # No-op fins que existisca una mostra de la Fase 1 a tests/fixtures/.
-      # Aleshores: validar els fitxers de mostra committejats contra els contractes pydantic.
-      - run: 'echo "contracts: skip fins a la Fase 1 (encara no hi ha mostres de FEGA)."'
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync
+      # Valida la fixture sintetica de persones juridiques contra els contractes pydantic
+      # i comprova que cada contracte porta la seua documentacio de procedencia.
+      - run: uv run pytest tests/test_contracts.py tests/test_provenance.py

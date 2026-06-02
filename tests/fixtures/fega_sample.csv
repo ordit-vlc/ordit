@@ -1,0 +1,5 @@
+BENEFICIARIO;GRUPO_EMPRESA;PROVINCIA;MUNICIPIO;MEDIDA;OBJETIVO_ESP;FEC_INI;FEC_FIN;FEAGA;FEADER;IMPORTECOFIN;FEADER_COFIN;IMPORTE_EUROS
+COOPERATIVA EXEMPLE COOP. V.;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta para la sostenibilidad;OE1;;;1234,56;0;0;0;1234,56
+SOCIETAT FICTICIA SL;A12345678-GRUP DEMO SA;Castelló/Castellón;12028 - Exemple de Baix;V.1   Compromisos medioambientales y climáticos;OE4|OE5|OE6;;;0;597,64;398,42;996,06;996,06
+EXPORTADORA DEMO SA;;Alacant/Alicante;03014 - Exemple de Mar;VI.4   Inversiones en activos físicos;;;;0;14825,10;0;0;27971,88
+FUNDACIO DEMOSTRACIO;;València/Valencia;46900 - Exemple de Serra;II.1   Cooperación para el desarrollo;OE2|OE5;02/08/2023;30/11/2023;0;800,00;0;0;800,00

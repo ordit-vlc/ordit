@@ -1,5 +1,10 @@
-# Pre-commit: forca ruff (check + format) abans de cada commit.
+# Pre-commit: higiene + ruff (check + format) abans de cada commit.
 # Instal·la amb `just setup` (uv sync + pre-commit install).
+
+# data/ esta gitignored, pero l'excloem globalment per seguretat (cap dada personal
+# no ha de passar mai per cap hook ni acabar al repo).
+exclude: ^data/
+
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.9
@@ -7,3 +12,16 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+
+  # Higiene base i guards anti-fuita: cap secret ni fitxer gran al repo.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: detect-private-key
+      - id: check-added-large-files
+        args: [--maxkb=2048]
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace

@@ -20,9 +20,9 @@ lint:
 test:
     uv run pytest
 
-# Valida els fitxers de mostra contra els contractes pydantic.
+# Valida la fixture contra els contractes pydantic i la procedencia documentada.
 contracts:
-    uv run pytest tests/test_contracts.py
+    uv run pytest tests/test_contracts.py tests/test_provenance.py
 
 # Executa els extractors -> data/raw (arreplegar les madeixes).
 ingest:

@@ -1,50 +1,63 @@
-"""Proves del contracte FEGA.
+"""Proves del contracte FEGA contra una fixture sintetica.
 
-A la Fase 0 nomes validem la logica del contracte (alies, tipus, opcionals) sense cap
-fitxer de mostra real ni cap crida de xarxa. La validacio contra fitxers reals de FEGA
-arriba a la Fase 1, quan es committegen mostres xicotetes a tests/fixtures/.
+La fixture (tests/fixtures/fega_sample.csv) conte NOMES entitats juridiques ficticies,
+cap dada de persona fisica real (vegeu DATA-PROTECTION.md). Reprodueix les peculiaritats
+del fitxer real: delimitador ";", coma decimal, OBJETIVO_ESP multivalor amb "|" i dates
+DD/MM/YYYY. L'exercici no ve a la font: s'injecta com fa la ingestio des del nom de fitxer.
 """
+
+import csv
+from datetime import date
+from decimal import Decimal
+from pathlib import Path
 
 from contracts.fega import FegaBeneficiary
 
-
-def test_construeix_des_dels_alies_de_la_font():
-    """El contracte accepta els noms de columna de la font (castella, provisionals)."""
-    registre = {
-        "nombre_beneficiario": "COOPERATIVA AGRICOLA EXEMPLE COOP. V.",
-        "nif": "F46000000",
-        "municipio": "Carcaixent",
-        "comarca_agraria": "La Ribera Alta",
-        "provincia": "Valencia",
-        "codigo_operacion": "II.1",
-        "objetivo_especifico": None,
-        "importe_eur": 12345.67,
-        "fondo": "FEAGA",
-        "ejercicio": 2023,
-    }
-
-    b = FegaBeneficiary.model_validate(registre)
-
-    assert b.beneficiary_name == "COOPERATIVA AGRICOLA EXEMPLE COOP. V."
-    assert b.nif == "F46000000"
-    assert b.amount_eur == 12345.67
-    assert b.fund == "FEAGA"
-    assert b.financial_year == 2023
+FIXTURE = Path(__file__).parent / "fixtures" / "fega_sample.csv"
+FIXTURE_YEAR = 2024  # com el derivaria la ingestio del nom de fitxer
 
 
-def test_municipi_i_nif_son_opcionals():
-    """Municipi None (agregat a comarca) i NIF None (registre anonim) son valids."""
-    registre = {
-        "nombre_beneficiario": "Beneficiari anonim < 1.250 EUR",
-        "provincia": "Castello",
-        "codigo_operacion": "I.3",
-        "importe_eur": 800.0,
-        "fondo": "FEADER",
-        "ejercicio": 2022,
-    }
+def _load() -> list[FegaBeneficiary]:
+    with FIXTURE.open(encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f, delimiter=";")
+        return [
+            FegaBeneficiary.model_validate({**row, "financial_year": FIXTURE_YEAR})
+            for row in reader
+        ]
 
-    b = FegaBeneficiary.model_validate(registre)
 
-    assert b.municipality is None
-    assert b.nif is None
-    assert b.comarca_agraria is None
+def test_la_fixture_valida_sencera():
+    rows = _load()
+    assert len(rows) == 4
+    assert all(r.financial_year == 2024 for r in rows)
+
+
+def test_imports_son_decimal_amb_coma():
+    coop = _load()[0]
+    assert isinstance(coop.amount_total_eur, Decimal)
+    assert coop.amount_total_eur == Decimal("1234.56")
+    assert coop.amount_feaga == Decimal("1234.56")
+    assert coop.amount_feader == Decimal("0")
+
+
+def test_objectius_multivalor_es_parteixen_per_pipe():
+    societat = _load()[1]
+    assert societat.specific_objectives == ["OE4", "OE5", "OE6"]
+    coop = _load()[0]
+    assert coop.specific_objectives == ["OE1"]
+    exportadora = _load()[2]
+    assert exportadora.specific_objectives == []
+
+
+def test_dates_dmy_i_camps_opcionals():
+    fundacio = _load()[3]
+    assert fundacio.date_start == date(2023, 8, 2)
+    coop = _load()[0]
+    assert coop.date_start is None
+    assert coop.group_raw is None
+
+
+def test_grupo_empresa_es_deixa_cru():
+    societat = _load()[1]
+    # La particio en group_cif + group_name es fa a staging (Fase 1), no al contracte.
+    assert societat.group_raw == "A12345678-GRUP DEMO SA"
