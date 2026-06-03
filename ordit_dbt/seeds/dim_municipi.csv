@@ -1,0 +1,543 @@
+codi_ine,nom,comarca,provincia
+03001,L'Atzúbia,Marina Alta,Alacant
+03002,Agost,Alacantí,Alacant
+03003,Agres,Comtat,Alacant
+03004,Aigües,Alacantí,Alacant
+03005,Albatera,Baix Segura,Alacant
+03006,Alcalalí,Marina Alta,Alacant
+03007,Alcosser,Comtat,Alacant
+03008,Alcoleja,Comtat,Alacant
+03009,Alcoi,Alcoià,Alacant
+03010,Alfafara,Comtat,Alacant
+03011,L'Alfàs del Pi,Marina Baixa,Alacant
+03012,Algorfa,Baix Segura,Alacant
+03013,L'Alguenya,Vinalopó Mitjà,Alacant
+03014,Alacant,Alacantí,Alacant
+03015,Almoradí,Baix Segura,Alacant
+03016,Almudaina,Comtat,Alacant
+03017,L'Alqueria d'Asnar,Comtat,Alacant
+03018,Altea,Marina Baixa,Alacant
+03019,Asp,Vinalopó Mitjà,Alacant
+03020,Balones,Comtat,Alacant
+03021,Banyeres de Mariola,Alcoià,Alacant
+03022,Benasau,Comtat,Alacant
+03023,Beneixama,Alt Vinalopó,Alacant
+03024,Benejússer,Baix Segura,Alacant
+03025,Benferri,Baix Segura,Alacant
+03026,Beniarbeig,Marina Alta,Alacant
+03027,Beniardà,Marina Baixa,Alacant
+03028,Beniarrés,Comtat,Alacant
+03029,Benigembla,Marina Alta,Alacant
+03030,Benidoleig,Marina Alta,Alacant
+03031,Benidorm,Marina Baixa,Alacant
+03032,Benifallim,Alcoià,Alacant
+03033,Benifato,Marina Baixa,Alacant
+03034,Benijòfar,Baix Segura,Alacant
+03035,Benilloba,Comtat,Alacant
+03036,Benillup,Comtat,Alacant
+03037,Benimantell,Marina Baixa,Alacant
+03038,Benimarfull,Comtat,Alacant
+03039,Benimassot,Comtat,Alacant
+03040,Benimeli,Marina Alta,Alacant
+03041,Benissa,Marina Alta,Alacant
+03042,El Poblenou de Benitatxell,Marina Alta,Alacant
+03043,Biar,Alt Vinalopó,Alacant
+03044,Bigastro,Baix Segura,Alacant
+03045,Bolulla,Marina Baixa,Alacant
+03046,Busot,Alacantí,Alacant
+03047,Calp,Marina Alta,Alacant
+03048,Callosa d'en Sarrià,Marina Baixa,Alacant
+03049,Callosa de Segura,Baix Segura,Alacant
+03050,El Campello,Alacantí,Alacant
+03051,El Camp de Mirra,Alt Vinalopó,Alacant
+03052,La Canyada,Alt Vinalopó,Alacant
+03053,Castalla,Alcoià,Alacant
+03054,Castell de Castells,Marina Alta,Alacant
+03055,Catral,Baix Segura,Alacant
+03056,Cocentaina,Comtat,Alacant
+03057,Confrides,Marina Baixa,Alacant
+03058,Coix,Baix Segura,Alacant
+03059,Crevillent,Baix Vinalopó,Alacant
+03060,Quatretondeta,Comtat,Alacant
+03061,Daia Nova,Baix Segura,Alacant
+03062,Daia Vella,Baix Segura,Alacant
+03063,Dénia,Marina Alta,Alacant
+03064,Dolores,Baix Segura,Alacant
+03065,Elx,Baix Vinalopó,Alacant
+03066,Elda,Vinalopó Mitjà,Alacant
+03067,Fageca,Comtat,Alacant
+03068,Famorca,Comtat,Alacant
+03069,Finestrat,Marina Baixa,Alacant
+03070,Formentera del Segura,Baix Segura,Alacant
+03071,Gata de Gorgos,Marina Alta,Alacant
+03072,Gaianes,Comtat,Alacant
+03073,Gorga,Comtat,Alacant
+03074,La Granja de Rocamora,Baix Segura,Alacant
+03075,El Castell de Guadalest,Marina Baixa,Alacant
+03076,Guardamar del Segura,Baix Segura,Alacant
+03077,El Fondó de les Neus,Vinalopó Mitjà,Alacant
+03078,El Fondó dels Frares,Vinalopó Mitjà,Alacant
+03079,Ibi,Alcoià,Alacant
+03080,Xacarella,Baix Segura,Alacant
+03081,Xaló,Marina Alta,Alacant
+03082,Xàbia,Marina Alta,Alacant
+03083,Xixona,Alacantí,Alacant
+03084,L'Orxa,Comtat,Alacant
+03085,Llíber,Marina Alta,Alacant
+03086,Millena,Comtat,Alacant
+03088,Montfort,Vinalopó Mitjà,Alacant
+03089,Monòver,Vinalopó Mitjà,Alacant
+03090,Mutxamel,Alacantí,Alacant
+03091,Murla,Marina Alta,Alacant
+03092,Muro del Comtat,Comtat,Alacant
+03093,Novelda,Vinalopó Mitjà,Alacant
+03094,La Nucia,Marina Baixa,Alacant
+03095,Ondara,Marina Alta,Alacant
+03096,Onil,Alcoià,Alacant
+03097,Orba,Marina Alta,Alacant
+03098,Orxeta,Marina Baixa,Alacant
+03099,Oriola,Baix Segura,Alacant
+03100,Parcent,Marina Alta,Alacant
+03101,Pedreguer,Marina Alta,Alacant
+03102,Pego,Marina Alta,Alacant
+03103,Penàguila,Alcoià,Alacant
+03104,Petrer,Vinalopó Mitjà,Alacant
+03105,El Pinós,Vinalopó Mitjà,Alacant
+03106,Planes,Comtat,Alacant
+03107,Polop,Marina Baixa,Alacant
+03109,Rafal,Baix Segura,Alacant
+03110,El Ràfol d'Almúnia,Marina Alta,Alacant
+03111,Redovà,Baix Segura,Alacant
+03112,Relleu,Marina Baixa,Alacant
+03113,Rojals,Baix Segura,Alacant
+03114,La Romana,Vinalopó Mitjà,Alacant
+03115,Sagra,Marina Alta,Alacant
+03116,Les Salines,Alt Vinalopó,Alacant
+03117,Sanet i els Negrals,Marina Alta,Alacant
+03118,Sant Fulgenci,Baix Segura,Alacant
+03119,Sant Joan d'Alacant,Alacantí,Alacant
+03120,Sant Miquel de les Salines,Baix Segura,Alacant
+03121,Santa Pola,Baix Vinalopó,Alacant
+03122,Sant Vicent del Raspeig,Alacantí,Alacant
+03123,Saix,Alt Vinalopó,Alacant
+03124,Sella,Marina Baixa,Alacant
+03125,Senija,Marina Alta,Alacant
+03127,Tàrbena,Marina Baixa,Alacant
+03128,Teulada,Marina Alta,Alacant
+03129,Tibi,Alcoià,Alacant
+03130,Tollos,Comtat,Alacant
+03131,Tormos,Marina Alta,Alacant
+03132,La Torre de les Maçanes,Alacantí,Alacant
+03133,Torrevella,Baix Segura,Alacant
+03134,La Vall d'Alcalà,Marina Alta,Alacant
+03135,La Vall d'Ebo,Marina Alta,Alacant
+03136,La Vall de Gallinera,Marina Alta,Alacant
+03137,La Vall de Laguar,Marina Alta,Alacant
+03138,El Verger,Marina Alta,Alacant
+03139,La Vila Joiosa,Marina Baixa,Alacant
+03140,Villena,Alt Vinalopó,Alacant
+03901,Els Poblets,Marina Alta,Alacant
+03902,El Pilar de la Foradada,Baix Segura,Alacant
+03903,Los Montesinos,Baix Segura,Alacant
+03904,Sant Isidre,Baix Segura,Alacant
+12001,Atzeneta del Maestrat,Alt Maestrat,Castelló
+12002,Aín,Plana Baixa,Castelló
+12003,Albocàsser,Alt Maestrat,Castelló
+12004,Alcalà de Xivert,Baix Maestrat,Castelló
+12005,L'Alcora,Alcalatén,Castelló
+12006,L'Alcúdia de Veo,Plana Baixa,Castelló
+12007,Fondeguilla,Plana Baixa,Castelló
+12008,Algímia d'Almonesir,Alt Palància,Castelló
+12009,Almassora,Plana Alta,Castelló
+12010,Almedíxer,Alt Palància,Castelló
+12011,Almenara,Plana Baixa,Castelló
+12012,Altura,Alt Palància,Castelló
+12013,Aranyel,Alt Millars,Castelló
+12014,Ares del Maestrat,Alt Maestrat,Castelló
+12015,Argeleta,Alt Millars,Castelló
+12016,Artana,Plana Baixa,Castelló
+12017,Aiòder,Alt Millars,Castelló
+12018,Assuèvar,Alt Palància,Castelló
+12020,Barraques,Alt Palància,Castelló
+12021,Betxí,Plana Baixa,Castelló
+12022,Begís,Alt Palància,Castelló
+12024,Benafer,Alt Palància,Castelló
+12025,Benafigos,Alt Maestrat,Castelló
+12026,Benassal,Alt Maestrat,Castelló
+12027,Benicarló,Baix Maestrat,Castelló
+12028,Benicàssim,Plana Alta,Castelló
+12029,Benlloc,Plana Alta,Castelló
+12031,Borriol,Plana Alta,Castelló
+12032,Borriana,Plana Baixa,Castelló
+12033,Cabanes de l'Arc,Plana Alta,Castelló
+12034,Càlig,Baix Maestrat,Castelló
+12036,Canet lo Roig,Baix Maestrat,Castelló
+12037,Castell de Cabres,Baix Maestrat,Castelló
+12038,Castellfort,Ports,Castelló
+12039,Castellnou,Alt Palància,Castelló
+12040,Castelló de la Plana,Plana Alta,Castelló
+12041,El Castell de Vilamalefa,Alt Millars,Castelló
+12042,Catí,Alt Maestrat,Castelló
+12043,Caudiel,Alt Palància,Castelló
+12044,Cervera del Maestrat,Baix Maestrat,Castelló
+12045,Cinctorres,Ports,Castelló
+12046,Cirat,Alt Millars,Castelló
+12048,Cortes d'Arenós,Alt Millars,Castelló
+12049,Costur,Alcalatén,Castelló
+12050,Les Coves de Vinromà,Alt Maestrat,Castelló
+12051,Culla,Alt Maestrat,Castelló
+12052,Xert,Baix Maestrat,Castelló
+12053,Xilxes,Plana Baixa,Castelló
+12055,Xodos,Alcalatén,Castelló
+12056,Xóvar,Alt Palància,Castelló
+12057,Eslida,Plana Baixa,Castelló
+12058,Espadella,Alt Millars,Castelló
+12059,Fanzara,Alt Millars,Castelló
+12060,Figueroles,Alcalatén,Castelló
+12061,Forcall,Ports,Castelló
+12063,La Font de la Reina,Alt Millars,Castelló
+12064,Les Fonts d'Aiòder,Alt Millars,Castelló
+12065,Gaibiel,Alt Palància,Castelló
+12067,Geldo,Alt Palància,Castelló
+12068,Herbers,Ports,Castelló
+12069,Figueres (Alt Palància),Alt Palància,Castelló
+12070,La Jana,Baix Maestrat,Castelló
+12071,Xèrica,Alt Palància,Castelló
+12072,Llucena,Alcalatén,Castelló
+12073,Lludient,Alt Millars,Castelló
+12074,La Llosa,Plana Baixa,Castelló
+12075,La Mata de Morella,Ports,Castelló
+12076,Matet,Alt Palància,Castelló
+12077,Moncofa,Plana Baixa,Castelló
+12078,Montant,Alt Millars,Castelló
+12079,Montanejos,Alt Millars,Castelló
+12080,Morella,Ports,Castelló
+12081,Navaixes,Alt Palància,Castelló
+12082,Nules,Plana Baixa,Castelló
+12083,Olocau del Rei,Ports,Castelló
+12084,Onda,Plana Baixa,Castelló
+12085,Orpesa,Plana Alta,Castelló
+12087,Palanques,Ports,Castelló
+12088,Pavies,Alt Palància,Castelló
+12089,Peníscola,Baix Maestrat,Castelló
+12090,Pina,Alt Palància,Castelló
+12091,Portell de Morella,Ports,Castelló
+12092,La Pobla d'Arenós,Alt Millars,Castelló
+12093,La Pobla de Benifassà,Baix Maestrat,Castelló
+12094,La Pobla Tornesa,Plana Alta,Castelló
+12095,Ribesalbes,Plana Baixa,Castelló
+12096,Rossell,Baix Maestrat,Castelló
+12097,Sacanyet,Alt Palància,Castelló
+12098,La Salzadella,Baix Maestrat,Castelló
+12099,Sant Jordi,Baix Maestrat,Castelló
+12100,Sant Mateu,Baix Maestrat,Castelló
+12101,Sant Rafel del Riu,Baix Maestrat,Castelló
+12102,Santa Magdalena de Polpís,Baix Maestrat,Castelló
+12103,La Serratella,Alt Maestrat,Castelló
+12104,Sogorb,Alt Palància,Castelló
+12105,La Serra d'en Galceran,Plana Alta,Castelló
+12106,Soneixa,Alt Palància,Castelló
+12107,Sot de Ferrer,Alt Palància,Castelló
+12108,Suera,Plana Baixa,Castelló
+12109,Tales,Plana Baixa,Castelló
+12110,Teresa,Alt Palància,Castelló
+12111,Tírig,Alt Maestrat,Castelló
+12112,La Todolella,Ports,Castelló
+12113,Toga,Alt Millars,Castelló
+12114,Toràs,Alt Palància,Castelló
+12115,El Toro,Alt Palància,Castelló
+12116,Torralba del Pinar,Alt Millars,Castelló
+12117,Torreblanca,Plana Alta,Castelló
+12118,Torre-xiva,Alt Millars,Castelló
+12119,La Torre d'en Besora,Alt Maestrat,Castelló
+12120,La Torre d'en Doménec,Alt Maestrat,Castelló
+12121,Traiguera,Baix Maestrat,Castelló
+12122,Les Useres,Alcalatén,Castelló
+12123,Vallat,Alt Millars,Castelló
+12124,La Vall d'Alba,Plana Alta,Castelló
+12125,La Vall d'Almonesir,Alt Palància,Castelló
+12126,La Vall d'Uixó,Plana Baixa,Castelló
+12127,Vallibona,Ports,Castelló
+12128,Vilafamés,Plana Alta,Castelló
+12129,Vilafranca,Ports,Castelló
+12130,Vilafermosa,Alt Millars,Castelló
+12131,Vilamalur,Alt Millars,Castelló
+12132,Vilanova d'Alcolea,Alt Maestrat,Castelló
+12133,Vilanova de Viver,Alt Millars,Castelló
+12134,Vilar de Canes,Alt Maestrat,Castelló
+12135,Vila-real,Plana Baixa,Castelló
+12136,La Vilavella,Plana Baixa,Castelló
+12137,Villores,Ports,Castelló
+12138,Vinaròs,Baix Maestrat,Castelló
+12139,Vistabella del Maestrat,Alt Maestrat,Castelló
+12140,Viver,Alt Palància,Castelló
+12141,Sorita,Ports,Castelló
+12142,Sucaina,Alt Millars,Castelló
+12901,Les Alqueries,Plana Baixa,Castelló
+12902,Sant Joan de Moró,Plana Alta,Castelló
+46001,Ademús,Racó d'Ademús,València
+46002,Ador,Safor,València
+46003,Atzeneta d'Albaida,Vall d'Albaida,València
+46004,Agullent,Vall d'Albaida,València
+46005,Alaquàs,Horta Sud,València
+46006,Albaida,Vall d'Albaida,València
+46007,Albal,Horta Sud,València
+46008,Albalat de la Ribera,Ribera Baixa,València
+46009,Albalat dels Sorells,Horta Nord,València
+46010,Albalat dels Tarongers,Camp de Morvedre,València
+46011,Alberic,Ribera Alta,València
+46012,Alboraig,Foia de Bunyol,València
+46013,Alboraia,Horta Nord,València
+46014,Albuixec,Horta Nord,València
+46015,Alcàsser,Horta Sud,València
+46016,Alcàntera de Xúquer,Ribera Alta,València
+46017,Alzira,Ribera Alta,València
+46018,Les Alcubles,Serrans,València
+46019,L'Alcúdia,Ribera Alta,València
+46020,L'Alcúdia de Crespins,Costera,València
+46021,Aldaia,Horta Sud,València
+46022,Alfafar,Horta Sud,València
+46023,Alfauir,Safor,València
+46024,Alfara de la Baronia,Camp de Morvedre,València
+46025,Alfara del Patriarca,Horta Nord,València
+46026,Alfarb,Ribera Alta,València
+46027,Alfarrasí,Vall d'Albaida,València
+46028,Algar de Palància,Camp de Morvedre,València
+46029,Algemesí,Ribera Alta,València
+46030,Algímia de la Baronia,Camp de Morvedre,València
+46031,Alginet,Ribera Alta,València
+46032,Almàssera,Horta Nord,València
+46033,Almiserà,Safor,València
+46034,Almoines,Safor,València
+46035,Almussafes,Ribera Baixa,València
+46036,Alpont,Serrans,València
+46037,L'Alqueria de la Comtessa,Safor,València
+46038,Andilla,Serrans,València
+46039,Anna,Canal de Navarrés,València
+46040,Antella,Ribera Alta,València
+46041,Ares dels Oms,Serrans,València
+46042,Aielo de Malferit,Vall d'Albaida,València
+46043,Aielo de Rugat,Vall d'Albaida,València
+46044,Aiora,Vall de Cofrents-Aiora,València
+46045,Barxeta,Costera,València
+46046,Barx,Safor,València
+46047,Bèlgida,Vall d'Albaida,València
+46048,Bellreguard,Safor,València
+46049,Bellús,Vall d'Albaida,València
+46050,Benaixeve,Serrans,València
+46051,Benaguasil,Camp de Túria,València
+46052,Benavites,Camp de Morvedre,València
+46053,Beneixida,Ribera Alta,València
+46054,Benetússer,Horta Sud,València
+46055,Beniarjó,Safor,València
+46056,Beniatjar,Vall d'Albaida,València
+46057,Benicolet,Vall d'Albaida,València
+46058,Benifairó de les Valls,Camp de Morvedre,València
+46059,Benifairó de la Valldigna,Safor,València
+46060,Benifaió,Ribera Alta,València
+46061,Beniflà,Safor,València
+46062,Benigànim,Vall d'Albaida,València
+46063,Benimodo,Ribera Alta,València
+46064,Benimuslem,Ribera Alta,València
+46065,Beniparrell,Horta Sud,València
+46066,Benirredrà,Safor,València
+46067,Benissanó,Camp de Túria,València
+46068,Benissoda,Vall d'Albaida,València
+46069,Benissuera,Vall d'Albaida,València
+46070,Bétera,Camp de Túria,València
+46071,Bicorb,Canal de Navarrés,València
+46072,Bocairent,Vall d'Albaida,València
+46073,Bolbait,Canal de Navarrés,València
+46074,Bonrepòs i Mirambell,Horta Nord,València
+46075,Bufali,Vall d'Albaida,València
+46076,Bugarra,Serrans,València
+46077,Bunyol,Foia de Bunyol,València
+46078,Burjassot,Horta Nord,València
+46079,Calles,Serrans,València
+46080,Camporrobles,Plana d'Utiel,València
+46081,Canals,Costera,València
+46082,Canet d'en Berenguer,Camp de Morvedre,València
+46083,Carcaixent,Ribera Alta,València
+46084,Càrcer,Ribera Alta,València
+46085,Carlet,Ribera Alta,València
+46086,Carrícola,Vall d'Albaida,València
+46087,Cases Altes,Racó d'Ademús,València
+46088,Cases Baixes,Racó d'Ademús,València
+46089,Casinos,Camp de Túria,València
+46090,Castelló de Rugat,Vall d'Albaida,València
+46091,Castellonet de la Conquesta,Safor,València
+46092,Castellfabib,Racó d'Ademús,València
+46093,Catadau,Ribera Alta,València
+46094,Catarroja,Horta Sud,València
+46095,Caudete de las Fuentes,Plana d'Utiel,València
+46096,Cerdà,Costera,València
+46097,Cofrents,Vall de Cofrents-Aiora,València
+46098,Corbera,Ribera Baixa,València
+46099,Cortes de Pallars,Vall de Cofrents-Aiora,València
+46100,Cotes,Ribera Alta,València
+46101,Quart de les Valls,Camp de Morvedre,València
+46102,Quart de Poblet,Horta Sud,València
+46103,Quartell,Camp de Morvedre,València
+46104,Quatretonda,Vall d'Albaida,València
+46105,Cullera,Ribera Baixa,València
+46106,Xelva,Serrans,València
+46107,Xella,Canal de Navarrés,València
+46108,Xera,Serrans,València
+46109,Xest,Foia de Bunyol,València
+46110,Xirivella,Horta Sud,València
+46111,Xiva,Foia de Bunyol,València
+46112,Xulella,Serrans,València
+46113,Daimús,Safor,València
+46114,Domenyo,Serrans,València
+46115,Dosaigües,Foia de Bunyol,València
+46116,L'Eliana,Camp de Túria,València
+46117,Emperador,Horta Nord,València
+46118,Énguera,Canal de Navarrés,València
+46119,L'Énova,Ribera Alta,València
+46120,Estivella,Camp de Morvedre,València
+46121,Estubeny,Costera,València
+46122,Faura,Camp de Morvedre,València
+46123,Favara,Ribera Baixa,València
+46124,Fontanars dels Alforins,Vall d'Albaida,València
+46125,Fortaleny,Ribera Baixa,València
+46126,Foios,Horta Nord,València
+46127,La Font d'en Carròs,Safor,València
+46128,La Font de la Figuera,Costera,València
+46129,Fuenterrobles,Plana d'Utiel,València
+46130,Gavarda,Ribera Alta,València
+46131,Gandia,Safor,València
+46132,El Genovés,Costera,València
+46133,Xestalgar,Serrans,València
+46134,Gilet,Camp de Morvedre,València
+46135,Godella,Horta Nord,València
+46136,Godelleta,Foia de Bunyol,València
+46137,La Granja de la Costera,Costera,València
+46138,Guadasséquies,Vall d'Albaida,València
+46139,Guadassuar,Ribera Alta,València
+46140,Guardamar de la Safor,Safor,València
+46141,Figueroles de Domenyo,Serrans,València
+46142,Xalans,Vall de Cofrents-Aiora,València
+46143,Xeraco,Safor,València
+46144,Xarafull,Vall de Cofrents-Aiora,València
+46145,Xàtiva,Costera,València
+46146,Xeresa,Safor,València
+46147,Llíria,Camp de Túria,València
+46148,Loriguilla,Serrans,València
+46149,La Llosa del Bisbe,Serrans,València
+46150,Llutxent,Vall d'Albaida,València
+46151,Llocnou d'en Fenollet,Costera,València
+46152,Llocnou de la Corona,Horta Sud,València
+46153,Llocnou de Sant Jeroni,Safor,València
+46154,Llanera de Ranes,Costera,València
+46155,Llaurí,Ribera Baixa,València
+46156,Llombai,Ribera Alta,València
+46157,La Llosa de Ranes,Costera,València
+46158,Macastre,Foia de Bunyol,València
+46159,Manises,Horta Sud,València
+46160,Manuel,Ribera Alta,València
+46161,Marines,Camp de Túria,València
+46162,Massalavés,Ribera Alta,València
+46163,Massalfassar,Horta Nord,València
+46164,Massamagrell,Horta Nord,València
+46165,Massanassa,Horta Sud,València
+46166,Meliana,Horta Nord,València
+46167,Millars,Canal de Navarrés,València
+46168,Miramar,Safor,València
+46169,Mislata,Horta Sud,València
+46170,Moixent,Costera,València
+46171,Montcada,Horta Nord,València
+46172,Montserrat,Ribera Alta,València
+46173,Montaverner,Vall d'Albaida,València
+46174,Montesa,Costera,València
+46175,Montitxelvo,Vall d'Albaida,València
+46176,Montroi,Ribera Alta,València
+46177,Museros,Horta Nord,València
+46178,Nàquera,Camp de Túria,València
+46179,Navarrés,Canal de Navarrés,València
+46180,Novetlè,Costera,València
+46181,Oliva,Safor,València
+46182,Olocau,Camp de Túria,València
+46183,L'Olleria,Vall d'Albaida,València
+46184,Ontinyent,Vall d'Albaida,València
+46185,Otos,Vall d'Albaida,València
+46186,Paiporta,Horta Sud,València
+46187,Palma de Gandia,Safor,València
+46188,Palmera,Safor,València
+46189,El Palomar,Vall d'Albaida,València
+46190,Paterna,Horta Nord,València
+46191,Pedralba,Serrans,València
+46192,Petrés,Camp de Morvedre,València
+46193,Picanya,Horta Sud,València
+46194,Picassent,Horta Sud,València
+46195,Piles,Safor,València
+46196,Pinet,Vall d'Albaida,València
+46197,Polinyà de Xúquer,Ribera Baixa,València
+46198,Potries,Safor,València
+46199,La Pobla de Farnals,Horta Nord,València
+46200,La Pobla del Duc,Vall d'Albaida,València
+46201,La Pobla de Sant Miquel,Racó d'Ademús,València
+46202,La Pobla de Vallbona,Camp de Túria,València
+46203,La Pobla Llarga,Ribera Alta,València
+46204,El Puig de Santa Maria,Horta Nord,València
+46205,Puçol,Horta Nord,València
+46206,Quesa,Canal de Navarrés,València
+46207,Rafelbunyol,Horta Nord,València
+46208,Rafelcofer,Safor,València
+46209,Rafelguaraf,Ribera Alta,València
+46210,El Ràfol de Salem,Vall d'Albaida,València
+46211,El Real de Gandia,Safor,València
+46212,Real,Ribera Alta,València
+46213,Requena,Plana d'Utiel,València
+46214,Riba-roja de Túria,Camp de Túria,València
+46215,Riola,Ribera Baixa,València
+46216,Rocafort,Horta Nord,València
+46217,Rotglà i Corberà,Costera,València
+46218,Ròtova,Safor,València
+46219,Rugat,Vall d'Albaida,València
+46220,Sagunt,Camp de Morvedre,València
+46221,Salem,Vall d'Albaida,València
+46222,Sant Joanet,Ribera Alta,València
+46223,Sedaví,Horta Sud,València
+46224,Segart,Camp de Morvedre,València
+46225,Sellent,Ribera Alta,València
+46226,Sempere,Vall d'Albaida,València
+46227,Senyera,Ribera Alta,València
+46228,Serra,Camp de Túria,València
+46229,Setaigües,Foia de Bunyol,València
+46230,Silla,Horta Sud,València
+46231,Simat de la Valldigna,Safor,València
+46232,Sinarques,Plana d'Utiel,València
+46233,Sollana,Ribera Baixa,València
+46234,Sot de Xera,Serrans,València
+46235,Sueca,Ribera Baixa,València
+46236,Sumacàrcer,Ribera Alta,València
+46237,Tavernes Blanques,Horta Nord,València
+46238,Tavernes de la Valldigna,Safor,València
+46239,Teresa de Cofrents,Vall de Cofrents-Aiora,València
+46240,Terrateig,Vall d'Albaida,València
+46241,Titagües,Serrans,València
+46242,Torre Baixa,Racó d'Ademús,València
+46243,Torrella,Costera,València
+46244,Torrent,Horta Sud,València
+46245,Torres Torres,Camp de Morvedre,València
+46246,Tous,Canal de Navarrés,València
+46247,Toixa,Serrans,València
+46248,Torís,Ribera Alta,València
+46249,Utiel,Plana d'Utiel,València
+46250,València,València,València
+46251,Vallada,Costera,València
+46252,Vallanca,Racó d'Ademús,València
+46253,Vallés,Costera,València
+46254,Venta del Moro,Plana d'Utiel,València
+46255,Vilallonga,Safor,València
+46256,Vilamarxant,Camp de Túria,València
+46257,Castelló de la Ribera,Ribera Alta,València
+46258,El Villar,Serrans,València
+46259,Villargordo del Cabriel,Plana d'Utiel,València
+46260,Vinalesa,Horta Nord,València
+46261,Iàtova,Foia de Bunyol,València
+46262,La Iessa,Serrans,València
+46263,Zarra,Vall de Cofrents-Aiora,València
+46902,Gàtova,Alt Palància,València
+46903,Sant Antoni de Benaixeve,Camp de Túria,València
+46904,Benicull de Xúquer,Ribera Baixa,València

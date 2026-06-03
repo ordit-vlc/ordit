@@ -1,0 +1,43 @@
+version: 2
+
+seeds:
+  - name: dim_municipi
+    description: >
+      Dimensio de municipis de la Comunitat Valenciana: codi_ine, nom (valencia), comarca
+      i provincia. 542 municipis. Vegeu docs/sources/geografia.md.
+    columns:
+      - name: codi_ine
+        tests:
+          - not_null
+          - unique
+      - name: nom
+        tests:
+          - not_null
+      - name: provincia
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["Alacant", "Castelló", "València"]
+
+  - name: xwalk_cp_ine
+    description: Crosswalk codi postal -> codi INE (GeoNames, CC BY 4.0). Via 1 de resolucio.
+    columns:
+      - name: postal_code
+        tests:
+          - not_null
+          - unique
+
+  - name: xwalk_locality
+    description: >
+      Resolucio aplicada de la cadena MUNICIPIO de FEGA -> codi_ine, amb resolved_by
+      (both/cp/name/discrepancy/unresolved). Generat per ingest/geo/build_seeds.py.
+    columns:
+      - name: municipi_raw
+        tests:
+          - not_null
+          - unique
+      - name: resolved_by
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["both", "cp", "name", "discrepancy", "unresolved"]

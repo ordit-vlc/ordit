@@ -26,3 +26,19 @@ models:
       +materialized: view
     marts:
       +materialized: table
+
+# Seeds de referencia geografica. Els codis (INE, postal) son text: mai integers, o
+# perdrien els zeros inicials (p. ex. "03001").
+seeds:
+  ordit:
+    +quote_columns: false
+    dim_municipi:
+      +column_types:
+        codi_ine: varchar
+    xwalk_cp_ine:
+      +column_types:
+        postal_code: varchar
+        codi_ine: varchar
+    xwalk_locality:
+      +column_types:
+        codi_ine: varchar

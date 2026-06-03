@@ -53,11 +53,18 @@ def staging_db(tmp_path_factory) -> Path:
     return db_path
 
 
+# Columnes derivades que staging afig a banda del contracte (split de MUNICIPIO).
+_DERIVED = {"postal_code", "locality_raw"}
+
+
 def test_columnes_staging_igualen_el_contracte(staging_db: Path):
     con = duckdb.connect(str(staging_db), read_only=True)
     cols = {row[0] for row in con.execute("describe staging_fega").fetchall()}
     expected = set(FegaBeneficiary.model_fields)
-    assert cols == expected, f"deriva: sobren {cols - expected}, falten {expected - cols}"
+    # Tots els camps del contracte hi son (cap deriva silenciosa de la font)...
+    assert expected <= cols, f"falten camps del contracte: {expected - cols}"
+    # ...i les uniques columnes extra son les derivades esperades.
+    assert cols - expected <= _DERIVED, f"columnes inesperades: {cols - expected - _DERIVED}"
 
 
 def test_filtre_comunitat_valenciana(staging_db: Path):
