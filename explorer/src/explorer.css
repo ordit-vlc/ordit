@@ -40,6 +40,34 @@ body {
   border-radius: var(--r-3);
   padding: var(--s-4) var(--s-4) var(--s-5);
 }
+.ex-aside-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-3);
+}
+.aside-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.aside-toggle .mono {
+  color: var(--ink-2);
+}
+/* Panell de filtres col.lapsat: nomes el boto-pestanya; el layout cedeix l'espai a la dreta. */
+.ex-layout.aside-collapsed {
+  grid-template-columns: max-content 1fr;
+}
+.ex-aside.is-collapsed {
+  padding: var(--s-3);
+}
+.ex-aside.is-collapsed .ex-aside-head {
+  margin-bottom: 0;
+}
+.ex-aside.is-collapsed .ex-aside-body {
+  display: none;
+}
 
 .ex-main {
   min-width: 0;
@@ -324,7 +352,8 @@ body {
   .map-aside {
     position: static;
   }
-  .ex-layout {
+  .ex-layout,
+  .ex-layout.aside-collapsed {
     grid-template-columns: 1fr;
   }
   .ex-aside {

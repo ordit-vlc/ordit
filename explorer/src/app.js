@@ -59,6 +59,11 @@ const state = {
     mesura: new Set(),
   },
   facetSearch: { comarca: "", municipi: "", mesura: "" },
+  // Estat del panell de filtres (recordat durant la sessio): panell sencer col.lapsat i
+  // conjunt de facetes col.lapsades (acordio per seccio). Col.lapsar es nomes visual: els
+  // filtres actius segueixen aplicant-se.
+  asideCollapsed: false,
+  collapsedFacets: new Set(),
   // Dimensions actives (GROUP BY de la taula). Per defecte totes -> maxima granularitat.
   dims: new Set(DIMENSIONS.map((d) => d.key)),
   sortKey: "import_eur",
@@ -271,8 +276,16 @@ function facetHtml(f) {
     opts = opts.filter(([v]) => v.toLowerCase().includes(fq));
   }
   const shown = opts.slice(0, f.search ? 80 : 50);
-  const head = `<div class="facet-head"><span class="facet-title">${f.title}</span>
-    <span class="mono">${sel.size ? sel.size + " sel." : counts.size}</span></div>`;
+  const collapsed = state.collapsedFacets.has(f.key);
+  // Capcalera com a boto: accessible amb teclat (Tab + Enter/Espai), aria-expanded i
+  // aria-controls cap al cos. El chevron es nomes una pista visual (aria-hidden).
+  const head = `<button type="button" class="facet-head" data-facet-toggle="${f.key}"
+      aria-expanded="${!collapsed}" aria-controls="facet-body-${f.key}">
+    <span class="facet-title">${f.title}</span>
+    <span class="facet-meta">
+      <span class="mono">${sel.size ? sel.size + " sel." : counts.size}</span>
+      <span class="facet-chevron" aria-hidden="true">${collapsed ? "▸" : "▾"}</span>
+    </span></button>`;
   const searchBox = f.search
     ? `<input class="input facet-search" data-facet="${f.key}" placeholder="filtra ${f.title.toLowerCase()}…"
         value="${esc(state.facetSearch[f.key])}" aria-label="Filtra ${f.title}" />`
@@ -285,7 +298,8 @@ function facetHtml(f) {
     )
     .join("");
   const more = opts.length > shown.length ? `<div class="facet-more mono">+${opts.length - shown.length} mes…</div>` : "";
-  return `<div class="facet">${head}${searchBox}<div class="facet-list">${list}${more}</div></div>`;
+  const body = `<div class="facet-body" id="facet-body-${f.key}">${searchBox}<div class="facet-list">${list}${more}</div></div>`;
+  return `<div class="facet${collapsed ? " is-collapsed" : ""}">${head}${body}</div>`;
 }
 
 function kpiHtml(rows) {
@@ -439,12 +453,19 @@ function render() {
       </div>
       <div class="cluster" style="gap:.5rem"><button class="btn btn-primary btn-sm" id="csv">Descarrega CSV</button></div>
     </div></header>
-    <div class="ex-layout">
-      <aside class="ex-aside">
-        <div class="cluster" style="justify-content:space-between;margin-bottom:var(--s-3)">
-          <span class="mono" style="color:var(--ink-2)">Filtres</span>
-          <button class="btn btn-ghost btn-sm" id="clear">Neteja</button>
-        </div>${facets}
+    <div class="ex-layout${state.asideCollapsed ? " aside-collapsed" : ""}">
+      <aside class="ex-aside${state.asideCollapsed ? " is-collapsed" : ""}">
+        <div class="ex-aside-head">
+          <button type="button" class="btn btn-ghost btn-sm aside-toggle" id="aside-toggle"
+            aria-expanded="${!state.asideCollapsed}" aria-controls="aside-body"
+            title="${state.asideCollapsed ? "Mostra els filtres" : "Amaga els filtres"}"
+            aria-label="${state.asideCollapsed ? "Mostra els filtres" : "Amaga els filtres"}">
+            <span class="aside-chevron" aria-hidden="true">${state.asideCollapsed ? "»" : "«"}</span>
+            <span class="mono">Filtres</span>
+          </button>
+          ${state.asideCollapsed ? "" : `<button class="btn btn-ghost btn-sm" id="clear">Neteja</button>`}
+        </div>
+        <div class="ex-aside-body" id="aside-body">${facets}</div>
       </aside>
       <main class="ex-main">
         ${kpiHtml(rows)}
@@ -483,10 +504,19 @@ function setupEvents() {
   app.addEventListener("click", (e) => {
     const t = e.target.closest(
       "[data-sort],[data-view],[data-chartby],[data-density],[data-chip-facet],[data-dim]," +
-        "[data-maplayer],[data-mapby],[data-muni],#clear,#muni-clear",
+        "[data-facet-toggle],[data-maplayer],[data-mapby],[data-muni],#clear,#aside-toggle,#muni-clear",
     );
     if (!t) return;
-    if (t.dataset.sort) {
+    // Despres del re-render, torna el focus al control col.lapsable (accessibilitat teclat).
+    let refocus = null;
+    if (t.dataset.facetToggle) {
+      const k = t.dataset.facetToggle;
+      state.collapsedFacets.has(k) ? state.collapsedFacets.delete(k) : state.collapsedFacets.add(k);
+      refocus = `[data-facet-toggle="${k}"]`;
+    } else if (t.id === "aside-toggle") {
+      state.asideCollapsed = !state.asideCollapsed;
+      refocus = "#aside-toggle";
+    } else if (t.dataset.sort) {
       const k = t.dataset.sort;
       if (state.sortKey === k) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
       else {
@@ -519,6 +549,7 @@ function setupEvents() {
       for (const k of Object.keys(state.facetSearch)) state.facetSearch[k] = "";
     }
     render();
+    if (refocus) document.querySelector(refocus)?.focus();
   });
   app.addEventListener("change", (e) => {
     const cb = e.target.closest('input[type="checkbox"][data-facet]');

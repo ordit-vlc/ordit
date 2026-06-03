@@ -89,7 +89,17 @@
 /* ---------------- Facetes / filtres ---------------- */
 .facet { border-top: 1px solid var(--line); padding: var(--s-4) 0; }
 .facet:first-of-type { border-top: 0; }
-.facet-head { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+/* Capcalera de faceta: boto col.lapsable (acordio). Reset de l'estil natiu del boto. */
+.facet-head {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s-3);
+  width: 100%; background: transparent; border: 0; padding: 0.1rem 0;
+  font-family: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.facet-head:focus-visible { outline: none; box-shadow: var(--ring); border-radius: var(--r-2); }
+.facet-meta { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--ink-3); }
+.facet-chevron { font-size: var(--t-xs); color: var(--ink-3); transition: color var(--dur) var(--ease); }
+.facet-head:hover .facet-title { color: var(--blau); }
+.facet.is-collapsed .facet-body { display: none; }
 .facet-title { font-family: var(--font-sans); font-weight: 600; font-size: var(--t-sm); color: var(--ink); }
 .facet-list { display: flex; flex-direction: column; gap: 0.1rem; margin-top: var(--s-3); }
 .facet-opt {
