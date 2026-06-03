@@ -21,3 +21,39 @@ models:
           - accepted_values:
               arguments:
                 values: ["legal", "natural", "natural_masked", "ambiguous"]
+
+  - name: int_sigpac_municipi
+    description: >
+      Recintes SIGPAC agregats per municipi-catastro, us i grup de cultiu, resolts a
+      codi_ine contra dim_municipi (default-deny) i enriquits amb nom de municipi, comarca
+      i etiqueta de l'us. Capa interna, no publicada.
+    columns:
+      - name: catastro_code
+        description: Codi de municipi de catastro (provincia 2 + municipi 3).
+        tests:
+          - not_null
+      - name: codi_ine
+        description: Codi INE resolt (NULL si el codi de catastro no casa amb dim_municipi).
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_municipi')
+                field: codi_ine
+      - name: geo_resolved
+        description: Estat de la resolucio catastro -> INE (metrica de cobertura).
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["matched", "unresolved"]
+      - name: land_use
+        description: Codi d'us SIGPAC (llista tancada).
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_us_sigpac')
+                field: codi_us
+      - name: surface_m2
+        tests:
+          - not_null

@@ -27,6 +27,39 @@ seeds:
           - not_null
           - unique
 
+  - name: dim_us_sigpac
+    description: >
+      Dimensio dels usos del sol de SIGPAC (llista tancada de l'ICV): codi_us, etiqueta en
+      valencia (nom_us) i flag es_agrari (us agrari productiu vs no agrari). 33 codis.
+      Vegeu docs/sources/sigpac.md.
+    columns:
+      - name: codi_us
+        tests:
+          - not_null
+          - unique
+      - name: nom_us
+        tests:
+          - not_null
+
+  - name: xwalk_catastro_ine
+    description: >
+      Crosswalk codi de municipi de catastro/SIGPAC -> codi INE per als 542 municipis de la
+      CV. Font: FEGA, equivalencies INE<->Catastro 2026 (vegeu docs/sources/sigpac.md). 210
+      municipis tenen catastro != INE: unir per igualtat assignaria la superficie al
+      municipi equivocat.
+    columns:
+      - name: catastro_code
+        tests:
+          - not_null
+          - unique
+      - name: codi_ine
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_municipi')
+                field: codi_ine
+
   - name: xwalk_locality
     description: >
       Resolucio aplicada de la cadena MUNICIPIO de FEGA -> codi_ine, amb resolved_by

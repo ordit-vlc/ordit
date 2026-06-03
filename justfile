@@ -20,13 +20,17 @@ lint:
 test:
     uv run pytest --cov
 
-# Valida la fixture contra els contractes pydantic i la procedencia documentada.
+# Valida les fixtures contra els contractes pydantic i la procedencia documentada.
 contracts:
-    uv run pytest tests/test_contracts.py tests/test_provenance.py
+    uv run pytest tests/test_contracts.py tests/test_contracts_sigpac.py tests/test_provenance.py
 
-# Executa els extractors -> data/raw (arreplegar les madeixes).
+# Executa els extractors -> data/raw (arreplegar les madeixes). SIGPAC agrega atribut-only
+# (sense geometria) i regenera el crosswalk catastro -> INE des de l'Excel de FEGA.
 ingest:
-    @echo "Sense extractors encara (Fase 1)."
+    uv run python -m ingest.fega.download
+    uv run python -m ingest.sigpac.download
+    uv run python -m ingest.sigpac.aggregate
+    uv run python -m ingest.sigpac.build_crosswalk
 
 # dbt build: staging -> intermediate -> marts (el teler teixeix).
 build:

@@ -42,3 +42,10 @@ seeds:
     xwalk_locality:
       +column_types:
         codi_ine: varchar
+    dim_us_sigpac:
+      +column_types:
+        codi_us: varchar
+    xwalk_catastro_ine:
+      +column_types:
+        catastro_code: varchar
+        codi_ine: varchar

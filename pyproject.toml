@@ -10,6 +10,7 @@ dependencies = [
     "dbt-duckdb>=1.9,<2.0",
     "duckdb>=1.1",
     "pydantic>=2.7",
+    "openpyxl>=3.1",  # llegir l'Excel de FEGA per al crosswalk catastro -> INE (SIGPAC)
 ]
 
 [dependency-groups]
@@ -36,10 +37,16 @@ addopts = "-ra"
 # paquet nucli amb codi real. linkage/ entra a la Fase 3.
 [tool.coverage.run]
 source = ["ingest"]
-# build_seeds.py es un script de generacio (llig dades externes i escriu seeds); la seua
-# correccio es verifica amb l'informe de cobertura que imprimeix i amb els tests de dbt
-# sobre els seeds resultants, no amb cobertura de linies.
-omit = ["ingest/geo/build_seeds.py", "ingest/geo/build_geometry.py"]
+# Scripts de generacio/ingesta que lligen dades externes, binaris o xarxa (no logica pura):
+# la seua correccio es verifica amb els informes que imprimeixen i amb els tests de dbt
+# sobre els artefactes resultants, no amb cobertura de linies.
+omit = [
+    "ingest/geo/build_seeds.py",
+    "ingest/geo/build_geometry.py",
+    "ingest/sigpac/download.py",
+    "ingest/sigpac/aggregate.py",
+    "ingest/sigpac/build_crosswalk.py",
+]
 
 [tool.coverage.report]
 fail_under = 70

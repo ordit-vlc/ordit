@@ -48,3 +48,66 @@ models:
       - name: exercici
         tests:
           - not_null
+
+  - name: mart_superficie_cultiu_municipi
+    description: >
+      Superficie SIGPAC per municipi i us del sol a la Comunitat Valenciana (campanya
+      2025), en hectarees. Esquema public en valencia ASCII; etiquetes (municipi, us) en
+      valencia amb accents. Nomes municipis resolts a codi_ine. Agregat per municipi i us:
+      cap dada de parcel.la ni de titular (DATA-PROTECTION.md). Vegeu docs/sources/sigpac.md.
+    columns:
+      - name: codi_ine
+        description: Codi INE del municipi.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_municipi')
+                field: codi_ine
+      - name: codi_us
+        description: Codi d'us SIGPAC (llista tancada).
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_us_sigpac')
+                field: codi_us
+      - name: superficie_ha
+        description: Superficie total del municipi en eixe us, en hectarees.
+        tests:
+          - not_null
+      - name: provincia
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["Alacant", "Castelló", "València"]
+      - name: exercici
+        tests:
+          - not_null
+
+  - name: mart_pac_x_superficie_municipi
+    description: >
+      Diners de la PAC (NOMES persones juridiques) creuats amb la superficie agraria de
+      SIGPAC, per municipi (campanya/exercici 2025). import_eur_per_ha es ajuda de
+      juridiques per hectarea agraria total (vegeu el cavet al model i DATA-PROTECTION.md),
+      no l'ajuda total. Una fila per municipi.
+    columns:
+      - name: codi_ine
+        description: Codi INE del municipi.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('dim_municipi')
+                field: codi_ine
+      - name: superficie_agraria_ha
+        tests:
+          - not_null
+      - name: import_pac_juridiques_eur
+        description: Suma d'ajuda PAC de persones juridiques al municipi (exercici 2025).
+        tests:
+          - not_null
+      - name: exercici
+        tests:
+          - not_null

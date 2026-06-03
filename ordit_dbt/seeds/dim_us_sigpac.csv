@@ -1,0 +1,35 @@
+codi_us,nom_us,es_agrari
+AG,Corrents i superfícies d'aigua,false
+CA,Vials,false
+CI,Cítrics,true
+CO,Contorn d'olivar,true
+ED,Edificacions,false
+FO,Forestal,false
+FY,Fruiters,true
+IM,Improductius,false
+IV,Hivernacles i cultius sota plàstic,true
+OF,Olivar-fruiter,true
+OV,Olivar,true
+PA,Pastura amb arbrat,true
+PR,Pastura arbustiva,true
+PS,Pasturatge,true
+TA,Terra arable,true
+TH,Horta,true
+VF,Vinya-fruiter,true
+VI,Vinya,true
+VO,Vinya-olivar,true
+ZC,Zona concentrada no inclosa en l'ortofoto,false
+ZU,Zona urbana,false
+ZV,Zona censurada,false
+FS,Fruita seca,true
+FL,Fruita seca i olivar,true
+FV,Fruita seca i vinya,true
+IS,Illes,false
+OC,Associació olivar-cítrics,true
+CV,Associació cítrics-vinya,true
+CF,Associació cítrics-fruiters,true
+CS,Associació cítrics-fruita de clofolla,true
+FF,Associació fruiters-fruita de clofolla,true
+EP,Element del paisatge,false
+MT,Matoll,false
+OP,Altres cultius permanents,true
