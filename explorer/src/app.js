@@ -334,7 +334,20 @@ function render() {
         ${chipsHtml()}
         ${content}
       </main>
-    </div>`;
+    </div>
+    ${creditsHtml()}`;
+}
+
+// Atribucio de fonts, sempre visible (peu de credits a totes les vistes).
+function creditsHtml() {
+  return `<footer class="ex-credits mono">
+    <span><strong>Fonts.</strong> Dades de la PAC:
+      <a href="${SOURCE.url}" target="_blank" rel="noopener">FEGA</a> · ${SOURCE.llic}.</span>
+    <span>Geometria de municipis: © EuroGeographics
+      (<a href="https://ec.europa.eu/eurostat/web/gisco" target="_blank" rel="noopener">GISCO</a>/IGN), CC BY.</span>
+    <span>Codis postals:
+      <a href="https://www.geonames.org/" target="_blank" rel="noopener">GeoNames</a>, CC BY 4.0.</span>
+  </footer>`;
 }
 
 /* ---------- Esdeveniments (delegacio) ---------- */

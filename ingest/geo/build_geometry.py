@@ -75,7 +75,7 @@ def main() -> None:
         )
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(
-        json.dumps({"type": "FeatureCollection", "features": feats}, separators=(",", ":")),
+        json.dumps({"type": "FeatureCollection", "features": feats}, separators=(",", ":")) + "\n",
         encoding="utf-8",
     )
     logger.info("Escrit %s: %d municipis (%d KiB)", OUT, len(feats), OUT.stat().st_size >> 10)
