@@ -1,12 +1,12 @@
-/* Explorador d'Ordit · ajudes de la PAC a persones juridiques de la Comunitat Valenciana.
-   Tot client-side: DuckDB-WASM llig el Parquet del mart i la resta es filtra en memoria
-   (el mart son ~12k files). Identificadors en angles ASCII; interficie en valencia. */
+/* Explorador d'Ordit · ajudes de la PAC de la Comunitat Valenciana (tots els receptors).
+   Tot client-side: DuckDB-WASM llig el Parquet del mart i la resta es filtra en memoria.
+   Identificadors en angles ASCII; interficie en valencia. */
 
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
 import { loadGeo, mapHtml, fmtEur0 } from "./map.js";
 
 // Ruta del Parquet publicat (relativa a /explorer/), servit com a fitxer estatic.
-const PARQUET_URL = new URL("../data/dist/mart_ajudes_pac_juridiques.parquet", location.href).href;
+const PARQUET_URL = new URL("../data/dist/mart_ajudes_pac.parquet", location.href).href;
 const GEO_URL = new URL("geo/municipis-cv.geojson", location.href).href;
 
 // Procedencia, sempre visible (cap dada sense font).
@@ -208,7 +208,7 @@ function kpiHtml(rows) {
   const munis = new Set(rows.map((r) => r.municipi)).size;
   const total = rows.reduce((a, r) => a + r.import_eur, 0);
   return `<div class="ex-kpis">
-    <div class="stat"><div class="stat-label">Beneficiaris</div><div class="stat-num tnum">${fmtInt(benef)}</div><div class="stat-sub">persones juridiques</div></div>
+    <div class="stat"><div class="stat-label">Beneficiaris</div><div class="stat-num tnum">${fmtInt(benef)}</div><div class="stat-sub">beneficiaris de la PAC</div></div>
     <div class="stat"><div class="stat-label">Ajudes</div><div class="stat-num tnum">${fmtInt(rows.length)}</div><div class="stat-sub">files (beneficiari·municipi·fons·mesura)</div></div>
     <div class="stat"><div class="stat-label">Import · €</div><div class="stat-num tnum">${fmtInt(total)}</div><div class="stat-sub">contribucio europea</div></div>
     <div class="stat"><div class="stat-label">Municipis</div><div class="stat-num tnum">${fmtInt(munis)}</div><div class="stat-sub">de la Comunitat Valenciana</div></div>
@@ -424,7 +424,7 @@ function downloadCsv() {
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = "ordit_ajudes_pac_juridiques.csv";
+  a.download = "ordit_ajudes_pac.csv";
   a.click();
   URL.revokeObjectURL(url);
 }

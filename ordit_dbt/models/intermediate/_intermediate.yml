@@ -1,26 +1,19 @@
 version: 2
 
 models:
-  - name: int_fega_classified
+  - name: int_fega
     description: >
-      Staging de FEGA amb el grup partit (group_cif, group_name) i entity_type derivat
-      del nom (legal / natural / natural_masked / ambiguous). Capa interna, no publicada.
+      Staging de FEGA amb el grup partit (group_cif, group_name) i el municipi resolt des
+      del codi postal. Porta-ho tot (cap filtre per tipus d'entitat). Capa interna.
     columns:
       - name: beneficiary_name
-        description: Rao social, nom de persona, o codi anonim ES#...
+        description: Rao social, nom de persona, o codi anonim ES#... (tal com ve de la font).
         tests:
           - not_null
       - name: financial_year
         description: Exercici financer, injectat des del nom de fitxer.
         tests:
           - not_null
-      - name: entity_type
-        description: Classificacio per forma juridica; mana el tipus d'entitat, no el nom.
-        tests:
-          - not_null
-          - accepted_values:
-              arguments:
-                values: ["legal", "natural", "natural_masked", "ambiguous"]
 
   - name: int_sigpac_municipi
     description: >

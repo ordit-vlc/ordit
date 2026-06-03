@@ -1,7 +1,7 @@
 """Proves del contracte FEGA contra una fixture sintetica.
 
-La fixture (tests/fixtures/fega_sample.csv) conte NOMES entitats juridiques ficticies,
-cap dada de persona fisica real (vegeu DATA-PROTECTION.md). Reprodueix les peculiaritats
+La fixture (tests/fixtures/fega_sample.csv) conte NOMES entitats ficticies, cap dada real
+(CI corre sempre amb fixtures sinteticas). Reprodueix les peculiaritats
 del fitxer real: delimitador ";", coma decimal, OBJETIVO_ESP multivalor amb "|" i dates
 DD/MM/YYYY. L'exercici no ve a la font: s'injecta com fa la ingestio des del nom de fitxer.
 """

@@ -7,7 +7,7 @@
 -- per a capitals i municipis segregats). Unir per igualtat assignaria la superficie al
 -- municipi equivocat: per aixo s'uneix pel crosswalk oficial de FEGA (xwalk_catastro_ine).
 -- Default-deny: el codi de catastro que no estiga al crosswalk queda 'unresolved' (codi_ine
--- NULL), mai s'inventa cap municipi (DATA-PROTECTION.md). La cobertura es una metrica
+-- NULL), mai s'inventa cap municipi. La cobertura es una metrica
 -- visible (test dbt). Vegeu docs/sources/sigpac.md.
 {{ config(materialized="view") }}
 

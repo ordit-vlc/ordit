@@ -1,8 +1,12 @@
-"""Export del mart de juridiques a Parquet, l'artefacte que consulta l'explorador.
+"""Export dels marts a Parquet, l'artefacte que consulta l'explorador.
 
-Llig el mart de la DuckDB del build plane i l'escriu com a Parquet a data/dist
+Llig els marts de la DuckDB del build plane i els escriu com a Parquet a data/dist
 (gitignored: es un artefacte derivat, no una font). L'explorador el consulta client-side
 amb DuckDB-WASM. Sense desplegament: tot local.
+
+Mode privat (vegeu CLAUDE.md): res no es publica fora del build plane local; per aixo
+l'export no aplica cap filtre ni guard d'anonimitzacio. Eixe pas es fara a una fase
+dedicada del ROADMAP abans de qualsevol publicacio.
 """
 
 from __future__ import annotations
@@ -11,8 +15,6 @@ import logging
 from pathlib import Path
 
 import duckdb
-
-from publish.leak_guard import LeakError, assert_mart_parquet_clean
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("publish.export")
@@ -23,7 +25,7 @@ DIST_DIR = ROOT / "data" / "dist"
 
 # Marts a exportar: nom de la taula -> nom del fitxer parquet.
 MARTS = {
-    "mart_ajudes_pac_juridiques": "mart_ajudes_pac_juridiques.parquet",
+    "mart_ajudes_pac": "mart_ajudes_pac.parquet",
 }
 
 
@@ -40,15 +42,8 @@ def export(db_path: Path = DB_PATH, dist_dir: Path = DIST_DIR) -> list[Path]:
         for table, filename in MARTS.items():
             out = dist_dir / filename
             con.execute(f"copy (select * from {table}) to '{out.as_posix()}' (format parquet)")
-            # Guard de fuga: cap dada de persona física pot eixir del build plane.
-            # Si el Parquet en conté, peta i s'esborra: no es publica res brut.
-            try:
-                assert_mart_parquet_clean(con, out)
-            except LeakError:
-                out.unlink(missing_ok=True)
-                raise
             n = con.execute(f"select count(*) from {table}").fetchone()[0]
-            logger.info("Exportat %s -> %s (%d files, guard de fuga OK)", table, out, n)
+            logger.info("Exportat %s -> %s (%d files)", table, out, n)
             written.append(out)
     finally:
         con.close()

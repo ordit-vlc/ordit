@@ -1,30 +1,26 @@
--- Mart public: ajudes de la PAC a persones JURIDIQUES de la Comunitat Valenciana.
--- Nomes entity_type == 'legal' (CB/SC ambiguous queden fora; cap persona fisica, mai).
--- Columnes en valencia ASCII (l'esquema public consultable): el renom de l'angles intern
--- al valencia es fa exactament ací, a la capa marts.
+-- Mart: ajudes de la PAC a la Comunitat Valenciana, TOTS els receptors (persones fisiques
+-- i juridiques), format llarg per fons. Columnes en valencia ASCII: el renom de l'angles
+-- intern al valencia es fa ací, a la capa marts.
 --
--- Geografia: municipi i comarca venen de la resolucio CP -> codi_ine -> dim_municipi
--- (Fase 2). Els no resolts mantenen el codi_postal i import, pero municipi/comarca son
--- NULL: mai s'inventa cap municipi (default-deny).
+-- Mode privat (vegeu CLAUDE.md): cap filtre per tipus d'entitat ni anonimitzacio. El
+-- llistat es complet, com el de la font. L'anonimitzacio i el compliment legal es faran a
+-- una fase dedicada del ROADMAP abans de qualsevol publicacio; ara per ara res no es publica.
+--
+-- Geografia: municipi i comarca venen de la resolucio CP -> codi_ine -> dim_municipi; els
+-- no resolts mantenen el codi_postal pero municipi/comarca son NULL (mai s'inventa cap).
 --
 -- Format llarg per fons: una fila per (exercici, fons, beneficiari, codi_postal, mesura),
--- amb fons com a dimensio neta {FEAGA, FEADER}. import_eur es l'import del fons (la
--- contribucio europea), sumat per la clau. Els imports negatius (recuperacions) son
--- valids i NO es descarten; nomes s'exclouen els imports exactament zero.
+-- amb fons com a dimensio neta {FEAGA, FEADER}. import_eur es l'import del fons. Els
+-- imports negatius (recuperacions) son valids i NO es descarten; nomes s'exclouen els zero.
 {{ config(materialized="table") }}
 
-with legal as (
-    select * from {{ ref("int_fega_classified") }}
-    where entity_type = 'legal'
-),
-
-long as (
+with long as (
     select
         beneficiary_name, postal_code, codi_ine, municipi, comarca, provincia,
         measure, financial_year, group_cif, group_name,
         'FEAGA' as fons,
         amount_feaga as import_eur
-    from legal
+    from {{ ref("int_fega") }}
     where amount_feaga <> 0
 
     union all
@@ -34,7 +30,7 @@ long as (
         measure, financial_year, group_cif, group_name,
         'FEADER' as fons,
         amount_feader as import_eur
-    from legal
+    from {{ ref("int_fega") }}
     where amount_feader <> 0
 )
 

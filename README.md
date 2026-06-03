@@ -28,15 +28,18 @@ En construcció. Fase 0 (fonaments). Vegeu [`ROADMAP.md`](ROADMAP.md).
 El detall tècnic i les convencions estan a [`CLAUDE.md`](CLAUDE.md). Les fonts, amb la
 seua llicència i procedència, es documenten a `docs/sources/`.
 
-## Protecció de dades
+## Estat i protecció de dades
 
-Ordit publica només persones jurídiques i agregats segurs, mai noms de persona física.
-La política completa i vinculant és a [`DATA-PROTECTION.md`](DATA-PROTECTION.md).
+Ordit és ara un projecte **privat i d'un sol usuari**: res no es publica ni s'exposa. Es
+treballa amb les dades completes de les fonts públiques per a anàlisi interna. El compliment
+de protecció de dades (anonimització, supressió de cel·les xicotetes, filtre de persones
+físiques i revisió legal) és una **fase futura dedicada** del [`ROADMAP.md`](ROADMAP.md),
+prèvia a qualsevol publicació oberta. Fins llavors, cap dada ix del build plane local.
 
 ## Llicència
 
 - Codi: MIT (vegeu [`LICENSE`](LICENSE)).
-- Dades: CC-BY-4.0 (vegeu [`LICENSE-DATA`](LICENSE-DATA)).
+- Dades: CC-BY-4.0 (vegeu [`LICENSE-DATA`](LICENSE-DATA)) — per a quan es publiquen.
 
-Les dades es deriven de fonts públiques (FEGA, SIGPAC, Catastro i altres) i es publiquen
-amb atribució a l'origen. Ordit no publica dades de persones físiques.
+Les dades es deriven de fonts públiques (FEGA, SIGPAC, Catastro i altres), amb atribució a
+l'origen.

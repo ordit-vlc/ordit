@@ -194,60 +194,32 @@ mergejar.
 
 ---
 
-## 8. Governança de dades
+## 8. Mode privat (i compliance diferit)
 
-La política completa de protecció de dades viu a [`DATA-PROTECTION.md`](DATA-PROTECTION.md)
-i és vinculant. Ací en queden les regles nucli, impossibles d'oblidar:
+Ordit és ara un projecte **privat i d'un sol usuari**: només l'humà hi accedeix, res no es
+publica ni s'exposa enlloc. Per això es treballa amb les **dades completes** de les fonts,
+sense filtres per tipus d'entitat ni anonimització: el llistat de receptors de la PAC és el
+complet (persones físiques i jurídiques amb nom, més els codis anònims `ES#...` tal com
+arriben de FEGA). Filtrar ara distorsionava l'anàlisi (eliminava físiques en lloc d'entendre
+la dada sencera), així que la maquinària de protecció de dades s'ha **retirada**.
 
-- **Finalitat única**: derivar estadístiques agregades i un dataset de persones jurídiques
-  de l'economia productiva valenciana a partir de fonts públiques. Res més.
-- **"És públic" no és "es pot reagregar i republicar"**: republicar i reagregar és un
-  tractament nou del qual Ordit és responsable. El cas Schecke (TJUE 2010, C-92/09 i
-  C-93/09) va declarar desproporcionat publicar persones físiques sense ponderació, i
-  Ordit no té el mandat legal del FEGA.
-- **Es publica**: persones jurídiques amb nom (cooperatives, SAT, SL, SA i formes clares)
-  més agregats sense nom.
-- **No es publica MAI**: cap nom de persona física, el fitxer brut, res personal.
-- **Usos prohibits**: ni perfilar, ni buscar o localitzar individus, ni enriquir o
-  enllaçar persones físiques.
-- **Model operatiu (build lliure, publicació estricta)**: el build plane processa el raw
-  SENCER, incloent-hi persones físiques, per a anàlisi interna; entendre la dada completa
-  és legítim i NO està restringit. El filtre de físiques s'aplica NOMÉS a la frontera de
-  publicació (marts → serve plane). Açò permet construir sense relitigar la privacitat a
-  cada pas. Detall a `DATA-PROTECTION.md` §6.
-- **Frontera de privacitat = frontera build → serve**: el raw i qualsevol dada personal
-  viuen NOMÉS al build plane (local), gitignored; mai a git, a CI ni al serve plane.
-- **Arquitectura del filtre**: el raw es manté sencer i immutable; la classificació i el
-  filtre es fan a la capa marts (frontera de publicació), no a la ingestió. Staging i
-  intermediate poden portar-ho tot, però són interns i no es publiquen mai.
-- **Guard de fuga (CI + `just publish`)**: qualsevol artefacte committejat o servit
-  (`data/dist`, seeds publicables, Parquet de l'explorador) ha de contindre 0 dades de
-  físiques: cap `ES#...`, cap `entity_type != legal` i, en Fase 3, cap nom d'administrador
-  del BORME. És el gate #5 estés a tot el que ix del build plane (`publish/leak_guard.py`).
-- **Compliment de publicació = fase dedicada, no de cada pas**: anonimització, supressió
-  de cel·les < N = 5 i ponderació de l'interés públic cas per cas es fan una vegada, com a
-  porta, abans de qualsevol publicació oberta / outreach / SEO.
-- **Classificació jurídica vs física**: precision-first, default-deny. Mana el tipus
-  d'entitat, no l'etimologia del nom. Una entitat amb forma jurídica registrada (SL, SLU,
-  SA, SAU, SAT, SLL, SAL, COOP/SCOOP/S COOP/COOPERATIVA, AIE, fundació, associació) és
-  persona jurídica i és publicable amb nom, encara que el nom continga noms o cognoms. No
-  es publiquen amb nom les files emmascarades pel FEGA (ES#...) ni els noms de persona
-  sense marcador d'entitat. CB i SC: decisió ajornada al moment de publicar (Fase 4).
-- **Retenció**: el raw no es guarda més enllà del que cal per al build; defineix una
-  finestra i refresca o esborra.
-- **Llicències**: codi MIT (`LICENSE`), dades CC-BY-4.0 (`LICENSE-DATA`). Els termes de
-  reutilització de FEGA, SIGPAC i Catastro exigeixen atribució; CC-BY és compatible.
-  Atribueix cada font a `docs/sources/`. La procedència és obligatòria: cap fet es publica
-  sense una font traçable.
-- **Anonimització en origen (FEGA)**: les persones físiques per davall de 1.250 EUR
-  s'anonimitzen amb un codi; els municipis sensibles s'EMMASCAREN (`PPXXX - XXXXX`,
-  mantenint el codi de província), no s'agreguen a comarca. Açò és un detall de la font,
-  no substitueix el nostre filtre propi.
-- **Entity resolution**: mai publiques un enllaç dur entre entitats sense un llindar de
-  confiança defensable. Emet estats: match / possible / no-match. Un fals "X controla Y"
-  sobre diners públics és un passiu, no una funcionalitat. Mantín traçabilitat per enllaç.
-- **Açò no és assessorament legal**: recomanada revisió per DPO o advocat abans de
-  publicar.
+- **Tot el tractament és intern i privat.** No hi ha publicació, ni outreach, ni explorador
+  exposat. L'explorador és estrictament local.
+- **Sense filtre jurídica/física ni anonimització als marts.** Els marts porten tots els
+  receptors. L'anonimització en origen de FEGA (`ES#...`, municipis emmascarats `PPXXX`) hi
+  és perquè ve cuita a la font; no la podem desfer i no l'afegim nosaltres.
+- **Higiene que es manté igualment**: `data/` (raw i artefactes) segueix **gitignored** —
+  mai a git ni a CI, encara en privat. CI corre amb fixtures sintètiques. La procedència
+  segueix obligatòria (`docs/sources/`); cap fet sense font traçable.
+- **El compliance és una fase futura del ROADMAP, no de cada pas.** Abans de qualsevol
+  publicació oberta caldrà reintroduir, com a porta dedicada: classificació jurídica/física
+  i filtre, anonimització, supressió de cel·les xicotetes (N < 5), ponderació de l'interés
+  públic (cas Schecke) i revisió legal (DPO/advocat). Vegeu la fase de Compliance al
+  [`ROADMAP.md`](ROADMAP.md). Fins llavors, res no ix del build plane local.
+- **Entity resolution (Fase 3)**: mai un enllaç dur sense un llindar de confiança
+  defensable; emet estats match / possible / no-match amb traçabilitat per enllaç.
+- **Açò no és assessorament legal.** La decisió de tractar dades personals de fonts
+  públiques per a anàlisi privada és de l'humà com a responsable de les dades.
 
 ---
 
@@ -289,7 +261,7 @@ i confirmar-los és el definidor go/no-go de la Fase 0.
 from pydantic import BaseModel, Field
 
 class FegaBeneficiary(BaseModel):
-    """Un registre de transparencia de FEGA. Publicacio oberta: nomes persones juridiques.
+    """Un registre de transparencia de FEGA. Mode privat: tots els receptors (vegeu §8).
 
     Font: FEGA dades obertes, fitxers de beneficiaris per municipi i exercici. Els
     municipis xicotets s'agreguen a comarca agraria; les persones fisiques per davall de
@@ -311,7 +283,7 @@ class FegaBeneficiary(BaseModel):
     financial_year: int = Field(alias="ejercicio")                    # any financer (16 oct n-1 a 15 oct n)
 ```
 
-La Fase 1 manté només persones jurídiques (`nif` present i no anònim) per als marts
-públics. A la capa marts estes columnes es renomenen a valencià ASCII (p. ex.
+En mode privat (vegeu §8) el mart manté **tots** els receptors, sense filtre per tipus
+d'entitat. A la capa marts estes columnes es renomenen a valencià ASCII (p. ex.
 `beneficiary_name` -> `nom_beneficiari`, `amount_eur` -> `import_eur`, `fund` -> `fons`,
 `financial_year` -> `exercici`).

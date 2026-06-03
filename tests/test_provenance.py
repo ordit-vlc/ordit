@@ -1,7 +1,7 @@
 """Guard de procedencia: cada contracte de font ha de portar la seua documentacio.
 
-La procedencia es obligatoria (CLAUDE.md §8, DATA-PROTECTION.md §11): cap fet es publica
-sense una font traçable. Este guard afirma que cada modul de contracte a contracts/ te el
+La procedencia es obligatoria (CLAUDE.md §5 i §8): cap fet sense una font traçable. Este
+guard afirma que cada modul de contracte a contracts/ te el
 seu docs/sources/<fil>.md amb les capçaleres requerides, perque no es puga afegir una font
 sense documentar-la.
 """

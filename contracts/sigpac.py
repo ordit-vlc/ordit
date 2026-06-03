@@ -17,9 +17,9 @@ Decisions de disseny:
   peta). group_cult pot ser NULL (usos sense grup de cultiu, p. ex. vials o aigua).
 - provincia i municipio son els codis de CATASTRO (DGC), no INE: la resolucio
   catastro -> codi_ine es fa a la capa de models amb un crosswalk (default-deny), no ací.
-  Vegeu DATA-PROTECTION.md i docs/sources/sigpac.md.
-- El recinte porta referencia catastral (poligon/parcel.la/recinte): NO es publica mai a
-  nivell de recinte; nomes s'agrega a superficie per municipi i us (vegeu marts).
+  Vegeu docs/sources/sigpac.md.
+- El recinte porta referencia catastral (poligon/parcel.la/recinte): als marts nomes
+  s'agrega a superficie per municipi i us (vegeu marts).
 """
 
 from __future__ import annotations

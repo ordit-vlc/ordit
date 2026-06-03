@@ -1,12 +1,12 @@
 version: 2
 
 models:
-  - name: mart_ajudes_pac_juridiques
+  - name: mart_ajudes_pac
     description: >
-      Ajudes de la PAC a persones juridiques de la Comunitat Valenciana, format llarg per
-      fons {FEAGA, FEADER}. Esquema public en valencia ASCII. Nomes entity_type 'legal':
-      cap persona fisica. Municipi i comarca resolts des del codi postal (Fase 2); els no
-      resolts mantenen codi_postal pero municipi/comarca son NULL. Vegeu DATA-PROTECTION.md.
+      Ajudes de la PAC a la Comunitat Valenciana, TOTS els receptors (fisiques i
+      juridiques), format llarg per fons {FEAGA, FEADER}. Esquema en valencia ASCII. Mode
+      privat: cap filtre ni anonimitzacio (vegeu CLAUDE.md). Municipi i comarca resolts des
+      del codi postal; els no resolts mantenen codi_postal pero municipi/comarca son NULL.
     columns:
       - name: nom_beneficiari
         tests:
@@ -30,8 +30,9 @@ models:
               arguments:
                 values: ["Alacant", "Castelló", "València"]
       - name: codi_postal
-        tests:
-          - not_null
+        description: >
+          Codi postal del beneficiari. NULL quan FEGA emmascara el municipi (files de
+          persona fisica en municipis xicotets, etiquetades "PPXXX - XXXXX" en origen).
       - name: mesura
         tests:
           - not_null
@@ -53,8 +54,8 @@ models:
     description: >
       Superficie SIGPAC per municipi i us del sol a la Comunitat Valenciana (campanya
       2025), en hectarees. Esquema public en valencia ASCII; etiquetes (municipi, us) en
-      valencia amb accents. Nomes municipis resolts a codi_ine. Agregat per municipi i us:
-      cap dada de parcel.la ni de titular (DATA-PROTECTION.md). Vegeu docs/sources/sigpac.md.
+      valencia amb accents. Nomes municipis resolts a codi_ine. Agregat per municipi i us.
+      Vegeu docs/sources/sigpac.md.
     columns:
       - name: codi_ine
         description: Codi INE del municipi.
@@ -87,10 +88,10 @@ models:
 
   - name: mart_pac_x_superficie_municipi
     description: >
-      Diners de la PAC (NOMES persones juridiques) creuats amb la superficie agraria de
-      SIGPAC, per municipi (campanya/exercici 2025). import_eur_per_ha es ajuda de
-      juridiques per hectarea agraria total (vegeu el cavet al model i DATA-PROTECTION.md),
-      no l'ajuda total. Una fila per municipi.
+      Diners de la PAC (tots els receptors) creuats amb la superficie agraria de SIGPAC,
+      per municipi (campanya/exercici 2025). import_eur_per_ha es orientatiu: FEGA atribueix
+      l'ajuda al municipi de registre del beneficiari, no a on es la terra (vegeu el cavet al
+      model). Una fila per municipi.
     columns:
       - name: codi_ine
         description: Codi INE del municipi.
@@ -104,8 +105,8 @@ models:
       - name: superficie_agraria_ha
         tests:
           - not_null
-      - name: import_pac_juridiques_eur
-        description: Suma d'ajuda PAC de persones juridiques al municipi (exercici 2025).
+      - name: import_pac_eur
+        description: Suma d'ajuda PAC de tots els receptors al municipi (exercici 2025).
         tests:
           - not_null
       - name: exercici

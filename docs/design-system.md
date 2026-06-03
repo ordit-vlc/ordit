@@ -53,8 +53,8 @@ mini-barra `.cellbar`, modificador `.compact`), `.barchart` i `.tilemap` (cartog
 ## L'explorador (v1)
 
 `explorer/index.html` + `explorer/src/app.js`. Tot **client-side**: DuckDB-WASM llig el
-Parquet del mart `mart_ajudes_pac_juridiques` (publicat a `data/dist/` per
-`just publish`) i la resta es filtra en memòria (el mart són ~12k files).
+Parquet del mart `mart_ajudes_pac` (publicat a `data/dist/` per
+`just publish`) i la resta es filtra en memòria.
 
 Estructura:
 

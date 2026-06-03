@@ -41,8 +41,8 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync
-      # dbt build contra les fixtures sintetiques (NOMES entitats juridiques/ficticies);
-      # mai contra el fitxer real, que viu al build plane local i no entra a git ni a CI.
+      # dbt build contra les fixtures sintetiques (entitats ficticies); mai contra el
+      # fitxer real, que viu al build plane local i no entra a git ni a CI.
       - name: dbt build (fixtures sintetiques)
         working-directory: ordit_dbt
         env:
@@ -61,6 +61,6 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync
-      # Valida la fixture sintetica de persones juridiques contra els contractes pydantic
-      # i comprova que cada contracte porta la seua documentacio de procedencia.
-      - run: uv run pytest tests/test_contracts.py tests/test_provenance.py
+      # Valida les fixtures sintetiques contra els contractes pydantic i comprova que cada
+      # contracte porta la seua documentacio de procedencia.
+      - run: uv run pytest tests/test_contracts.py tests/test_contracts_sigpac.py tests/test_provenance.py

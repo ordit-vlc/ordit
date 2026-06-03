@@ -39,8 +39,8 @@ _AMOUNT_FIELDS = (
 class FegaBeneficiary(BaseModel):
     """Una linia de transparencia de FEGA (una mesura d'un beneficiari).
 
-    Publicacio oberta: nomes persones juridiques (vegeu DATA-PROTECTION.md). El filtre
-    juridica/fisica es fa a la capa marts, no ací: el contracte modela la font tal com es.
+    Mode privat (vegeu CLAUDE.md §8): el contracte modela la font tal com es, amb tots els
+    receptors (fisiques i juridiques). Cap filtre per tipus d'entitat.
     """
 
     model_config = ConfigDict(populate_by_name=True)

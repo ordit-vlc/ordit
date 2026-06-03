@@ -1,20 +1,15 @@
--- Mart public: diners de la PAC (persones juridiques) creuats amb la superficie agraria
--- de SIGPAC, per municipi de la Comunitat Valenciana. Un indicador municipal d'intensitat
--- d'ajuda per hectarea. Columnes en valencia ASCII.
+-- Mart: diners de la PAC (TOTS els receptors) creuats amb la superficie agraria de SIGPAC,
+-- per municipi de la Comunitat Valenciana. Un indicador municipal d'intensitat d'ajuda per
+-- hectarea. Columnes en valencia ASCII.
 --
--- CAVETS (documentats, no defectes; cal interpretar import_eur_per_ha amb cura):
---   1. L'import es NOMES de persones juridiques (l'unic publicable; DATA-PROTECTION.md),
---      mentre que la superficie agraria de SIGPAC es de TOTA la terra agraria del municipi.
---      Per tant import_eur_per_ha es "euros de PAC de juridiques per hectarea agraria
---      total", NO l'ajuda total per hectarea.
---   2. FEGA atribueix l'ajuda al municipi de REGISTRE del beneficiari (codi postal), no a
---      on es fisicament la terra. Una cooperativa gran registrada en un poble xicotet pot
---      donar un euros/ha desorbitat (diners alts sobre poca superficie local). L'indicador
---      es municipal i orientatiu, no una subvencio per hectarea real.
--- S'alineen exercici FEGA i campanya SIGPAC (mateix any) per comparabilitat.
+-- CAVET (documentat, no un defecte): FEGA atribueix l'ajuda al municipi de REGISTRE del
+-- beneficiari (codi postal), no a on es fisicament la terra. Una cooperativa gran
+-- registrada en un poble xicotet pot donar un euros/ha desorbitat (diners alts sobre poca
+-- superficie local). L'indicador es municipal i orientatiu, no una subvencio per hectarea
+-- real. S'alineen exercici FEGA i campanya SIGPAC (mateix any) per comparabilitat.
 --
 -- Base: la superficie agraria per municipi (SIGPAC). Els municipis amb superficie pero
--- sense ajuda juridica registrada mostren import 0 (left join), no desapareixen.
+-- sense ajuda registrada mostren import 0 (left join), no desapareixen.
 {{ config(materialized="table") }}
 
 with superficie as (
@@ -32,9 +27,9 @@ with superficie as (
 ajudes as (
     select
         codi_ine,
-        sum(import_eur) as import_pac_juridiques_eur,
-        count(distinct nom_beneficiari) as nombre_beneficiaris_juridics
-    from {{ ref("mart_ajudes_pac_juridiques") }}
+        sum(import_eur) as import_pac_eur,
+        count(distinct nom_beneficiari) as nombre_beneficiaris
+    from {{ ref("mart_ajudes_pac") }}
     where codi_ine is not null
       and exercici = {{ var("sigpac_campaign", 2025) }}
     group by codi_ine
@@ -46,11 +41,11 @@ select
     s.comarca,
     s.provincia,
     s.superficie_agraria_ha,
-    coalesce(a.import_pac_juridiques_eur, 0) as import_pac_juridiques_eur,
-    coalesce(a.nombre_beneficiaris_juridics, 0) as nombre_beneficiaris_juridics,
+    coalesce(a.import_pac_eur, 0) as import_pac_eur,
+    coalesce(a.nombre_beneficiaris, 0) as nombre_beneficiaris,
     case
         when s.superficie_agraria_ha > 0
-        then round(coalesce(a.import_pac_juridiques_eur, 0) / s.superficie_agraria_ha, 2)
+        then round(coalesce(a.import_pac_eur, 0) / s.superficie_agraria_ha, 2)
     end as import_eur_per_ha,
     s.exercici
 from superficie s

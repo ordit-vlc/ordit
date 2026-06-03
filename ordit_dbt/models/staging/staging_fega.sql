@@ -1,6 +1,6 @@
 -- Staging de FEGA: neteja els fitxers reals (UTF-8 normalitzat per la ingestio) i els
 -- tipa, filtrant a la Comunitat Valenciana. Capa interna: NO es publica i pot portar-ho
--- tot (inclosos noms de persona fisica); el filtre juridica/fisica es fa a marts.
+-- tot (inclosos noms de persona fisica): mode privat, cap filtre per tipus d'entitat.
 --
 -- Peculiaritats de la font que es gestionen ací (vegeu docs/sources/fega.md):
 --   - coma decimal (format espanyol), sense punt de milers consistent

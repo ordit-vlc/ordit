@@ -65,13 +65,13 @@ Unir per **igualtat directa** `catastro == INE` assignaria silenciosament la sup
 210 municipis al **municipi equivocat**. Per això s'usa el crosswalk oficial de FEGA
 (`xwalk_catastro_ine.csv`, generat per `ingest/sigpac/build_crosswalk.py`), que mapeja els
 542 codis de catastro de la CV al seu codi INE. Resolució: **100%** (0 `unresolved`); cap
-municipi inventat (default-deny, DATA-PROTECTION.md).
+municipi inventat (default-deny).
 
-## Privacitat
+## Granularitat
 
 Els recintes no porten noms de persona. Sí que porten referència cadastral (polígon,
-parcel·la, recinte), que **mai es publica a nivell de recinte**: tota la cadena cap als
-marts agrega a **municipi × ús**, l'única granularitat publicada. Vegeu DATA-PROTECTION.md.
+parcel·la, recinte); als marts tota la cadena agrega a **municipi × ús**. El compliment de
+protecció de dades, si algun dia es publica, és una fase futura del ROADMAP.
 
 ## Processament memory-safe
 

@@ -33,12 +33,12 @@ sense enllaç.
 Lliurable:
 - Extractor `ingest/fega/` que baixa fitxers de FEGA CV per a 2 o 3 exercicis.
 - Validació de contracte passant amb fitxers reals.
-- `staging` de dbt + un primer `mart` de beneficiaris persones jurídiques (raó social,
-  NIF, municipi, mesura, import, fons, exercici).
+- `staging` de dbt + un `mart` de beneficiaris amb TOTS els receptors (mode privat, sense
+  filtre per tipus d'entitat: raó social o nom, municipi, mesura, import, fons, exercici).
 - Proves de dbt (not null, valors acceptats per a `fons`, claus úniques).
 
-Go: `just build` verd, les proves de dbt passen, el mart té les files de persona
-jurídica esperades per a un municipi comprovat a mà.
+Go: `just build` verd, les proves de dbt passen, el mart té les files esperades per a un
+municipi comprovat a mà.
 
 No-go: deriva de contracte entre exercicis que no es pot reconciliar a staging.
 
@@ -80,9 +80,36 @@ FEGA + SIGPAC (ja valuós) i revisa l'enllaç més avant.
 
 ---
 
+## Fase C — Compliance i anonimització (porta de publicació)
+
+Objectiu: convertir el conjunt complet (mode privat) en un conjunt publicable. És una
+**porta dedicada, prèvia i bloquejant** de qualsevol publicació oberta, outreach o SEO. Es
+fa **una sola vegada, no a cada pas**: mentre el projecte és privat (Fases 1-5), es treballa
+amb les dades senceres i esta fase no s'activa. Reintrodueix la maquinària que es va retirar
+en passar a mode privat (vegeu `CLAUDE.md` §8 i l'historial de git per al codi de referència).
+
+Lliurable:
+- Classificació jurídica vs física (precision-first, default-deny) i **filtre**: només
+  persones jurídiques amb nom i agregats segurs surten a la frontera de publicació.
+- **Anonimització** i **supressió de cel·les xicotetes** (N < 5) als agregats.
+- **Ponderació de l'interés públic** cas per cas (cas Schecke, TJUE C-92/09 i C-93/09).
+- **Guard de fuga** automàtic (CI + `just publish`): 0 dades de persona física a tot
+  artefacte committejat o servit.
+- **Frontera de privacitat = frontera build → serve**: el raw i les dades personals no
+  ixen mai del build plane local.
+- **Revisió legal** (DPO/advocat) abans de publicar. Açò no és assessorament legal.
+
+Go: un artefacte de publicació que passa el guard de fuga amb 0 dades de persona física i la
+revisió legal aprovada.
+
+No-go: qualsevol dada personal pot reconstruir-se des dels agregats publicats.
+
+---
+
 ## Fase 4 — Publicació oberta + explorador
 
-Objectiu: publicar dades obertes i un explorador consultable.
+Objectiu: publicar dades obertes i un explorador consultable. **Depèn de la Fase C**: no es
+publica res fins que la porta de compliance estiga superada.
 
 Lliurable:
 - `publish/` que exporta els marts a GeoParquet particionat a `data/dist`.

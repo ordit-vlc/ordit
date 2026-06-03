@@ -34,9 +34,9 @@ just build     # dbt build (des de la Fase 1)
 ## Mode raw local (`just explore-raw`)
 
 Obri la DuckDB sencera del build plane (`data/ordit.duckdb`) en una sessió de Python amb
-la connexió ja oberta com a `con`. Conté el **raw sencer, incloent-hi persones físiques**,
-per a anàlisi interna: explorar, depurar, mesurar cobertura. És **legítim i no està
-restringit** (vegeu `DATA-PROTECTION.md` §6).
+la connexió ja oberta com a `con`. Conté el **raw sencer i tots els receptors, incloent-hi
+persones físiques**, per a anàlisi interna: explorar, depurar, mesurar cobertura. En mode
+privat (vegeu `CLAUDE.md` §8) es treballa amb les dades completes, sense filtre.
 
 ```sh
 just explore-raw
@@ -45,17 +45,9 @@ just explore-raw
 ```
 
 > **ESTRICTAMENT LOCAL.** Esta DuckDB i el raw viuen només al build plane, gitignored.
-> **Mai** es serveix, **mai** s'exposa en cap endpoint i **mai** es posa darrere cap
-> protecció (perquè no s'exposa). El que ix cap a fora (publicació, explorador) passa pel
-> guard de fuga (`publish/leak_guard.py`): 0 dades de persona física.
-
-## Guard de fuga (frontera build → serve)
-
-Tot artefacte committejat o servit (`data/dist`, seeds, Parquet de l'explorador) es
-comprova: 0 codis `ES#...`, 0 files `entity_type != legal` (i, en Fase 3, cap nom
-d'administrador del BORME). S'executa a `just publish` i a CI (`tests/test_leak_guard.py`).
-Si un artefacte conté dades de persona física, `just publish` peta i esborra el fitxer:
-no es publica res brut.
+> **Mai** es serveix ni s'exposa en cap endpoint. Res no ix cap a fora: el projecte és
+> privat i no publica. El compliment de protecció de dades (filtre, anonimització, guard de
+> fuga) és una fase futura del [`ROADMAP.md`](ROADMAP.md), prèvia a qualsevol publicació.
 
 ## Desplegament (serve plane)
 

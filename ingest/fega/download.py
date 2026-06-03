@@ -5,8 +5,8 @@ recents disponibles i en deixa el .txt descomprimit a data/raw/fega/ (gitignored
 persones fisiques, no es committeja mai). Sense claus ni secrets: son URL publiques.
 
 El raw es manté SENCER (totes les CCAA, totes les persones); el filtre a la Comunitat
-Valenciana i la classificacio juridica/fisica es fan a la capa de models (staging i
-marts), no ací. Vegeu DATA-PROTECTION.md.
+Valenciana es fa a la capa de models (staging), no ací. Mode privat: cap filtre per tipus
+d'entitat (vegeu CLAUDE.md §8).
 
 Els noms de fitxer de la font no son consistents entre anys (guio vs guio baix entre
 "ejercicio" i "financiero"), per aixo es mapegen explicitament per exercici.

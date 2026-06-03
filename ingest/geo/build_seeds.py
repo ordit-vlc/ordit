@@ -11,7 +11,7 @@ Resolucio en DUES VIES que es validen mutuament:
          bilingue "X/Y" i de truncament (prefix unic).
 Quan ambdues resolen han de COINCIDIR; si discrepen, es 'discrepancy' i queda sense
 municipi (default-deny: no s'inventa cap municipi). El que no resol cap via queda
-'unresolved'. Vegeu DATA-PROTECTION.md.
+'unresolved'.
 
 Entrades (al build plane, gitignored): data/raw/geo/municipis-VAL.json (atributs del
 GeoJSON de TopQuaranta) i data/raw/geonames/ES.txt (GeoNames). El cross-check de noms usa
@@ -118,7 +118,7 @@ def main() -> None:
                     cands.add(_single(pref))
         return _single(cands)
 
-    # Resol cada localitat distinta de FEGA. Llig staging_fega (NO int_fega_classified):
+    # Resol cada localitat distinta de FEGA. Llig staging_fega (NO l'intermediate int_fega):
     # l'intermediate ja depen del seed xwalk_locality que generem ací, i llegir-lo crearia
     # una dependencia circular. staging_fega nomes depen del raw.
     con = duckdb.connect(str(DB_PATH), read_only=True)

@@ -4,8 +4,7 @@
 --
 -- Default-deny geografic: nomes municipis resolts a codi_ine (els 'unresolved' queden
 -- fora del mart; la seua cobertura es una metrica visible al test de l'intermediate).
--- Sense dades de persona: la superficie ve agregada per municipi i us, mai per parcel.la
--- ni titular (DATA-PROTECTION.md). Una fila per (municipi, us, exercici).
+-- La superficie ve agregada per municipi i us. Una fila per (municipi, us, exercici).
 {{ config(materialized="table") }}
 
 select
