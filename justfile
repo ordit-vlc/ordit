@@ -44,3 +44,8 @@ publish:
 serve: publish
     @echo "Explorador a http://localhost:8000/explorer/  (Ctrl+C per parar)"
     uv run python -m http.server 8000
+
+# Obri la DuckDB SENCERA del build plane (raw incl. persones fisiques) per a exploracio.
+# ESTRICTAMENT LOCAL: mai servida, mai en cap endpoint, mai darrere cap proteccio.
+explore-raw:
+    uv run python -i -c 'import duckdb; con = duckdb.connect("data/ordit.duckdb"); print("Ordit · DuckDB del build plane oberta com a `con` (raw sencer, incl. persones fisiques). Estrictament local. Prova: con.sql(\"show tables\")")'

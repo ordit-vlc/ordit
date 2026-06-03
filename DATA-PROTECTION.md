@@ -57,29 +57,44 @@ Ordit **no** es construeix ni es pot usar per a:
 
 Qualsevol funcionalitat que habilite estos usos és un defecte, no una millora.
 
-## 6. Frontera de dos plans = frontera de privacitat
+## 6. Model operatiu: build plane lliure, frontera de publicació estricta
 
-Ordit té dos plans (vegeu `CLAUDE.md` §2):
+Açò és el contracte que permet **construir sense por** i **sense relitigar la privacitat a
+cada pas**. Hi ha dos plans (vegeu `CLAUDE.md` §2) i una sola frontera que importa.
 
-- **Build plane** (local): on viuen el **raw** i **qualsevol dada personal**. Gitignored.
-  Mai a git, mai a CI, mai al serve plane.
-- **Serve plane**: només artefactes finals publicables (GeoParquet de jurídiques i
-  agregats).
+- **Build plane (local): processa el raw SENCER, incloent-hi persones físiques, per a
+  anàlisi interna.** Entendre la dada completa (mirar-la, perfilar-la a nivell agregat,
+  depurar-la, mesurar cobertura, explorar la DuckDB sencera) és **legítim i no està
+  restringit**. El raw i qualsevol dada personal viuen NOMÉS ací, gitignored: mai a git,
+  mai a CI, mai al serve plane.
+- **El filtre de persones físiques NOMÉS s'aplica a la frontera de publicació**
+  (marts → serve plane). No és una preocupació de cada model intermedi ni de cada commit:
+  és un punt únic i ben definit.
 
-> La **frontera build → serve és la frontera de privacitat**. El filtre que deixa fora les
-> persones físiques **es fa ahí**: res personal travessa cap al serve plane.
+> La **frontera build → serve és la frontera de privacitat.** Cap dada personal o sensible
+> es committeja al repo, entra a CI ni es serveix: viu només al build plane. El filtre que
+> deixa fora les persones físiques es fa exactament en eixa frontera.
 
-Cap dada personal pot acabar en un commit, en un artefacte de CI ni en un fitxer servit.
+Esta separació és el que fa que el treball diari al build plane no haja de demanar permís:
+la seguretat la garanteix la frontera (i el guard de fuga, §7), no l'autocensura a cada
+passa.
 
-## 7. Arquitectura del filtre
+## 7. Arquitectura del filtre i guard de fuga
 
 - El **raw es manté sencer i immutable**: és la procedència; no es retalla en la ingestió.
 - La **classificació i el filtre** (jurídica vs física, supressió) es fan a la **capa
   marts**, que és la **frontera de publicació** —**NO** a la ingestió.
-- **Staging pot portar-ho tot** (inclosos noms de persona física): és **intern**, viu al
-  build plane i **no es publica mai**.
+- **Staging i intermediate poden portar-ho tot** (inclosos noms de persona física): són
+  **interns**, viuen al build plane i **no es publiquen mai**.
 - **Minimitza la retenció duradora** aigües avall de noms de persona física: com més prop
   de la frontera de publicació es filtra, menys còpies personals queden.
+
+**Guard de fuga (gate #5 estés a tot el que ix del build plane).** Qualsevol artefacte
+**committejat o servit** —`data/dist`, seeds publicables, el Parquet de l'explorador— ha
+de contindre **0 dades de persones físiques**: cap codi anònim de FEGA (`ES#...`), cap fila
+amb `entity_type != legal` i, quan existisca (Fase 3), cap nom d'administrador del BORME.
+És una comprovació automàtica (CI + `just publish`); és el que et deixa construir sense
+por. Vegeu `publish/leak_guard.py`.
 
 ## 8. Supressió d'agregats
 
@@ -91,6 +106,14 @@ pot aïllar (i, per tant, identificar) un individu.
 - La supressió s'aplica de manera que cap agregat publicat permeta aïllar un individu
   (atenció també a la supressió secundària: combinacions de cel·les que reconstruirien una
   cel·la suprimida).
+
+**El compliment de publicació és una FASE dedicada, no una preocupació de cada pas.** La
+revisió fina —anonimització, supressió de cel·les < N = 5, ponderació de l'interés públic
+cas per cas (Schecke, §2), i la revisió legal (DPO/advocat)— es fa **una vegada, com a
+porta**, just **abans de qualsevol publicació oberta, outreach o SEO**. Mentre el treball
+es queda al build plane (anàlisi, modelatge, exploració), no cal repetir esta revisió a
+cada commit: la frontera (§6) i el guard de fuga (§7) ja garanteixen que res personal
+n'isca per accident.
 
 ## 9. Classificació jurídica vs física
 

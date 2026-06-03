@@ -210,15 +210,23 @@ i és vinculant. Ací en queden les regles nucli, impossibles d'oblidar:
 - **No es publica MAI**: cap nom de persona física, el fitxer brut, res personal.
 - **Usos prohibits**: ni perfilar, ni buscar o localitzar individus, ni enriquir o
   enllaçar persones físiques.
+- **Model operatiu (build lliure, publicació estricta)**: el build plane processa el raw
+  SENCER, incloent-hi persones físiques, per a anàlisi interna; entendre la dada completa
+  és legítim i NO està restringit. El filtre de físiques s'aplica NOMÉS a la frontera de
+  publicació (marts → serve plane). Açò permet construir sense relitigar la privacitat a
+  cada pas. Detall a `DATA-PROTECTION.md` §6.
 - **Frontera de privacitat = frontera build → serve**: el raw i qualsevol dada personal
-  viuen NOMÉS al build plane (local), gitignored; mai a git, a CI ni al serve plane. El
-  filtre que deixa fora les persones físiques es fa en eixa frontera.
+  viuen NOMÉS al build plane (local), gitignored; mai a git, a CI ni al serve plane.
 - **Arquitectura del filtre**: el raw es manté sencer i immutable; la classificació i el
-  filtre es fan a la capa marts (frontera de publicació), no a la ingestió. Staging pot
-  portar-ho tot, però és intern i no es publica mai. Minimitza la retenció duradora
-  aigües avall de noms de persona física.
-- **Supressió d'agregats**: agregar no anonimitza si la cel·la és xicoteta. Suprimeix tota
-  cel·la amb menys de N = 5 beneficiaris (proposat) perquè cap agregat aïlle un individu.
+  filtre es fan a la capa marts (frontera de publicació), no a la ingestió. Staging i
+  intermediate poden portar-ho tot, però són interns i no es publiquen mai.
+- **Guard de fuga (CI + `just publish`)**: qualsevol artefacte committejat o servit
+  (`data/dist`, seeds publicables, Parquet de l'explorador) ha de contindre 0 dades de
+  físiques: cap `ES#...`, cap `entity_type != legal` i, en Fase 3, cap nom d'administrador
+  del BORME. És el gate #5 estés a tot el que ix del build plane (`publish/leak_guard.py`).
+- **Compliment de publicació = fase dedicada, no de cada pas**: anonimització, supressió
+  de cel·les < N = 5 i ponderació de l'interés públic cas per cas es fan una vegada, com a
+  porta, abans de qualsevol publicació oberta / outreach / SEO.
 - **Classificació jurídica vs física**: precision-first, default-deny. Mana el tipus
   d'entitat, no l'etimologia del nom. Una entitat amb forma jurídica registrada (SL, SLU,
   SA, SAU, SAT, SLL, SAL, COOP/SCOOP/S COOP/COOPERATIVA, AIE, fundació, associació) és
