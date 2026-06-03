@@ -8,19 +8,15 @@
    patro), llegenda numerica, valor al focus, llista lateral sempre visible; mai
    roig-verd; el color mai es l'unica senyal (acompanyat de llista i etiqueta). */
 
+import { fmtEur, fmtHa, fmtEurHa } from "./format.js";
+
 const SEQ = ["--seq-0", "--seq-1", "--seq-2", "--seq-3", "--seq-4", "--seq-5", "--seq-6"];
 const CATS = ["--cat-1", "--cat-2", "--cat-3", "--cat-4", "--cat-5", "--cat-6"];
-
-const nf0 = new Intl.NumberFormat("ca-ES", { maximumFractionDigits: 0 });
-const nf1 = new Intl.NumberFormat("ca-ES", { maximumFractionDigits: 1 });
-export const fmtEur0 = (n) => nf0.format(Math.round(n)) + " €";
-const fmtHa = (n) => nf1.format(n) + " ha";
-const fmtEurHa = (n) => nf0.format(Math.round(n)) + " €/ha";
 
 // Capes del mapa: etiqueta visible (valencia), titol i formatador del valor. Les capes de
 // superficie venen del creuat SIGPAC x FEGA per municipi (campanya 2025, no filtrable).
 export const LAYERS = {
-  diners: { label: "Diners PAC", title: "Import de PAC", fmt: fmtEur0, sigpac: false },
+  diners: { label: "Diners PAC", title: "Import de PAC", fmt: fmtEur, sigpac: false },
   superficie: { label: "Superficie", title: "Superficie agraria", fmt: fmtHa, sigpac: true },
   eur_ha: { label: "€/ha", title: "Ajuda per hectarea", fmt: fmtEurHa, sigpac: true },
 };

@@ -4,6 +4,7 @@
 
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
 import { loadGeo, mapHtml, layerFmt } from "./map.js";
+import { fmtEur, fmtInt } from "./format.js";
 
 // Rutes dels Parquet publicats (relatives a /explorer/), servits com a fitxers estatics.
 const PARQUET_URL = new URL("../data/dist/mart_ajudes_pac.parquet", location.href).href;
@@ -39,11 +40,6 @@ const FACETS = [
 ];
 
 const TABLE_LIMIT = 300; // files mostrades a la taula (l'agregat i els KPI usen tot el filtrat)
-
-const eur = new Intl.NumberFormat("ca-ES", { maximumFractionDigits: 0 });
-const eur2 = new Intl.NumberFormat("ca-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const fmtEur = (n) => eur2.format(n) + " €";
-const fmtInt = (n) => eur.format(n);
 
 const state = {
   rows: [],
@@ -304,7 +300,8 @@ function tableHtml(rows) {
         return `<tr>
         <td class="cell-strong">${esc(r.nom_beneficiari)}</td>
         <td>${esc(r.municipi)}</td>
-        <td>${esc(r.mesura)}</td>
+        <td>${esc(r.comarca)}</td>
+        <td class="cell-mesura">${esc(r.mesura)}</td>
         <td><span class="badge">${esc(r.fons)}</span></td>
         <td class="num">${r.exercici}</td>
         <td class="num cell-strong">${fmtEur(r.import_eur)}${bar}</td>

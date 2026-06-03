@@ -130,7 +130,12 @@ table.data.compact thead th { padding: 0.45rem 0.8rem; }
 table.data.compact tbody td { padding: 0.42rem 0.8rem; }
 table.data tbody tr:hover { background: var(--blau-tint); }
 table.data tbody tr:last-child td { border-bottom: 0; }
-table.data td.num { font-family: var(--font-mono); }
+table.data td.num { font-family: var(--font-mono); white-space: nowrap; }
+/* Per sota d'esta amplada la taula fa scroll horitzontal en lloc d'esclafar columnes. */
+table.data { min-width: 760px; }
+/* La mesura es el text mes llarg: se li dona un sostre i s'ajusta, aixi la resta de
+   columnes (comarca, fons, exercici, import) no queden esclafades ni tallades. */
+table.data .cell-mesura { max-width: 340px; }
 .cell-strong { font-weight: 600; }
 .cell-sub { color: var(--ink-3); font-size: var(--t-xs); }
 
