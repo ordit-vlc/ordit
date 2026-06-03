@@ -74,3 +74,18 @@ seeds:
           - accepted_values:
               arguments:
                 values: ["both", "cp", "name", "discrepancy", "unresolved"]
+
+  - name: xwalk_beneficiari
+    description: >
+      Correccio de procedencia de noms de beneficiari truncats en origen de FEGA (no
+      fabricacio): nom_origen tal com arriba -> nom_normalitzat documentat i tracable. Es
+      curat a ma, cas per cas, amb la justificacio a la columna nota i a docs/sources/fega.md.
+      S'aplica a int_fega; staging porta el nom fidel a la font.
+    columns:
+      - name: nom_origen
+        tests:
+          - not_null
+          - unique
+      - name: nom_normalitzat
+        tests:
+          - not_null

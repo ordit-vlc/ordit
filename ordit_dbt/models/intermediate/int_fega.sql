@@ -6,6 +6,11 @@
 --
 -- group_raw ("CIF-NOM" del grup) es parteix pel primer "-": la majoria de valors no porten
 -- CIF (comencen per "-"), aleshores group_cif queda NULL.
+--
+-- Normalitzacio de nom (correccio de procedencia, NO fabricacio): alguns beneficiaris venen
+-- truncats en origen de FEGA. El crosswalk tracable xwalk_beneficiari corregeix els casos
+-- documentats (p. ex. "VALENCIANA" -> "Generalitat Valenciana"); vegeu docs/sources/fega.md.
+-- Staging porta el nom tal com arriba (fidel a la font); la correccio s'aplica aci.
 {{ config(materialized="table") }}
 
 with prepared as (
@@ -21,7 +26,7 @@ with prepared as (
 -- ingest/geo/build_seeds.py i docs/sources/geografia.md). Els no resolts queden sense
 -- municipi (codi_ine NULL), mai s'inventa cap municipi.
 select
-    p.*,
+    p.* replace (coalesce(b.nom_normalitzat, p.beneficiary_name) as beneficiary_name),
     nullif(x.codi_ine, '') as codi_ine,
     coalesce(x.resolved_by, 'unresolved') as geo_resolved_by,
     m.nom as municipi,
@@ -34,5 +39,6 @@ select
         when 'València/Valencia' then 'València'
     end as provincia
 from prepared p
+left join {{ ref("xwalk_beneficiari") }} b on b.nom_origen = p.beneficiary_name
 left join {{ ref("xwalk_locality") }} x on x.municipi_raw = p.municipality
 left join {{ ref("dim_municipi") }} m on m.codi_ine = nullif(x.codi_ine, '')

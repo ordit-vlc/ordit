@@ -4,3 +4,4 @@ SOCIETAT FICTICIA SL;A12345678-GRUP DEMO SA;Castelló/Castellón;12028 - Exemple
 ES#00000001;;València/Valencia;46XXX - XXXXX;I.1   Ayuda básica a la renta;;;;73,62;0;0;0;73,62;
 NOM FICTICI DE PROVA;;Alacant/Alicante;03014 - Exemple de Mar;I.6   Ayuda a la renta asociada;OE2;;;800,00;0;0;0;800,00;
 ENTITAT DE MADRID SL;;Madrid;28079 - Madrid;VI.4   Inversiones en activos físicos;;;;0;100,00;0;0;100,00;
+VALENCIANA;;València/Valencia;46001 - Valencia;VI.25   Asistencia técnica;;;;0;5000,00;0;0;5000,00;

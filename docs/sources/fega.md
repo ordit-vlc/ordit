@@ -93,6 +93,18 @@ Cada fila és **una línia per mesura** d'un beneficiari, no un beneficiari agre
   persones jurídiques publicades).
 - **Files malformades**: ~2 línies amb un `;` incrustat al nom desplacen els camps
   (apareix una "província" `SL`). Cal una regla de sanejament a staging.
+- **Noms truncats en origen**: alguns beneficiaris arriben amb el nom escapçat per la
+  pròpia font. El cas confirmat és el **govern valencià**, que FEGA publica només com a
+  `VALENCIANA` (sense «Generalitat»), mentre que `GENERALITAT DE CATALUNYA` sí que apareix
+  sencer per a les **mateixes mesures** (forestals VI.11/VI.12/VI.13, assistència tècnica
+  VI.25/V.9, programa escolar de fruita IV.3) des de **València capital (46001)**. Com que
+  el fitxer **no porta CIF**, no es pot confirmar la identitat amb un identificador, però la
+  procedència és defensable. La ingesta **no trunca res**: porta el nom fidel a `staging`.
+  La correcció s'aplica a `int_fega` via el crosswalk traçable
+  [`xwalk_beneficiari`](../../ordit_dbt/seeds/xwalk_beneficiari.csv) (`VALENCIANA` →
+  `Generalitat Valenciana`), curat a mà i auditat cas per cas; **mai una reescriptura
+  automàtica per heurística**. La invariant es blinda amb el test dbt
+  `assert_noms_normalitzats` (cap nom del crosswalk pot sobreviure sense corregir al mart).
 
 ## Estat del contracte
 
