@@ -36,6 +36,10 @@ addopts = "-ra"
 # paquet nucli amb codi real. linkage/ entra a la Fase 3.
 [tool.coverage.run]
 source = ["ingest"]
+# build_seeds.py es un script de generacio (llig dades externes i escriu seeds); la seua
+# correccio es verifica amb l'informe de cobertura que imprimeix i amb els tests de dbt
+# sobre els seeds resultants, no amb cobertura de linies.
+omit = ["ingest/geo/build_seeds.py"]
 
 [tool.coverage.report]
 fail_under = 70

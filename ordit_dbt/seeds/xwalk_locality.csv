@@ -1,0 +1,1235 @@
+municipi_raw,codi_ine,resolved_by
+00370 - Dénia,03063,name
+02540 - Alicante/Alacant,03014,name
+02720 - Benissa,03041,name
+03000 - Alicante/Alacant,03014,name
+03000 - Biar,03043,name
+03000 - Elche/Elx,03065,name
+03000 - Elda,03066,name
+03001 - Alicante/Alacant,03014,both
+03001 - Elche/Elx,,discrepancy
+03002 - Alicante/Alacant,03014,both
+03002 - Elche/Elx,,discrepancy
+03003 - Alicante/Alacant,03014,both
+03003 - Orihuela,,discrepancy
+03004 - Alicante/Alacant,03014,both
+03005 - Alicante/Alacant,03014,both
+03005 - Hondón de los Frailes,,discrepancy
+03006 - Alicante/Alacant,03014,both
+03007 - Alicante/Alacant,03014,both
+03008 - Alicante/Alacant,03014,both
+03009 - Alicante/Alacant,03014,both
+03009 - Orihuela,,discrepancy
+03010 - Alicante/Alacant,03014,both
+03011 - Alicante/Alacant,03014,both
+03012 - Alicante/Alacant,03014,both
+03013 - Alicante/Alacant,03014,both
+03014 - Alicante/Alacant,03014,both
+03015 - Alicante/Alacant,03014,both
+03015 - Castell de Castells,,discrepancy
+03016 - Alicante/Alacant,03014,both
+03040 - Benimeli,03040,name
+03062 - Daya Vieja,03062,name
+03100 - Jijona/Xixona,03083,both
+03104 - Petrer,03104,name
+03106 - Alicante/Alacant,03014,name
+03108 - Torremanzanas/Torre de les Maçanes (la),03132,both
+03109 - Tibi,03129,both
+03110 - Alicante/Alacant,,discrepancy
+03110 - Jijona/Xixona,,discrepancy
+03110 - Mutxamel,03090,both
+03111 - Busot,03046,both
+03112 - Alicante/Alacant,03014,both
+03113 - Alicante/Alacant,,discrepancy
+03113 - Elche/Elx,03065,both
+03114 - Alicante/Alacant,03014,both
+03116 - Salinas,03116,name
+03130 - Santa Pola,03121,both
+03139 - Elche/Elx,03065,both
+03139 - Santa Pola,,discrepancy
+03140 - Guardamar del Segura,03076,both
+03150 - Almoradí,,discrepancy
+03150 - Dolores,03064,both
+03158 - Catral,03055,both
+03158 - Crevillent,,discrepancy
+03159 - Daya Nueva,03061,both
+03160 - Alicante/Alacant,,discrepancy
+03160 - Almoradí,03015,both
+03160 - Catral,,discrepancy
+03160 - Torrevieja,,discrepancy
+03169 - Algorfa,03012,both
+03170 - Benijófar,,discrepancy
+03170 - Formentera del Segura,03113,cp
+03170 - Rojales,03113,both
+03177 - San Fulgencio,03062,both
+03178 - Benijófar,03034,both
+03179 - Almoradí,03015,both
+03179 - Formentera del Segura,03015,cp
+03179 - Rojales,,discrepancy
+03180 - Alicante/Alacant,,discrepancy
+03180 - Torrevieja,03133,both
+03181 - Torrevieja,03133,both
+03182 - Torrevieja,03133,both
+03183 - Torrevieja,03133,both
+03184 - Torrevieja,03133,both
+03185 - Torrevieja,03133,both
+03186 - Torrevieja,03133,both
+03187 - Montesinos (Los),03903,both
+03187 - Torrevieja,,discrepancy
+03188 - Alfàs del Pi (l'),,discrepancy
+03188 - Torrevieja,03133,both
+03189 - Orihuela,03099,both
+03190 - Alicante/Alacant,,discrepancy
+03190 - Almoradí,,discrepancy
+03190 - Pilar de la Horadada,03902,both
+03191 - Pilar de la Horadada,,discrepancy
+03193 - San Miguel de Salinas,03120,both
+03194 - Elche/Elx,03065,both
+03194 - Guardamar del Segura,,discrepancy
+03195 - Elche/Elx,03065,both
+03200 - Elche/Elx,03065,name
+03201 - Elche/Elx,03065,both
+03202 - Benidorm,,discrepancy
+03202 - Elche/Elx,03065,both
+03203 - Alcoy/Alcoi,,discrepancy
+03203 - Alicante/Alacant,,discrepancy
+03203 - Elche/Elx,03065,both
+03203 - Mutxamel,,discrepancy
+03203 - Orxeta,03065,cp
+03204 - Alicante/Alacant,,discrepancy
+03204 - Elche/Elx,03065,both
+03205 - Alicante/Alacant,,discrepancy
+03205 - Elche/Elx,03065,both
+03206 - Elche/Elx,03065,both
+03207 - Elche/Elx,03065,both
+03208 - Elche/Elx,03065,both
+03220 - Elche/Elx,03065,name
+03290 - Elche/Elx,03065,both
+03291 - Elche/Elx,03065,both
+03292 - Elche/Elx,03065,both
+03293 - Elche/Elx,03065,both
+03294 - Elche/Elx,03065,both
+03295 - Elche/Elx,03065,both
+03296 - Elche/Elx,03065,both
+03300 - Alicante/Alacant,,discrepancy
+03300 - Orihuela,03099,both
+03310 - Jacarilla,03099,both
+03310 - Orihuela,03099,both
+03311 - Alicante/Alacant,,discrepancy
+03311 - Orihuela,03099,both
+03312 - Orihuela,03099,both
+03313 - Orihuela,03099,both
+03314 - Guardamar del Segura,,discrepancy
+03314 - Orihuela,03099,both
+03315 - Albatera,,discrepancy
+03315 - Orihuela,03099,both
+03316 - Benferri,03099,cp
+03316 - Orihuela,03099,both
+03317 - Callosa de Segura,03049,both
+03317 - Orihuela,,discrepancy
+03318 - Orihuela,03099,name
+03320 - Elche/Elx,03065,both
+03321 - Orihuela,03099,name
+03322 - Alicante/Alacant,03014,name
+03322 - Orihuela,03099,name
+03325 - Orihuela,03099,name
+03330 - Alicante/Alacant,,discrepancy
+03330 - Crevillent,03059,both
+03332 - Elche/Elx,03065,name
+03339 - Crevillent,03059,both
+03339 - Romana (la),,discrepancy
+03340 - Albatera,03005,both
+03340 - Alicante/Alacant,,discrepancy
+03340 - Elche/Elx,,discrepancy
+03340 - Ibi,,discrepancy
+03348 - Granja de Rocamora,03074,both
+03349 - San Isidro,03904,both
+03350 - Albatera,,discrepancy
+03350 - Benidorm,,discrepancy
+03350 - Cox,03058,both
+03360 - Callosa de Segura,03049,both
+03360 - Cox,,discrepancy
+03360 - Novelda,,discrepancy
+03360 - Rafal,,discrepancy
+03366 - Callosa de Segura,03049,name
+03369 - Orihuela,03099,both
+03369 - Rafal,,discrepancy
+03370 - Redován,03111,both
+03377 - Redován,03111,name
+03380 - Bigastro,03044,both
+03390 - Alicante/Alacant,,discrepancy
+03390 - Benejúzar,03024,both
+03400 - Beneixama,,discrepancy
+03400 - Villena,03140,both
+03409 - Cañada,03052,cp
+03409 - Villena,,discrepancy
+03410 - Biar,03043,both
+03410 - Onil,,discrepancy
+03420 - Castalla,03053,both
+03420 - Ibi,,discrepancy
+03420 - Villena,,discrepancy
+03430 - Onil,03096,both
+03440 - Ibi,03079,both
+03450 - Banyeres de Mariola,03021,both
+03459 - Alfafara,03010,name
+03460 - Beneixama,03023,both
+03460 - Campo de Mirra/Camp de Mirra (el),,discrepancy
+03469 - Beneixama,,discrepancy
+03469 - Campo de Mirra/Camp de Mirra (el),03051,both
+03500 - Benidorm,03031,name
+03500 - Elda,03066,name
+03501 - Alcocer de Planes,,discrepancy
+03501 - Alicante/Alacant,,discrepancy
+03501 - Benidorm,03031,both
+03502 - Benidorm,03031,both
+03503 - Benidorm,03031,both
+03505 - Benidorm,03031,name
+03509 - Finestrat,03069,both
+03510 - Callosa d'En Sarrià,03048,both
+03516 - Benimantell,03037,both
+03517 - Beniardá,03057,cp
+03517 - Benifato,03057,cp
+03517 - Benimantell,,discrepancy
+03517 - Castell de Guadalest (el),03057,cp
+03517 - Confrides,03057,both
+03518 - Bolulla,03045,both
+03518 - Tàrbena,03045,cp
+03520 - Polop,03107,both
+03530 - Benidorm,,discrepancy
+03530 - Nucia (la),03094,cp
+03530 - Polop,,discrepancy
+03540 - Alicante/Alacant,03014,both
+03540 - Sant Joan d'Alacant,,discrepancy
+03550 - Alicante/Alacant,,discrepancy
+03550 - Sant Joan d'Alacant,03119,both
+03559 - Alicante/Alacant,03014,both
+03560 - Alicante/Alacant,,discrepancy
+03560 - Campello (el),03050,cp
+03569 - Aigües,03004,both
+03570 - Villajoyosa/Vila Joiosa (la),03139,both
+03578 - Alicante/Alacant,,discrepancy
+03578 - Relleu,03112,both
+03578 - Villajoyosa/Vila Joiosa (la),,discrepancy
+03579 - Orxeta,03124,cp
+03579 - Sella,03124,both
+03580 - Alfàs del Pi (l'),03011,both
+03580 - Benidorm,,discrepancy
+03581 - Alfàs del Pi (l'),03011,both
+03590 - Altea,03018,both
+03599 - Altea,03018,both
+03600 - Elda,03066,both
+03600 - Petrer,,discrepancy
+03610 - Almoradí,,discrepancy
+03610 - Petrer,03104,both
+03620 - Alicante/Alacant,03014,name
+03620 - Villena,03140,name
+03630 - Beneixama,,discrepancy
+03630 - Sax,03123,both
+03638 - Salinas,03116,both
+03640 - Algueña,,discrepancy
+03640 - Monóvar/Monòver,03089,both
+03640 - Petrer,,discrepancy
+03640 - Romana (la),,discrepancy
+03649 - Monóvar/Monòver,03089,both
+03650 - Algueña,,discrepancy
+03650 - Alicante/Alacant,,discrepancy
+03650 - Aspe,,discrepancy
+03650 - Campello (el),03105,cp
+03650 - Pinós (el)/Pinoso,03105,both
+03657 - Pinós (el)/Pinoso,03105,both
+03658 - Salinas,,discrepancy
+03659 - Alicante/Alacant,,discrepancy
+03660 - Algueña,,discrepancy
+03660 - Novelda,03093,both
+03668 - Algueña,03013,both
+03668 - Campello (el),03013,cp
+03669 - Hondón de las Nieves,03114,cp
+03669 - Romana (la),03114,both
+03670 - Monforte del Cid,03088,both
+03670 - Novelda,,discrepancy
+03679 - Monforte del Cid,03088,both
+03680 - Algueña,,discrepancy
+03680 - Aspe,03019,both
+03680 - Pinós (el)/Pinoso,,discrepancy
+03688 - Hondón de las Nieves,03077,cp
+03688 - Hondón de los Frailes,03077,both
+03689 - Hondón de las Nieves,03077,cp
+03689 - Hondón de los Frailes,03077,both
+03689 - Orihuela,,discrepancy
+03690 - Alicante/Alacant,,discrepancy
+03690 - San Vicente del Raspeig/Sant Vicent del,03122,both
+03690 - Sant Joan d'Alacant,,discrepancy
+03698 - Agost,03002,both
+03699 - Alicante/Alacant,03014,both
+03700 - Benissa,,discrepancy
+03700 - Dénia,03063,both
+03709 - Dénia,03063,both
+03710 - Agres,,discrepancy
+03710 - Calpe/Calp,03047,both
+03720 - Benissa,03041,both
+03720 - Bolulla,,discrepancy
+03723 - Alcalalí,03006,both
+03724 - Teulada,03128,both
+03725 - Alicante/Alacant,,discrepancy
+03725 - Teulada,03128,both
+03726 - Benitachell/Poble Nou de Benitatxell (el,03042,both
+03727 - Xaló,03081,both
+03728 - Alcalalí,03006,both
+03729 - Benimeli,,discrepancy
+03729 - Llíber,03125,cp
+03730 - Benidoleig,,discrepancy
+03730 - Jávea/Xàbia,03082,both
+03740 - Gata de Gorgos,03071,both
+03749 - Dénia,03063,both
+03750 - Adsubia,,discrepancy
+03750 - Pedreguer,03101,both
+03750 - Villajoyosa/Vila Joiosa (la),,discrepancy
+03759 - Benidoleig,03030,both
+03760 - Ondara,03095,both
+03760 - Pedreguer,,discrepancy
+03768 - Sanet y Negrals,03040,name
+03769 - Benidoleig,,discrepancy
+03769 - Benimeli,03040,both
+03769 - Ràfol d'Almúnia (El),03040,cp
+03769 - Sanet y Negrals,03040,both
+03770 - Verger (el),03063,cp
+03778 - Beniarbeig,03026,both
+03779 - Poblets (els),03063,both
+03780 - Pego,03063,cp
+03780 - Vall de Gallinera,,discrepancy
+03786 - Adsubia,03001,both
+03786 - Vall d'Alcalà (la),03001,cp
+03787 - Vall d'Ebo (la),03135,name
+03787 - Vall de Gallinera,03136,name
+03788 - Beniarbeig,,discrepancy
+03788 - Vall d'Alcalà (la),03136,cp
+03788 - Vall de Gallinera,03136,both
+03789 - Planes,,discrepancy
+03789 - Vall d'Ebo (la),03135,both
+03790 - Orba,03097,both
+03791 - Vall de Laguar (la),03137,cp
+03792 - Alcalalí,,discrepancy
+03792 - Murla,03091,both
+03792 - Parcent,03091,cp
+03793 - Castell de Castells,03054,both
+03794 - Benigembla,03029,both
+03795 - Sagra,03131,cp
+03795 - Tormos,03131,both
+03798 - Vall d'Ebo (la),03135,name
+03800 - Alcoy/Alcoi,03009,both
+03801 - Alcoy/Alcoi,03009,both
+03802 - Alcoy/Alcoi,03009,both
+03803 - Alcoy/Alcoi,03009,both
+03803 - Cocentaina,,discrepancy
+03804 - Alcoy/Alcoi,03009,both
+03804 - Benimarfull,03009,cp
+03810 - Benilloba,03035,both
+03811 - Alicante/Alacant,,discrepancy
+03811 - Gorga,03073,both
+03811 - Quatretondeta,03073,cp
+03812 - Balones,03086,cp
+03812 - Benimassot,03086,cp
+03812 - Millena,03086,both
+03813 - Facheca,03068,both
+03813 - Famorca,03068,both
+03814 - Alcoleja,03008,both
+03814 - Benasau,03008,cp
+03815 - Alicante/Alacant,,discrepancy
+03815 - Penàguila,03103,both
+03816 - Benifallim,03032,both
+03818 - Cocentaina,03056,name
+03819 - Jijona/Xixona,,discrepancy
+03820 - Cocentaina,03056,both
+03827 - Almudaina,03016,both
+03827 - Benillup,03016,cp
+03827 - Benimarfull,03016,cp
+03827 - Muro de Alcoy,,discrepancy
+03828 - Agres,,discrepancy
+03828 - Benimarfull,03106,cp
+03828 - Planes,03106,both
+03829 - Alqueria d'Asnar (l'),03056,both
+03830 - Alcoy/Alcoi,,discrepancy
+03830 - Beniarrés,,discrepancy
+03830 - Muro de Alcoy,03092,both
+03831 - Muro de Alcoy,03092,name
+03837 - Agres,03003,both
+03838 - Alfafara,03010,both
+03839 - Muro de Alcoy,03092,both
+03840 - Gaianes,03072,both
+03841 - Alcocer de Planes,03007,both
+03850 - Beniarrés,03028,both
+03850 - Vall d'Alcalà (la),03028,cp
+03858 - Salinas,03116,name
+03860 - Lorcha/Orxa (l'),03084,both
+03869 - Hondón de los Frailes,03077,name
+03870 - Agres,03003,name
+03910 - Pilar de la Horadada,03902,name
+03XXX - XXXXX,,unresolved
+04006 - Manuel,46160,name
+04660 - Alzira,46017,name
+10382 - Cocentaina,03056,name
+12001 - Castellón de la Plana/Castelló de la Pla,12040,both
+12002 - Benicasim/Benicàssim,12040,both
+12002 - Castellón de la Plana/Castelló de la Pla,12040,both
+12003 - Albocàsser,,discrepancy
+12003 - Castellón de la Plana/Castelló de la Pla,12040,both
+12003 - Peníscola/Peñíscola,,discrepancy
+12004 - Alcalà de Xivert,,discrepancy
+12004 - Atzeneta del Maestrat,,discrepancy
+12004 - Castellón de la Plana/Castelló de la Pla,12040,both
+12005 - Castellón de la Plana/Castelló de la Pla,12040,both
+12006 - Castellón de la Plana/Castelló de la Pla,12040,both
+12010 - Castellón de la Plana/Castelló de la Pla,12040,name
+12033 - Cabanes,12033,name
+12040 - Coves de Vinromà (les),12050,name
+12053 - Chilches/Xilxes,12053,name
+12085 - Oropesa del Mar/Orpesa,12085,name
+12100 - Castellón de la Plana/Castelló de la Pla,,discrepancy
+12105 - Sierra Engarcerán,12105,name
+12110 - Alcora (l'),12005,both
+12110 - Castellón de la Plana/Castelló de la Pla,,discrepancy
+12118 - Castellón de la Plana/Castelló de la Pla,,discrepancy
+12118 - Useras/Useres (les),12122,both
+12119 - Costur,12005,cp
+12120 - Alcora (l'),,discrepancy
+12120 - Lucena del Cid,12072,both
+12121 - Alcora (l'),12005,both
+12121 - Villahermosa del Río,,discrepancy
+12122 - Castellón de la Plana/Castelló de la Pla,,discrepancy
+12122 - Figueroles,,discrepancy
+12123 - Castillo de Villamalefa,12073,both
+12123 - Ludiente,12073,both
+12124 - Villahermosa del Río,12130,both
+12125 - Zucaina,12142,both
+12126 - Cortes de Arenoso,12048,both
+12126 - Vall d'Uixó (la),12048,cp
+12126 - Vilavella (la),12048,cp
+12127 - Cortes de Arenoso,12048,both
+12130 - Sant Joan de Moró,12902,both
+12131 - Useras/Useres (les),12122,both
+12132 - Atzeneta del Maestrat,12001,both
+12133 - Atzeneta del Maestrat,12001,both
+12134 - Benafigos,12025,both
+12135 - Vila-real,,discrepancy
+12135 - Vistabella del Maestrazgo,12067,both
+12138 - Canet lo Roig,12036,name
+12138 - Vinaròs,12138,name
+12140 - Albocàsser,12003,both
+12140 - Vila-real,,discrepancy
+12150 - Sierra Engarcerán,,discrepancy
+12150 - Villafranca del Cid/Vilafranca,12129,both
+12159 - Castellfort,12038,both
+12160 - Benasal,12026,both
+12160 - Castellón de la Plana/Castelló de la Pla,,discrepancy
+12160 - Culla,,discrepancy
+12160 - Forcall,,discrepancy
+12161 - Torre d'En Besora (la),12119,both
+12162 - Vilar de Canes,12134,both
+12163 - Culla,12051,both
+12164 - Sierra Engarcerán,12105,both
+12165 - Ares del Maestre,12014,cp
+12166 - Sierra Engarcerán,12105,both
+12170 - Sant Mateu,12100,both
+12170 - Tírig,,discrepancy
+12179 - Tírig,12111,both
+12180 - Cabanes,12033,both
+12181 - Benlloch,12029,both
+12181 - Castellón de la Plana/Castelló de la Pla,,discrepancy
+12182 - Sierra Engarcerán,12105,both
+12183 - Vilanova d'Alcolea,12132,both
+12184 - Benicarló,,discrepancy
+12184 - Sarratella,12120,both
+12184 - Sierra Engarcerán,,discrepancy
+12184 - Torre d'en Doménec (la),12120,both
+12184 - Vall d'Alba,,discrepancy
+12185 - Benlloch,,discrepancy
+12185 - Coves de Vinromà (les),12050,both
+12185 - Peníscola/Peñíscola,,discrepancy
+12186 - Coves de Vinromà (les),,discrepancy
+12186 - Salzadella (la),12098,cp
+12190 - Borriol,12124,cp
+12191 - Pobla Tornesa (la),12094,both
+12192 - Vilafamés,12128,both
+12193 - Sierra Engarcerán,,discrepancy
+12193 - Vall d'Alba,12124,both
+12194 - Pobla Tornesa (la),,discrepancy
+12194 - Vall d'Alba,12124,both
+12200 - Onda,12084,both
+12210 - Ribesalbes,12095,both
+12220 - Onda,12084,both
+12221 - Tales,12109,both
+12222 - Aín,12002,both
+12230 - Argelita,12058,both
+12230 - Vallat,12058,cp
+12231 - Cirat,12046,both
+12300 - Morella,12080,both
+12310 - Forcall,12061,both
+12311 - Morella,,discrepancy
+12311 - Todolella,12087,cp
+12311 - Villores,12087,cp
+12311 - Zorita del Maestrazgo,12087,both
+12312 - Atzeneta del Maestrat,,discrepancy
+12312 - Mata de Morella (la),12075,both
+12312 - Olocau del Rey,12075,both
+12312 - Todolella,12075,cp
+12314 - Morella,12080,name
+12315 - Vallibona,12127,both
+12317 - Herbés,12068,both
+12318 - Cinctorres,12091,cp
+12318 - Portell de Morella,12091,both
+12319 - Castell de Cabres,12037,both
+12320 - Sant Jordi/San Jorge,12099,both
+12330 - Traiguera,12121,both
+12340 - Jana (la),12070,cp
+12350 - Borriana/Burriana,12036,cp
+12350 - Canet lo Roig,12036,both
+12360 - Chert/Xert,12052,both
+12360 - Sant Mateu,,discrepancy
+12360 - Traiguera,,discrepancy
+12400 - Castellón de la Plana/Castelló de la Pla,12040,both
+12400 - Segorbe,12040,cp
+12410 - Altura,12012,both
+12412 - Geldo,12104,cp
+12413 - Almedíjar,12010,both
+12413 - Castellnovo,12010,both
+12414 - Algimia de Almonacid,12125,both
+12414 - Segorbe,12125,cp
+12414 - Vall de Almonacid,12125,both
+12415 - Gaibiel,12065,both
+12415 - Matet,12065,cp
+12420 - Barracas,12020,both
+12428 - Puebla de Arenoso,12063,both
+12428 - Villanueva de Viver,12063,both
+12429 - Pina de Montalgrao,12115,both
+12429 - Toro (El),12115,both
+12430 - Bejís,12022,both
+12430 - Borriana/Burriana,12022,cp
+12431 - Torás,12114,both
+12439 - Alquerías del Niño Perdido,12901,name
+12440 - Caudiel,12043,both
+12447 - Montán,12078,both
+12448 - Montanejos,12079,both
+12449 - Benafer,12088,cp
+12449 - Higueras,12088,both
+12449 - Pavías,12088,both
+12450 - Jérica,12071,both
+12459 - Betxí,12021,name
+12460 - Viver,12140,both
+12469 - Sacañet,12140,both
+12469 - Teresa,,discrepancy
+12470 - Navajas,12081,both
+12480 - Soneja,12106,both
+12489 - Sot de Ferrer,12107,both
+12490 - Azuébar,12018,both
+12499 - Chóvar,12056,both
+12500 - Almazora/Almassora,,discrepancy
+12500 - Benicarló,,discrepancy
+12500 - Nules,,discrepancy
+12500 - Vinaròs,12138,both
+12509 - Alfondeguilla,12007,name
+12510 - San Rafael del Río,12101,both
+12511 - Rossell,12096,both
+12512 - Rossell,12096,both
+12513 - Catí,12042,cp
+12513 - Rossell,,discrepancy
+12520 - Borriana/Burriana,12082,cp
+12520 - Nules,12082,both
+12525 - Eslida,12057,name
+12526 - Betxí,,discrepancy
+12526 - Vilavella (la),12136,cp
+12527 - Artana,12016,both
+12527 - Nules,,discrepancy
+12528 - Eslida,12057,both
+12529 - Nules,12082,both
+12529 - Toro (El),,discrepancy
+12530 - Alquerías del Niño Perdido,,discrepancy
+12530 - Borriana/Burriana,12027,cp
+12530 - Canet lo Roig,,discrepancy
+12530 - Castellón de la Plana/Castelló de la Pla,,discrepancy
+12536 - Vilavella (la),,unresolved
+12539 - Alquerías del Niño Perdido,12901,both
+12539 - Betxí,,discrepancy
+12540 - Castellón de la Plana/Castelló de la Pla,,discrepancy
+12540 - Vila-real,12135,both
+12546 - Betxí,12021,name
+12549 - Betxí,12021,both
+12550 - Almazora/Almassora,12009,both
+12560 - Benicasim/Benicàssim,12040,both
+12570 - Alcalà de Xivert,12004,both
+12578 - Cervera del Maestre,12044,both
+12579 - Alcalà de Xivert,12004,both
+12580 - Benicarló,12027,both
+12580 - Catí,12027,cp
+12580 - Càlig,,discrepancy
+12580 - Nules,,discrepancy
+12580 - Vinaròs,,discrepancy
+12589 - Càlig,12034,both
+12589 - Peníscola/Peñíscola,,discrepancy
+12590 - Almenara,12011,both
+12590 - Borriol,12011,cp
+12590 - Nules,,discrepancy
+12590 - Vinaròs,,discrepancy
+12591 - Almenara,,discrepancy
+12591 - Llosa (la),12074,both
+12592 - Chilches/Xilxes,12053,both
+12593 - Càlig,,discrepancy
+12593 - Moncofa,12077,both
+12594 - Oropesa del Mar/Orpesa,12085,both
+12595 - Cabanes,12033,both
+12595 - Torreblanca,,discrepancy
+12596 - Alcalà de Xivert,,discrepancy
+12596 - Torreblanca,12117,both
+12597 - Santa Magdalena de Pulpis,12102,both
+12598 - Benicarló,,discrepancy
+12598 - Peníscola/Peñíscola,12089,both
+12599 - Pobla de Benifassà (la),12093,both
+12599 - Rossell,,discrepancy
+12600 - Vall d'Uixó (la),12126,cp
+12601 - Nules,12082,name
+12609 - Alfondeguilla,12007,both
+12XXX - XXXXX,,unresolved
+26970 - Valencia,,unresolved
+30003 - Alicante/Alacant,03014,name
+30300 - Orihuela,03099,name
+35030 - Nucia (la),,unresolved
+40389 - Piles,46195,name
+43117 - Bétera,46070,name
+43201 - Caudiel,12043,name
+43600 - Utiel,46249,name
+44920 - Mislata,46169,name
+46000 - Paterna,46190,name
+46000 - Valencia,,unresolved
+46001 - Ademuz,,discrepancy
+46001 - Mislata,,discrepancy
+46001 - Valencia,46250,cp
+46001 - Venta del Moro,,discrepancy
+46002 - Mogente/Moixent,,discrepancy
+46002 - Valencia,46250,cp
+46003 - Valencia,46250,cp
+46003 - Vallanca,,discrepancy
+46004 - Oliva,,discrepancy
+46004 - Turís,,discrepancy
+46004 - Valencia,46250,cp
+46004 - Vallada,,discrepancy
+46004 - Vallanca,,discrepancy
+46005 - Bocairent,46072,name
+46005 - Valencia,,unresolved
+46005 - Vallanca,46252,name
+46006 - Bolbaite,,discrepancy
+46006 - Valencia,46250,cp
+46007 - Albal,46250,cp
+46007 - Valencia,46250,cp
+46008 - Valencia,46250,cp
+46008 - Vallanca,,discrepancy
+46009 - Valencia,46250,cp
+46010 - Valencia,46250,cp
+46010 - Vallanca,,discrepancy
+46011 - Valencia,46250,cp
+46012 - Sueca,,discrepancy
+46012 - Valencia,46250,cp
+46013 - Alboraya,,discrepancy
+46013 - Valencia,46250,cp
+46014 - Valencia,46250,cp
+46014 - Vallada,,discrepancy
+46014 - Venta del Moro,,discrepancy
+46014 - Xirivella,,discrepancy
+46015 - Sagunto/Sagunt,,discrepancy
+46015 - Valencia,46250,cp
+46016 - Tavernes Blanques,46237,both
+46016 - Valencia,46237,cp
+46017 - Bétera,,discrepancy
+46017 - Chelva,,discrepancy
+46017 - Valencia,46250,cp
+46017 - Vallada,,discrepancy
+46018 - Benifaió,46250,cp
+46018 - Paterna,,discrepancy
+46018 - Requena,,discrepancy
+46018 - Valencia,46250,cp
+46018 - Vallanca,,discrepancy
+46018 - Yátova,,discrepancy
+46019 - Valencia,46250,cp
+46020 - Valencia,46250,cp
+46021 - Alaquàs,,discrepancy
+46021 - Bétera,,discrepancy
+46021 - Valencia,46250,cp
+46022 - Alfafar,,discrepancy
+46022 - Silla,,discrepancy
+46022 - Valencia,46250,cp
+46023 - Albuixech,,discrepancy
+46023 - Ayora,,discrepancy
+46023 - Massanassa,46250,cp
+46023 - Valencia,46250,cp
+46023 - Vallada,,discrepancy
+46023 - Vallanca,,discrepancy
+46024 - Torrent,,discrepancy
+46024 - Valencia,46250,cp
+46025 - Valencia,46250,cp
+46026 - Valencia,46250,cp
+46035 - Benimodo,,discrepancy
+46035 - Segorbe,46250,cp
+46035 - Valencia,46250,cp
+46046 - Barx,46046,name
+46060 - Mislata,46169,name
+46062 - Valencia,,unresolved
+46071 - Gandia,,unresolved
+46100 - Burjassot,46078,both
+46100 - Manises,,discrepancy
+46100 - Valencia,46078,cp
+46100 - Villargordo del Cabriel,,discrepancy
+46103 - Eliana (l'),46116,name
+46110 - Godella,46135,both
+46110 - Valencia,46135,cp
+46111 - Rocafort,46216,both
+46112 - Rocafort,,discrepancy
+46112 - Valencia,46250,cp
+46113 - Moncada,46171,both
+46113 - Valencia,46171,cp
+46114 - Vinalesa,46260,both
+46115 - Alfara del Patriarca,46025,both
+46116 - Moncada,46171,name
+46117 - Bétera,46070,both
+46117 - Valencia,46070,cp
+46118 - Serra,46228,both
+46119 - Bétera,,discrepancy
+46119 - Náquera,46178,both
+46120 - Ademuz,,discrepancy
+46120 - Alboraya,46013,both
+46120 - Picanya,,discrepancy
+46120 - Torrent,,discrepancy
+46120 - Valencia,46013,cp
+46124 - Fontanars dels Alforins,46124,name
+46130 - Massamagrell,46164,both
+46130 - Rafelbuñol/Rafelbunyol,,discrepancy
+46131 - Bonrepòs i Mirambell,46250,cp
+46131 - Valencia,46250,cp
+46132 - Almàssera,46032,both
+46133 - Gandia,46166,cp
+46133 - Meliana,46166,both
+46134 - Foios,46126,both
+46134 - Meliana,,discrepancy
+46135 - Albalat dels Sorells,46250,cp
+46135 - Valencia,46250,cp
+46136 - Museros,46177,both
+46136 - Valencia,46177,cp
+46137 - Pobla de Farnals (la),46199,cp
+46138 - Rafelbuñol/Rafelbunyol,46207,both
+46138 - Rafelguaraf,,discrepancy
+46139 - Pobla de Farnals (la),46199,cp
+46140 - Ademuz,46001,both
+46140 - Llíria,,discrepancy
+46140 - Puebla de San Miguel,46001,both
+46141 - Ademuz,,discrepancy
+46141 - Castielfabib,46092,both
+46143 - Torrebaja,46242,both
+46144 - Castielfabib,46092,name
+46145 - Vallanca,46252,both
+46146 - Casas Bajas,46088,both
+46147 - Casas Altas,46087,both
+46148 - Alfara de Algimia,46030,cp
+46148 - Algimia de Alfara,46030,both
+46148 - Torres Torres,,discrepancy
+46149 - Algimia de Alfara,,discrepancy
+46149 - Benisanó,,discrepancy
+46149 - Gilet,46134,both
+46150 - Villar del Arzobispo,46258,name
+46160 - Benaguasil,,discrepancy
+46160 - Llíria,46147,both
+46160 - Valencia,46147,cp
+46161 - Olocau,,unresolved
+46162 - Andilla,46141,cp
+46162 - Higueruelas,46141,both
+46163 - Llíria,,discrepancy
+46163 - Marines,46161,both
+46164 - Marines,,discrepancy
+46164 - Pedralba,46191,both
+46165 - Bugarra,46076,both
+46166 - Gestalgar,46133,both
+46167 - Chulilla,46112,both
+46167 - Pedralba,,discrepancy
+46168 - Losa del Obispo,46234,cp
+46168 - Requena,,discrepancy
+46168 - Sot de Chera,46234,both
+46169 - Gátova,46902,both
+46169 - Marines,,discrepancy
+46169 - Mislata,,discrepancy
+46169 - Olocau,46902,cp
+46170 - Higueruelas,,discrepancy
+46170 - Villar del Arzobispo,46258,both
+46170 - Vistabella del Maestrazgo,,discrepancy
+46171 - Casinos,46089,both
+46171 - Llíria,,discrepancy
+46171 - Villar del Arzobispo,,discrepancy
+46172 - Alcublas,46018,both
+46173 - Benagéber,46149,both
+46173 - Losa del Obispo,46149,cp
+46174 - Domeño,46114,both
+46175 - Calles,46079,both
+46176 - Chelva,46106,both
+46176 - Tuéjar,,discrepancy
+46177 - Bétera,,discrepancy
+46177 - Titaguas,,discrepancy
+46177 - Tuéjar,46247,both
+46178 - Alpuente,46262,both
+46178 - Aras de los Olmos,,discrepancy
+46178 - Casinos,,discrepancy
+46178 - Titaguas,46262,both
+46178 - Tuéjar,,discrepancy
+46178 - Yesa (La),46262,cp
+46179 - Alpuente,,discrepancy
+46179 - Aras de los Olmos,46041,both
+46179 - Tuéjar,,discrepancy
+46180 - Benaguasil,46051,both
+46180 - Benisanó,,discrepancy
+46180 - Náquera,,discrepancy
+46180 - Valencia,46051,cp
+46181 - Benisanó,46067,both
+46182 - Paterna,46190,both
+46183 - Eliana (l'),46116,both
+46184 - San Antonio de Benagéber,46903,both
+46185 - Benaguasil,,discrepancy
+46185 - Pobla de Farnals (la),46202,cp
+46185 - Pobla de Vallbona (la),46202,both
+46185 - Torrent,,discrepancy
+46186 - Pobla de Vallbona (la),46202,name
+46190 - Loriguilla,,discrepancy
+46190 - Riba-roja de Túria,46214,both
+46191 - Vilamarxant,46256,both
+46192 - Montserrat,46172,both
+46193 - Montroy,46176,both
+46193 - Picanya,,discrepancy
+46194 - Real de Montroi,46212,cp
+46195 - Llombai,46156,both
+46196 - Catadau,46093,both
+46197 - Alfarp,46026,both
+46197 - Valencia,46026,cp
+46198 - Dos Aguas,46115,both
+46198 - Millares,46115,cp
+46198 - Pobla de Vallbona (la),,discrepancy
+46199 - Cortes de Pallás,46167,both
+46199 - Millares,46167,cp
+46199 - Requena,,discrepancy
+46199 - Valencia,46167,cp
+46200 - Millares,46186,cp
+46200 - Paiporta,46186,both
+46200 - Picanya,,discrepancy
+46200 - Quart de Poblet,,discrepancy
+46205 - Puçol,,unresolved
+46210 - Picanya,46193,both
+46210 - Silla,,discrepancy
+46215 - Requena,46213,name
+46220 - Picassent,46015,cp
+46220 - Valencia,46015,cp
+46222 - Faura,46122,name
+46229 - Picassent,,unresolved
+46230 - Alginet,46031,both
+46240 - Benimodo,,discrepancy
+46240 - Carlet,46085,both
+46240 - Pobla Llarga (la),,discrepancy
+46249 - Utiel,46249,name
+46250 - Alcúdia (l'),46220,both
+46250 - Carlet,,discrepancy
+46250 - Utiel,,discrepancy
+46250 - Valencia,46220,cp
+46250 - Villanueva de Castellón,,discrepancy
+46251 - Vallada,46251,name
+46256 - Alberic,46011,name
+46260 - Alberic,46011,both
+46266 - Alberic,,discrepancy
+46266 - Antella,46040,both
+46267 - Gavarda,46130,both
+46268 - Alzira,46017,both
+46268 - Tous,,discrepancy
+46269 - Tous,46246,both
+46270 - Antella,,discrepancy
+46270 - Requena,,discrepancy
+46270 - Senyera,,discrepancy
+46270 - Valencia,46257,cp
+46270 - Villanueva de Castellón,46257,both
+46290 - Alcàsser,46015,both
+46290 - Mislata,,discrepancy
+46291 - Benimodo,46063,both
+46292 - Masalavés,46162,cp
+46293 - Alcàntera de Xúquer,46016,both
+46293 - Beneixida,46016,cp
+46293 - Càrcer,,discrepancy
+46294 - Cotes,46084,cp
+46294 - Càrcer,46084,both
+46294 - Sumacàrcer,,discrepancy
+46295 - Càrcer,,discrepancy
+46295 - Sellent,46236,cp
+46295 - Sumacàrcer,46236,both
+46299 - Masalavés,,unresolved
+46300 - Caudete de las Fuentes,,discrepancy
+46300 - Cullera,,discrepancy
+46300 - Requena,,discrepancy
+46300 - Utiel,46249,both
+46300 - Venta del Moro,,discrepancy
+46310 - Utiel,,discrepancy
+46310 - Venta del Moro,46254,both
+46311 - Venta del Moro,46254,both
+46312 - Benagéber,,discrepancy
+46312 - Utiel,46249,both
+46313 - Fuenterrobles,,discrepancy
+46313 - Utiel,46249,both
+46314 - Fuenterrobles,46129,both
+46314 - Valencia,46129,cp
+46315 - Caudete de las Fuentes,46095,both
+46317 - Villargordo del Cabriel,46259,both
+46317 - Vinalesa,,discrepancy
+46318 - Rafelbuñol/Rafelbunyol,46207,name
+46318 - Valencia,,unresolved
+46320 - Alboraya,,discrepancy
+46320 - Camporrobles,,discrepancy
+46320 - Sinarcas,46232,both
+46320 - Utiel,,discrepancy
+46321 - Utiel,46249,both
+46330 - Camporrobles,46080,both
+46330 - Utiel,,discrepancy
+46330 - Valencia,46080,cp
+46340 - Requena,46213,both
+46340 - Valencia,46213,cp
+46347 - Requena,46213,name
+46350 - Chera,46108,both
+46350 - Utiel,,discrepancy
+46351 - Chelva,46106,both
+46351 - Requena,,discrepancy
+46352 - Requena,46213,both
+46353 - Requena,46213,both
+46354 - Requena,46213,both
+46354 - Utiel,,discrepancy
+46354 - Valencia,46213,cp
+46355 - Cortes de Pallás,,discrepancy
+46355 - Requena,46213,both
+46356 - Requena,46213,both
+46357 - Requena,46213,both
+46360 - Buñol,46077,both
+46360 - Cheste,,discrepancy
+46367 - Godelleta,,discrepancy
+46367 - Yátova,46261,both
+46368 - Macastre,46158,both
+46369 - Alborache,46012,both
+46369 - Yátova,,discrepancy
+46370 - Chiva,46111,both
+46380 - Benigánim,,discrepancy
+46380 - Cheste,46109,both
+46380 - Chiva,,discrepancy
+46388 - Cheste,,discrepancy
+46388 - Chiva,,discrepancy
+46388 - Godelleta,46136,both
+46389 - Turís,46248,both
+46389 - Valencia,46248,cp
+46390 - Rafelguaraf,,discrepancy
+46390 - Requena,46213,both
+46390 - Riba-roja de Túria,,discrepancy
+46390 - Utiel,,discrepancy
+46391 - Requena,46213,both
+46392 - Siete Aguas,46229,both
+46393 - Loriguilla,46148,both
+46393 - Turís,,discrepancy
+46394 - Riba-roja de Túria,46214,name
+46398 - Turís,46248,name
+46400 - Carlet,,discrepancy
+46400 - Cullera,46105,both
+46409 - Cullera,46105,both
+46410 - Alginet,,discrepancy
+46410 - Cullera,,discrepancy
+46410 - Fortaleny,,discrepancy
+46410 - Sueca,46235,both
+46410 - Valencia,46235,cp
+46417 - Riola,46215,both
+46418 - Fortaleny,46125,both
+46418 - Riola,,discrepancy
+46419 - Sueca,46235,both
+46420 - Mislata,,discrepancy
+46420 - Picassent,46235,cp
+46420 - Sueca,46235,both
+46430 - Benifaió,46233,cp
+46430 - Sollana,46233,both
+46439 - Sollana,46233,both
+46440 - Almussafes,46035,both
+46440 - Valencia,46035,cp
+46446 - Almussafes,46035,name
+46450 - Benifairó de la Valldigna,,discrepancy
+46450 - Benifaió,46204,cp
+46450 - Catarroja,,discrepancy
+46450 - Simat de la Valldigna,,discrepancy
+46450 - Valencia,46204,cp
+46460 - Albaida,,discrepancy
+46460 - Catarroja,,discrepancy
+46460 - Silla,46230,both
+46460 - Sollana,,discrepancy
+46462 - Masalavés,,unresolved
+46462 - Tous,46246,name
+46468 - Llutxent,,unresolved
+46469 - Beniparrell,46065,both
+46470 - Albal,46094,cp
+46470 - Alcúdia (l'),,discrepancy
+46470 - Catarroja,46094,both
+46470 - Massanassa,46094,cp
+46470 - Silla,,discrepancy
+46470 - Valencia,46094,cp
+46488 - Beniatjar,46056,name
+46488 - Polinyà de Xúquer,46197,name
+46500 - Sagunto/Sagunt,46220,both
+46501 - Petrés,46192,both
+46510 - Benavites,,discrepancy
+46510 - Quart de les Valls,,discrepancy
+46510 - Quartell,46103,both
+46511 - Benifairó de la Valldigna,,discrepancy
+46511 - Benifairó de les Valls,46058,both
+46511 - Faura,,discrepancy
+46512 - Faura,46122,both
+46514 - Benavites,46052,both
+46514 - Quart de les Valls,,discrepancy
+46515 - Quart de les Valls,46101,both
+46520 - Sagunto/Sagunt,46220,both
+46529 - Canet d'En Berenguer,46082,both
+46530 - Puçol,46220,cp
+46530 - Sagunto/Sagunt,46220,both
+46540 - Puig,46204,both
+46550 - Albuixech,46014,both
+46560 - Massalfassar,46163,both
+46569 - Senyera,46227,name
+46590 - Estivella,46120,both
+46591 - Albalat dels Tarongers,46010,both
+46592 - Segart,46224,both
+46593 - Algar de Palancia,46028,both
+46594 - Alfara de Algimia,46024,cp
+46595 - Torres Torres,46245,both
+46600 - Alzira,46017,both
+46600 - Carlet,,discrepancy
+46600 - Valencia,46017,cp
+46610 - Guadassuar,46139,both
+46610 - Sueca,,discrepancy
+46611 - Benimuslem,46064,both
+46612 - Corbera,46098,both
+46613 - Llaurí,46155,both
+46613 - Valencia,46155,cp
+46614 - Favara,46123,both
+46618 - Fortaleny,46125,name
+46620 - Alberic,,discrepancy
+46620 - Ayora,46044,both
+46620 - Jarafuel,,discrepancy
+46621 - Zarra,46263,both
+46622 - Jarafuel,,discrepancy
+46622 - Teresa de Cofrentes,46239,both
+46623 - Alcàntera de Xúquer,,discrepancy
+46623 - Jarafuel,46144,both
+46624 - Jalance,46142,both
+46625 - Cofrentes,46097,both
+46630 - Font de la Figuera (la),46128,both
+46635 - Fontanars dels Alforins,46124,both
+46640 - Mogente/Moixent,46170,both
+46650 - Canals,46081,both
+46650 - Valencia,46081,cp
+46652 - Montesa,46174,name
+46659 - Canals,46081,both
+46660 - Alzira,,discrepancy
+46660 - Manuel,46160,both
+46660 - Mogente/Moixent,,discrepancy
+46661 - Ènova (l'),46227,name
+46666 - Rafelguaraf,46209,both
+46667 - Barxeta,46045,both
+46668 - Albalat de la Ribera,,discrepancy
+46668 - Algemesí,,discrepancy
+46668 - Llocnou d'En Fenollet,46151,both
+46668 - Rafelguaraf,,discrepancy
+46669 - Manuel,,discrepancy
+46669 - Sant  Joan de l'Ènova,46227,cp
+46669 - Senyera,46227,both
+46669 - Ènova (l'),46227,both
+46670 - Pobla Llarga (la),46203,both
+46680 - Alcàntera de Xúquer,,discrepancy
+46680 - Algemesí,46029,both
+46680 - Guadassuar,,discrepancy
+46687 - Albalat de la Ribera,46008,both
+46687 - Polinyà de Xúquer,,discrepancy
+46688 - Polinyà de Xúquer,46197,both
+46689 - Albalat de la Ribera,,discrepancy
+46689 - Benicull de Xúquer,46904,both
+46690 - Alcúdia de Crespins (l'),46020,both
+46690 - Mogente/Moixent,,discrepancy
+46690 - Vallada,,discrepancy
+46691 - Mogente/Moixent,,discrepancy
+46691 - Vallada,46251,both
+46692 - Montesa,46174,both
+46692 - Vallada,,discrepancy
+46694 - Genovés,46132,name
+46700 - Gandia,,unresolved
+46701 - Gandia,46131,cp
+46701 - Valencia,46131,cp
+46702 - Gandia,46131,cp
+46703 - Benirredrà,46066,both
+46710 - Daimús,46113,both
+46711 - Miramar,46168,both
+46712 - Alcublas,,discrepancy
+46712 - Font d'En Carròs (la),46195,cp
+46712 - Piles,46195,both
+46713 - Bellreguard,46048,both
+46715 - Alqueria de la Comtessa (l'),46037,both
+46715 - Rótova,46037,cp
+46716 - Alqueria de la Comtessa (l'),,discrepancy
+46716 - Rafelcofer,46208,both
+46717 - Font d'En Carròs (la),46089,cp
+46718 - Oliva,46181,name
+46720 - Villalonga,46255,both
+46720 - Villanueva de Castellón,,discrepancy
+46721 - Potríes,46198,both
+46722 - Beniarjó,46061,cp
+46722 - Beniflá,46061,both
+46723 - Almoines,46034,both
+46723 - Palma de Gandía,,discrepancy
+46724 - Ador,,discrepancy
+46724 - Palma de Gandía,46187,both
+46725 - Alfauir,46023,both
+46725 - Rótova,46023,cp
+46726 - Almiserà,,discrepancy
+46726 - Castellonet de la Conquesta,46091,both
+46726 - Llocnou de Sant Jeroni,46091,cp
+46727 - Real de Gandía,46211,both
+46728 - Gandia,46131,cp
+46729 - Ador,46002,both
+46730 - Gandia,46131,cp
+46740 - Carcaixent,46083,both
+46740 - Guadassuar,,discrepancy
+46740 - Valencia,46083,cp
+46745 - Silla,46230,name
+46750 - Simat de la Valldigna,46231,both
+46758 - Barx,46046,both
+46758 - Valencia,46046,cp
+46760 - Carcaixent,,discrepancy
+46760 - Gandia,46238,cp
+46760 - Simat de la Valldigna,,discrepancy
+46760 - Sueca,,discrepancy
+46760 - Tavernes Blanques,,discrepancy
+46760 - Tavernes de la Valldigna,46238,both
+46760 - Valencia,46238,cp
+46761 - Benifairó de la Valldigna,46059,name
+46770 - Xeraco,46143,both
+46770 - Xeresa,,discrepancy
+46780 - Oliva,46181,both
+46780 - Ontinyent,,discrepancy
+46780 - Valencia,46181,cp
+46784 - Albalat de la Ribera,46008,name
+46790 - Alaquàs,,discrepancy
+46790 - Tavernes de la Valldigna,,discrepancy
+46790 - Xeresa,46146,both
+46791 - Benifairó de la Valldigna,46059,both
+46791 - Simat de la Valldigna,,discrepancy
+46791 - Tavernes de la Valldigna,,discrepancy
+46792 - Alzira,46017,both
+46800 - Novelé/Novetlè,,discrepancy
+46800 - Valencia,46145,cp
+46800 - Xàtiva,46145,both
+46810 - Enguera,46118,both
+46812 - Aielo de Malferit,46042,both
+46813 - Cerdà,46081,cp
+46814 - Granja de la Costera (la),46137,both
+46814 - Llanera de Ranes,46137,cp
+46814 - Pobla del Duc (la),,discrepancy
+46815 - Llosa de Ranes (la),46157,both
+46815 - Ènova (l'),,discrepancy
+46816 - Guadasequies,,discrepancy
+46816 - Llosa de Ranes (la),,discrepancy
+46816 - Rotglà i Corberà,46217,both
+46817 - Estubeny,46121,both
+46818 - Enguera,,discrepancy
+46818 - Granja de la Costera (la),,discrepancy
+46818 - Sueca,,discrepancy
+46819 - Novelé/Novetlè,46180,both
+46820 - Anna,46039,both
+46820 - Enguera,,discrepancy
+46820 - Manises,,discrepancy
+46821 - Chella,46107,both
+46822 - Bolbaite,46073,both
+46823 - Navarrés,46179,both
+46824 - Quesa,46206,both
+46825 - Bicorp,46071,both
+46830 - Benigánim,46062,both
+46830 - Llutxent,46062,cp
+46831 - Benigánim,46062,name
+46837 - Quatretonda,46104,both
+46838 - Benicolet,46057,both
+46838 - Llutxent,46057,cp
+46838 - Pinet,,discrepancy
+46839 - Benisuera,46069,both
+46839 - Guadasequies,46069,both
+46839 - Pobla del Duc (la),,discrepancy
+46839 - Terrateig,46069,cp
+46840 - Pobla del Duc (la),46200,both
+46841 - Castelló de Rugat,46090,both
+46842 - Aielo de Rugat,46043,both
+46842 - Castelló de Rugat,,discrepancy
+46842 - Montitxelvo/Montichelvo,,discrepancy
+46842 - Rugat,46043,cp
+46842 - Terrateig,46043,cp
+46842 - Valencia,46043,cp
+46843 - Ráfol de Salem,46221,cp
+46843 - Salem,46221,both
+46844 - Beniatjar,46056,both
+46844 - Otos,46056,cp
+46850 - Cullera,,discrepancy
+46850 - Olleria (l'),46183,both
+46860 - Agullent,,discrepancy
+46860 - Albaida,46006,both
+46860 - Enguera,,discrepancy
+46868 - Bèlgida,46047,both
+46869 - Atzeneta d'Albaida,46003,both
+46869 - Carrícola,46003,cp
+46870 - Aielo de Malferit,,discrepancy
+46870 - Ontinyent,46184,both
+46880 - Bocairent,46072,both
+46890 - Agullent,46004,both
+46890 - Paterna,,discrepancy
+46890 - Torrent,,discrepancy
+46891 - Bufali,46075,both
+46891 - Palomar (el),46075,cp
+46892 - Montaverner,46173,both
+46893 - Alfarrasí,46027,both
+46894 - Genovés,46132,both
+46898 - Paterna,46190,name
+46900 - Paterna,,discrepancy
+46900 - Picassent,46244,cp
+46900 - Torrent,46244,both
+46901 - Torrent,46244,both
+46901 - Valencia,46244,cp
+46909 - Torrent,46244,both
+46910 - Albal,46022,cp
+46910 - Alfafar,46022,both
+46910 - Benetússer,46022,cp
+46910 - Llocnou de la Corona,,discrepancy
+46910 - Massanassa,46022,cp
+46910 - Sedaví,46022,cp
+46910 - Valencia,46022,cp
+46912 - Valencia,,unresolved
+46920 - Mislata,46169,both
+46929 - Mislata,46169,name
+46930 - Quart de Poblet,46102,both
+46930 - Valencia,46102,cp
+46939 - Loriguilla,46148,name
+46940 - Catarroja,,discrepancy
+46940 - Manises,46159,both
+46940 - Valencia,46159,cp
+46949 - Manises,46159,name
+46950 - Requena,,discrepancy
+46950 - Valencia,46110,cp
+46950 - Xirivella,46110,both
+46960 - Alaquàs,,discrepancy
+46960 - Albaida,,discrepancy
+46960 - Aldaia,46021,both
+46960 - Valencia,46021,cp
+46970 - Alaquàs,46005,both
+46970 - Massanassa,46005,cp
+46970 - Valencia,46005,cp
+46980 - Paterna,46190,both
+46980 - Valencia,46190,cp
+46988 - Paterna,46190,both
+46989 - Paterna,46190,both
+46992 - Montesa,46174,name
+46995 - Xirivella,46110,name
+46XXX - XXXXX,,unresolved
+48181 - Benisanó,46067,name
+49018 - Valencia,,unresolved
+49320 - Sinarcas,46232,name
+49750 - Simat de la Valldigna,46231,name
+50012 - Vinaròs,12138,name

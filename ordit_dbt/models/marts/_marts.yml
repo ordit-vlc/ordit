@@ -5,20 +5,31 @@ models:
     description: >
       Ajudes de la PAC a persones juridiques de la Comunitat Valenciana, format llarg per
       fons {FEAGA, FEADER}. Esquema public en valencia ASCII. Nomes entity_type 'legal':
-      cap persona fisica. Vegeu DATA-PROTECTION.md.
+      cap persona fisica. Municipi i comarca resolts des del codi postal (Fase 2); els no
+      resolts mantenen codi_postal pero municipi/comarca son NULL. Vegeu DATA-PROTECTION.md.
     columns:
       - name: nom_beneficiari
         tests:
           - not_null
-      - name: municipi
+      - name: codi_ine
+        description: Codi INE del municipi (NULL si el codi postal no s'ha pogut resoldre).
+        # Integritat referencial (#6): cada codi_ine publicat existeix a dim_municipi.
         tests:
-          - not_null
-          # Integritat referencial (#6): cada municipi publicat traça a una fila d'origen.
           - relationships:
               arguments:
-                to: ref('int_fega_classified')
-                field: municipality
+                to: ref('dim_municipi')
+                field: codi_ine
+      - name: municipi
+        description: Nom del municipi en valencia (NULL si no resolt).
+      - name: comarca
+        description: Comarca (NULL si no resolt).
       - name: provincia
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Alacant", "Castelló", "València"]
+      - name: codi_postal
         tests:
           - not_null
       - name: mesura

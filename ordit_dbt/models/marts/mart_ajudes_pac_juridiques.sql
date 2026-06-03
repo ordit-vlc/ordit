@@ -3,7 +3,11 @@
 -- Columnes en valencia ASCII (l'esquema public consultable): el renom de l'angles intern
 -- al valencia es fa exactament ací, a la capa marts.
 --
--- Format llarg per fons: una fila per (exercici, fons, beneficiari, municipi, mesura),
+-- Geografia: municipi i comarca venen de la resolucio CP -> codi_ine -> dim_municipi
+-- (Fase 2). Els no resolts mantenen el codi_postal i import, pero municipi/comarca son
+-- NULL: mai s'inventa cap municipi (default-deny).
+--
+-- Format llarg per fons: una fila per (exercici, fons, beneficiari, codi_postal, mesura),
 -- amb fons com a dimensio neta {FEAGA, FEADER}. import_eur es l'import del fons (la
 -- contribucio europea), sumat per la clau. Els imports negatius (recuperacions) son
 -- valids i NO es descarten; nomes s'exclouen els imports exactament zero.
@@ -16,8 +20,8 @@ with legal as (
 
 long as (
     select
-        beneficiary_name, municipality, province, measure, financial_year,
-        group_cif, group_name,
+        beneficiary_name, postal_code, codi_ine, municipi, comarca, provincia,
+        measure, financial_year, group_cif, group_name,
         'FEAGA' as fons,
         amount_feaga as import_eur
     from legal
@@ -26,8 +30,8 @@ long as (
     union all
 
     select
-        beneficiary_name, municipality, province, measure, financial_year,
-        group_cif, group_name,
+        beneficiary_name, postal_code, codi_ine, municipi, comarca, provincia,
+        measure, financial_year, group_cif, group_name,
         'FEADER' as fons,
         amount_feader as import_eur
     from legal
@@ -36,8 +40,11 @@ long as (
 
 select
     beneficiary_name as nom_beneficiari,
-    municipality as municipi,
-    province as provincia,
+    any_value(codi_ine) as codi_ine,
+    any_value(municipi) as municipi,
+    any_value(comarca) as comarca,
+    any_value(provincia) as provincia,
+    postal_code as codi_postal,
     measure as mesura,
     sum(import_eur) as import_eur,
     fons,
@@ -45,5 +52,5 @@ select
     any_value(group_cif) as group_cif,
     any_value(group_name) as group_name
 from long
-group by beneficiary_name, municipality, province, measure, fons, financial_year
+group by beneficiary_name, postal_code, measure, fons, financial_year
 having sum(import_eur) <> 0

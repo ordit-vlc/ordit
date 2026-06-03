@@ -45,6 +45,9 @@ select
     nullif(trim(GRUPO_EMPRESA), '') as group_raw,
     trim(PROVINCIA) as province,
     nullif(trim(MUNICIPIO), '') as municipality,
+    -- MUNICIPIO de FEGA es "codi_postal - nom_localitat" (no codi INE): partim els dos.
+    nullif(regexp_extract(MUNICIPIO, '^\s*(\d{5})', 1), '') as postal_code,
+    nullif(trim(regexp_replace(MUNICIPIO, '^\s*\d{5}\s*-\s*', '')), '') as locality_raw,
     trim(MEDIDA) as measure,
     list_filter(string_split(OBJETIVO_ESP, '|'), x -> x <> '') as specific_objectives,
     try_strptime(nullif(trim(FEC_INI), ''), '%d/%m/%Y')::date as date_start,

@@ -19,6 +19,7 @@ const SOURCE = {
 const COLUMNS = [
   { key: "nom_beneficiari", label: "Beneficiari", type: "text", strong: true },
   { key: "municipi", label: "Municipi", type: "text" },
+  { key: "comarca", label: "Comarca", type: "text" },
   { key: "mesura", label: "Mesura", type: "text" },
   { key: "fons", label: "Fons", type: "text" },
   { key: "exercici", label: "Exercici", type: "num" },
@@ -28,6 +29,7 @@ const COLUMNS = [
 const FACETS = [
   { key: "exercici", title: "Exercici", search: false },
   { key: "fons", title: "Fons", search: false },
+  { key: "comarca", title: "Comarca", search: true },
   { key: "municipi", title: "Municipi", search: true },
   { key: "mesura", title: "Mesura", search: true },
 ];
@@ -42,8 +44,14 @@ const fmtInt = (n) => eur.format(n);
 const state = {
   rows: [],
   query: "",
-  sel: { exercici: new Set(), fons: new Set(), municipi: new Set(), mesura: new Set() },
-  facetSearch: { municipi: "", mesura: "" },
+  sel: {
+    exercici: new Set(),
+    fons: new Set(),
+    comarca: new Set(),
+    municipi: new Set(),
+    mesura: new Set(),
+  },
+  facetSearch: { comarca: "", municipi: "", mesura: "" },
   sortKey: "import_eur",
   sortDir: "desc",
   view: "taula", // taula | grafic
@@ -68,7 +76,10 @@ async function loadMart() {
 
   const conn = await db.connect();
   const res = await conn.query(
-    `select nom_beneficiari, municipi, provincia, mesura,
+    `select nom_beneficiari,
+            coalesce(municipi, '(sense resoldre)') as municipi,
+            coalesce(comarca, '(sense comarca)') as comarca,
+            provincia, codi_postal, codi_ine, mesura,
             cast(import_eur as double) as import_eur, fons, exercici,
             group_cif, group_name
      from 'mart.parquet'`,
@@ -321,8 +332,7 @@ function setupEvents() {
     else if (t.id === "clear") {
       for (const f of FACETS) state.sel[f.key].clear();
       state.query = "";
-      state.facetSearch.municipi = "";
-      state.facetSearch.mesura = "";
+      for (const k of Object.keys(state.facetSearch)) state.facetSearch[k] = "";
     }
     render();
   });
@@ -358,7 +368,7 @@ function setupEvents() {
 
 function downloadCsv() {
   const rows = sortRows(filteredRows());
-  const cols = ["nom_beneficiari", "municipi", "provincia", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name"];
+  const cols = ["nom_beneficiari", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name"];
   const escCsv = (v) => {
     const s = v == null ? "" : String(v);
     return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
