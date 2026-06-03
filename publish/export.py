@@ -23,9 +23,13 @@ ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = ROOT / "data" / "ordit.duckdb"
 DIST_DIR = ROOT / "data" / "dist"
 
-# Marts a exportar: nom de la taula -> nom del fitxer parquet.
+# Marts a exportar: nom de la taula -> nom del fitxer parquet. L'explorador consulta cada
+# Parquet client-side amb DuckDB-WASM. Tres capes: ajudes de la PAC (tots els receptors),
+# superficie de cultiu de SIGPAC per municipi i us, i el creuat diners-PAC x superficie.
 MARTS = {
     "mart_ajudes_pac": "mart_ajudes_pac.parquet",
+    "mart_superficie_cultiu_municipi": "mart_superficie_cultiu_municipi.parquet",
+    "mart_pac_x_superficie_municipi": "mart_pac_x_superficie_municipi.parquet",
 }
 
 

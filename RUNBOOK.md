@@ -49,6 +49,25 @@ just explore-raw
 > privat i no publica. El compliment de protecció de dades (filtre, anonimització, guard de
 > fuga) és una fase futura del [`ROADMAP.md`](ROADMAP.md), prèvia a qualsevol publicació.
 
+## Publicar i servir l'explorador (local)
+
+`just publish` (= `python -m publish.export`) llig la DuckDB del build plane i escriu a
+`data/dist/` un Parquet per mart publicat: `mart_ajudes_pac.parquet` (ajudes de la PAC,
+tots els receptors), `mart_superficie_cultiu_municipi.parquet` (superfície per municipi i
+ús, SIGPAC) i `mart_pac_x_superficie_municipi.parquet` (creuat diners-PAC × superfície per
+municipi). Els Parquet són artefactes derivats: `data/` és gitignored, no es committegen.
+
+`just serve` publica primer i després alça un servidor estàtic. Obri l'explorador a:
+
+```
+http://localhost:8000/explorer/
+```
+
+L'explorador consulta els tres Parquet client-side amb DuckDB-WASM. El mapa commuta entre
+tres capes (diners de la PAC, superfície de cultiu, €/ha) i, en triar un municipi, en mostra
+el desglossament de superfície per ús de cultiu. Cap backend ni cap crida de xarxa externa
+(només el bundle de DuckDB-WASM des de jsDelivr). **Estrictament local: cap desplegament.**
+
 ## Desplegament (serve plane)
 
 Caddy multi-tenant: Ordit te el seu snippet a `/etc/caddy/conf.d/*.caddy`, importat pel

@@ -151,6 +151,21 @@ body {
   stroke: var(--blau);
   stroke-width: 1.6;
 }
+.map-tile.is-sel {
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+/* Nota de capa (p. ex. la coropleta de SIGPAC no respon als filtres de FEGA). */
+.map-note {
+  margin-bottom: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  background: var(--paper-sunken);
+  border: 1px solid var(--line-hair);
+  border-radius: var(--r-2);
+  font-size: var(--t-2xs);
+  color: var(--ink-3);
+}
 .map-legend {
   display: flex;
   flex-wrap: wrap;
@@ -216,6 +231,70 @@ body {
 }
 .map-unres .nm {
   color: var(--ink-3);
+}
+
+/* Desglossament de superficie per us del municipi triat al mapa. */
+.map-breakdown {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  padding: var(--s-3) var(--s-4) var(--s-4);
+  margin-bottom: var(--s-3);
+}
+.mb-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.mb-title {
+  font-weight: 600;
+  color: var(--ink);
+}
+.mb-sub {
+  font-size: var(--t-2xs);
+  color: var(--ink-3);
+  margin: var(--s-2) 0 var(--s-3);
+}
+.mb-list {
+  max-height: 44vh;
+  overflow-y: auto;
+  padding-right: 0.3rem;
+}
+.mb-row {
+  display: grid;
+  grid-template-columns: 1fr 64px auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.22rem 0;
+  border-top: 1px solid var(--line-hair);
+  font-size: var(--t-sm);
+}
+.mb-us {
+  color: var(--ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mb-noagr {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  color: var(--ink-3);
+}
+.mb-track {
+  height: 8px;
+  background: var(--paper-inset);
+  border-radius: var(--r-1);
+  overflow: hidden;
+}
+.mb-track i {
+  display: block;
+  height: 100%;
+}
+.mb-val {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  white-space: nowrap;
 }
 
 @media (max-width: 1000px) {

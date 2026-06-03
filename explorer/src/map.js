@@ -1,16 +1,30 @@
 /* Coropleta de la Comunitat Valenciana per a l'explorador.
-   Acoloreix els poligons municipals (GISCO LAU, codi_ine) segons l'agregat d'import de
-   PAC, per comarca (vista principal) o per municipi. Sense fusionar geometries: la vista
-   de comarca acoloreix cada municipi pel total de la seua comarca.
+   Acoloreix els poligons municipals (GISCO LAU, codi_ine) segons la capa triada:
+   diners de la PAC (€), superficie de cultiu (ha) o ajuda per hectarea (€/ha). La vista
+   pot agregar per comarca (acolorint cada municipi pel total de la seua comarca) o per
+   municipi. Sense fusionar geometries.
 
    Accessibilitat (design system): rampa blava seqüencial per trams discrets (sense
    patro), llegenda numerica, valor al focus, llista lateral sempre visible; mai
    roig-verd; el color mai es l'unica senyal (acompanyat de llista i etiqueta). */
 
 const SEQ = ["--seq-0", "--seq-1", "--seq-2", "--seq-3", "--seq-4", "--seq-5", "--seq-6"];
+const CATS = ["--cat-1", "--cat-2", "--cat-3", "--cat-4", "--cat-5", "--cat-6"];
 
-const eur0 = new Intl.NumberFormat("ca-ES", { maximumFractionDigits: 0 });
-export const fmtEur0 = (n) => eur0.format(Math.round(n)) + " €";
+const nf0 = new Intl.NumberFormat("ca-ES", { maximumFractionDigits: 0 });
+const nf1 = new Intl.NumberFormat("ca-ES", { maximumFractionDigits: 1 });
+export const fmtEur0 = (n) => nf0.format(Math.round(n)) + " €";
+const fmtHa = (n) => nf1.format(n) + " ha";
+const fmtEurHa = (n) => nf0.format(Math.round(n)) + " €/ha";
+
+// Capes del mapa: etiqueta visible (valencia), titol i formatador del valor. Les capes de
+// superficie venen del creuat SIGPAC x FEGA per municipi (campanya 2025, no filtrable).
+export const LAYERS = {
+  diners: { label: "Diners PAC", title: "Import de PAC", fmt: fmtEur0, sigpac: false },
+  superficie: { label: "Superficie", title: "Superficie agraria", fmt: fmtHa, sigpac: true },
+  eur_ha: { label: "€/ha", title: "Ajuda per hectarea", fmt: fmtEurHa, sigpac: true },
+};
+export const layerFmt = (layer) => (LAYERS[layer] || LAYERS.diners).fmt;
 
 const esc = (s) =>
   String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -61,12 +75,70 @@ function bucket(value, thresholds) {
   return b;
 }
 
-/** HTML de la vista de mapa. `agg` = {byIne: Map, byComarca: Map, unresolved: number}. */
-export function mapHtml(geo, agg, mapBy) {
-  const valueOf = (f) =>
-    mapBy === "comarca"
-      ? agg.byComarca.get(f.properties.comarca) || 0
-      : agg.byIne.get(f.properties.codi_ine) || 0;
+/* El valor d'un municipi/comarca segons la capa triada.
+   - diners: agg.byIne / agg.byComarca (files de FEGA filtrades).
+   - superficie / eur_ha: surf, agregat estatic del creuat SIGPAC x FEGA per municipi.
+     L'eur_ha de comarca es recalcula com a suma(import)/suma(superficie), no com a mitjana
+     de ratios (que falsejaria el creuat). */
+function valueFn(agg, surf, mapBy, layer) {
+  if (layer === "diners") {
+    return mapBy === "comarca"
+      ? (f) => agg.byComarca.get(f.properties.comarca) || 0
+      : (f) => agg.byIne.get(f.properties.codi_ine) || 0;
+  }
+  if (mapBy === "comarca") {
+    return (f) => {
+      const c = surf.byComarca.get(f.properties.comarca);
+      if (!c) return 0;
+      return layer === "superficie" ? c.sup : c.sup > 0 ? c.imp / c.sup : 0;
+    };
+  }
+  return (f) => {
+    const m = surf.byIne.get(f.properties.codi_ine);
+    if (!m) return 0;
+    return layer === "superficie" ? m.sup : m.eurHa;
+  };
+}
+
+/** Desglossament de superficie per us d'un municipi seleccionat (card del lateral). */
+function breakdownHtml(sel) {
+  if (!sel) return "";
+  if (!sel.rows || !sel.rows.length) {
+    return `<div class="map-breakdown">
+      <div class="mb-head"><span class="mb-title">${esc(sel.name)}</span>
+        <button class="btn btn-ghost btn-sm" id="muni-clear" aria-label="Tanca el desglossament">✕</button></div>
+      <p class="mono" style="color:var(--ink-3)">Sense superficie de cultiu de SIGPAC per a este municipi.</p>
+    </div>`;
+  }
+  const rows = [...sel.rows].sort((a, b) => b.superficie_ha - a.superficie_ha);
+  const total = rows.reduce((a, r) => a + r.superficie_ha, 0);
+  const max = Math.max(...rows.map((r) => r.superficie_ha), 1);
+  const list = rows
+    .map((r, i) => {
+      const w = (r.superficie_ha / max) * 100;
+      const mark = r.es_agrari ? "" : ` <span class="mb-noagr" title="us no agrari">no agrari</span>`;
+      return `<div class="mb-row">
+        <span class="mb-us" title="${esc(r.us)}">${esc(r.us)}${mark}</span>
+        <div class="mb-track"><i style="width:${w}%;background:var(${CATS[i % CATS.length]})"></i></div>
+        <span class="mb-val tnum">${fmtHa(r.superficie_ha)}</span></div>`;
+    })
+    .join("");
+  return `<div class="map-breakdown">
+    <div class="mb-head"><span class="mb-title">${esc(sel.name)}</span>
+      <button class="btn btn-ghost btn-sm" id="muni-clear" aria-label="Tanca el desglossament">✕</button></div>
+    <div class="mb-sub mono">Superficie per us de cultiu · SIGPAC 2025 · total ${fmtHa(total)}</div>
+    <div class="mb-list">${list}</div>
+  </div>`;
+}
+
+/** HTML de la vista de mapa.
+   ctx = {agg, surf, mapBy, layer, sel}. agg = {byIne, byComarca, unresolved} (diners);
+   surf = {byIne: Map ine->{sup,imp,eurHa}, byComarca: Map->{sup,imp}}; sel = desglossament. */
+export function mapHtml(geo, ctx) {
+  const { agg, surf, mapBy, layer, sel } = ctx;
+  const meta = LAYERS[layer] || LAYERS.diners;
+  const fmt = meta.fmt;
+  const valueOf = valueFn(agg, surf, mapBy, layer);
   const thresholds = quantiles(geo.features.map(valueOf));
 
   const tiles = geo.features
@@ -75,9 +147,11 @@ export function mapHtml(geo, agg, mapBy) {
       const b = bucket(v, thresholds);
       const fill = b < 0 ? "var(--paper-inset)" : `var(${SEQ[b]})`;
       const name = mapBy === "comarca" ? f.properties.comarca : f.properties.municipi;
-      return `<path d="${f._d}" class="map-tile" tabindex="0" role="img"
+      const isSel = sel && sel.ine === f.properties.codi_ine ? " is-sel" : "";
+      return `<path d="${f._d}" class="map-tile${isSel}" tabindex="0" role="button"
+        data-ine="${esc(f.properties.codi_ine)}" data-muni="${esc(f.properties.municipi)}"
         data-name="${esc(name)}" data-val="${v}" fill="${fill}"
-        aria-label="${esc(name)}: ${esc(fmtEur0(v))}"><title>${esc(name)} · ${esc(fmtEur0(v))}</title></path>`;
+        aria-label="${esc(name)}: ${esc(fmt(v))}"><title>${esc(name)} · ${esc(fmt(v))}</title></path>`;
     })
     .join("");
 
@@ -86,45 +160,65 @@ export function mapHtml(geo, agg, mapBy) {
   const legend = SEQ.map((s, i) => {
     const lo = edges[i];
     const hi = i < thresholds.length ? thresholds[i] : null;
-    const range = hi == null ? `> ${fmtEur0(lo)}` : `${fmtEur0(lo)} – ${fmtEur0(hi)}`;
+    const range = hi == null ? `> ${fmt(lo)}` : `${fmt(lo)} – ${fmt(hi)}`;
     return `<span class="leg-item"><i style="background:var(${s})"></i> ${esc(range)}</span>`;
   }).join("");
 
-  // Llista lateral sempre visible (rang per valor), inclou els no resolts.
+  // Llista lateral sempre visible (rang per valor); per a diners inclou els no resolts.
   const entries =
     mapBy === "comarca"
-      ? [...agg.byComarca.entries()]
-      : geo.features.map((f) => [f.properties.municipi, agg.byIne.get(f.properties.codi_ine) || 0]);
+      ? geo.features.reduce((acc, f) => {
+          const c = f.properties.comarca;
+          if (!acc.seen.has(c)) {
+            acc.seen.add(c);
+            acc.out.push([c, valueOf(f)]);
+          }
+          return acc;
+        }, { seen: new Set(), out: [] }).out
+      : geo.features.map((f) => [f.properties.municipi, valueOf(f)]);
   const ranked = entries.filter(([, v]) => v !== 0).sort((a, b) => b[1] - a[1]);
   const list = ranked
     .map(([name, v]) => {
       const b = bucket(v, thresholds);
       const sw = b < 0 ? "var(--paper-inset)" : `var(${SEQ[b]})`;
       return `<div class="map-row"><span class="sw" style="background:${sw}"></span>
-        <span class="nm">${esc(name)}</span><span class="vl tnum">${esc(fmtEur0(v))}</span></div>`;
+        <span class="nm">${esc(name)}</span><span class="vl tnum">${esc(fmt(v))}</span></div>`;
     })
     .join("");
   const unres =
-    agg.unresolved > 0
+    layer === "diners" && agg.unresolved > 0
       ? `<div class="map-row map-unres"><span class="sw" style="background:var(--neutral)"></span>
-        <span class="nm">(sense municipi)</span><span class="vl tnum">${esc(fmtEur0(agg.unresolved))}</span></div>`
+        <span class="nm">(sense municipi)</span><span class="vl tnum">${esc(fmt(agg.unresolved))}</span></div>`
       : "";
 
+  const sigpacNote = meta.sigpac
+    ? `<div class="map-note mono">Capa de SIGPAC (campanya 2025): no respon als filtres d'exercici ni de fons.</div>`
+    : "";
+
   return `<div class="card card-pad">
-    <div class="cluster" style="justify-content:space-between;margin-bottom:var(--s-4)">
-      <h3 style="font-size:var(--t-lg)">Import de PAC per ${mapBy === "comarca" ? "comarca" : "municipi"}</h3>
-      <div class="seg">
-        <button data-mapby="comarca" class="${mapBy === "comarca" ? "active" : ""}" aria-pressed="${mapBy === "comarca"}">Comarca</button>
-        <button data-mapby="municipi" class="${mapBy === "municipi" ? "active" : ""}" aria-pressed="${mapBy === "municipi"}">Municipi</button>
+    <div class="cluster" style="justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-4)">
+      <h3 style="font-size:var(--t-lg)">${meta.title} per ${mapBy === "comarca" ? "comarca" : "municipi"}</h3>
+      <div class="cluster" style="gap:var(--s-4)">
+        <div class="seg" role="group" aria-label="Capa">
+          <button data-maplayer="diners" class="${layer === "diners" ? "active" : ""}" aria-pressed="${layer === "diners"}">Diners PAC</button>
+          <button data-maplayer="superficie" class="${layer === "superficie" ? "active" : ""}" aria-pressed="${layer === "superficie"}">Superficie</button>
+          <button data-maplayer="eur_ha" class="${layer === "eur_ha" ? "active" : ""}" aria-pressed="${layer === "eur_ha"}">€/ha</button>
+        </div>
+        <div class="seg" role="group" aria-label="Granularitat">
+          <button data-mapby="comarca" class="${mapBy === "comarca" ? "active" : ""}" aria-pressed="${mapBy === "comarca"}">Comarca</button>
+          <button data-mapby="municipi" class="${mapBy === "municipi" ? "active" : ""}" aria-pressed="${mapBy === "municipi"}">Municipi</button>
+        </div>
       </div>
     </div>
+    ${sigpacNote}
     <div class="ex-map">
       <div class="map-figure">
         <svg viewBox="0 0 ${geo.W} ${geo.H}" class="map-svg" role="group" aria-label="Mapa de la Comunitat Valenciana">${tiles}</svg>
         <div class="map-legend mono" aria-hidden="true">${legend}<span class="leg-item"><i style="background:var(--paper-inset)"></i> sense dada</span></div>
       </div>
       <div class="map-aside">
-        <div class="map-focus mono" id="map-focus">Passa el cursor o tabula per veure el valor.</div>
+        <div class="map-focus mono" id="map-focus">Tria un municipi al mapa per veure'n els usos de cultiu.</div>
+        ${breakdownHtml(sel)}
         <div class="map-list">${list}${unres}</div>
       </div>
     </div>

@@ -3,10 +3,12 @@
    Identificadors en angles ASCII; interficie en valencia. */
 
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
-import { loadGeo, mapHtml, fmtEur0 } from "./map.js";
+import { loadGeo, mapHtml, layerFmt } from "./map.js";
 
-// Ruta del Parquet publicat (relativa a /explorer/), servit com a fitxer estatic.
+// Rutes dels Parquet publicats (relatives a /explorer/), servits com a fitxers estatics.
 const PARQUET_URL = new URL("../data/dist/mart_ajudes_pac.parquet", location.href).href;
+const SUP_URL = new URL("../data/dist/mart_pac_x_superficie_municipi.parquet", location.href).href;
+const USE_URL = new URL("../data/dist/mart_superficie_cultiu_municipi.parquet", location.href).href;
 const GEO_URL = new URL("geo/municipis-cv.geojson", location.href).href;
 
 // Procedencia, sempre visible (cap dada sense font).
@@ -45,6 +47,8 @@ const fmtInt = (n) => eur.format(n);
 
 const state = {
   rows: [],
+  surf: { byIne: new Map(), byComarca: new Map() }, // creuat SIGPAC x FEGA per municipi
+  useByIne: new Map(), // desglossament de superficie per us, per codi_ine
   geo: null,
   query: "",
   sel: {
@@ -59,6 +63,8 @@ const state = {
   sortDir: "desc",
   view: "taula", // taula | mapa | grafic
   mapBy: "comarca", // comarca | municipi
+  mapLayer: "diners", // diners | superficie | eur_ha (capa de la coropleta)
+  selMuni: null, // {ine, name} del municipi triat al mapa (desglossament d'usos)
   chartBy: "municipi", // municipi | beneficiari
   density: "compacte",
 };
@@ -79,8 +85,16 @@ function geoAgg(rows) {
   return { byIne, byComarca, unresolved };
 }
 
-/* ---------- Carrega del mart amb DuckDB-WASM ---------- */
-async function loadMart() {
+/* ---------- Carrega dels marts amb DuckDB-WASM ---------- */
+async function registerParquet(db, name, url) {
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`No s'ha pogut llegir ${name} (${resp.status}).`);
+  await db.registerFileBuffer(name, new Uint8Array(await resp.arrayBuffer()));
+}
+
+// Carrega els tres marts publicats: ajudes de la PAC (files), creuat SIGPAC x FEGA per
+// municipi (coropleta de superficie/€-ha) i superficie per us (desglossament municipal).
+async function loadMarts() {
   const bundle = await duckdb.selectBundle(duckdb.getJsDelivrBundles());
   const workerUrl = URL.createObjectURL(
     new Blob([`importScripts("${bundle.mainWorker}");`], { type: "text/javascript" }),
@@ -90,22 +104,70 @@ async function loadMart() {
   await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
   URL.revokeObjectURL(workerUrl);
 
-  const resp = await fetch(PARQUET_URL);
-  if (!resp.ok) throw new Error(`No s'ha pogut llegir el Parquet (${resp.status}).`);
-  await db.registerFileBuffer("mart.parquet", new Uint8Array(await resp.arrayBuffer()));
+  await Promise.all([
+    registerParquet(db, "ajudes.parquet", PARQUET_URL),
+    registerParquet(db, "superficie.parquet", SUP_URL),
+    registerParquet(db, "usos.parquet", USE_URL),
+  ]);
 
   const conn = await db.connect();
-  const res = await conn.query(
+  const ajudes = await conn.query(
     `select nom_beneficiari,
             coalesce(municipi, '(sense resoldre)') as municipi,
             coalesce(comarca, '(sense comarca)') as comarca,
             provincia, codi_postal, codi_ine, mesura,
             cast(import_eur as double) as import_eur, fons, exercici,
             group_cif, group_name
-     from 'mart.parquet'`,
+     from 'ajudes.parquet'`,
+  );
+  const superficie = await conn.query(
+    `select codi_ine, comarca,
+            cast(superficie_agraria_ha as double) as superficie_agraria_ha,
+            cast(import_pac_eur as double) as import_pac_eur,
+            cast(import_eur_per_ha as double) as import_eur_per_ha
+     from 'superficie.parquet'`,
+  );
+  const usos = await conn.query(
+    `select codi_ine, codi_us, us, es_agrari,
+            cast(superficie_ha as double) as superficie_ha,
+            cast(nombre_recintes as bigint) as nombre_recintes
+     from 'usos.parquet'`,
   );
   await conn.close();
-  return res.toArray().map((r) => r.toJSON());
+  return {
+    rows: ajudes.toArray().map((r) => r.toJSON()),
+    surfRows: superficie.toArray().map((r) => r.toJSON()),
+    useRows: usos.toArray().map((r) => r.toJSON()),
+  };
+}
+
+// Agregat estatic del creuat per municipi: byIne (superficie, import, €/ha) i byComarca
+// (sumes; el €/ha de comarca es recalcula com a suma-import/suma-superficie a map.js).
+function buildSurf(surfRows) {
+  const byIne = new Map();
+  const byComarca = new Map();
+  for (const r of surfRows) {
+    byIne.set(r.codi_ine, {
+      sup: r.superficie_agraria_ha,
+      imp: r.import_pac_eur,
+      eurHa: r.import_eur_per_ha,
+    });
+    const c = byComarca.get(r.comarca) || { sup: 0, imp: 0 };
+    c.sup += r.superficie_agraria_ha;
+    c.imp += r.import_pac_eur;
+    byComarca.set(r.comarca, c);
+  }
+  return { byIne, byComarca };
+}
+
+// Desglossament de superficie per us, indexat per codi_ine.
+function buildUse(useRows) {
+  const m = new Map();
+  for (const r of useRows) {
+    if (!m.has(r.codi_ine)) m.set(r.codi_ine, []);
+    m.get(r.codi_ine).push(r);
+  }
+  return m;
 }
 
 /* ---------- Derivats ---------- */
@@ -228,7 +290,9 @@ function chipsHtml() {
 
 function tableHtml(rows) {
   const ind = (k) => (state.sortKey === k ? `<span class="sort-ind">${state.sortDir === "asc" ? "▲" : "▼"}</span>` : "");
-  const max = Math.max(...rows.map((r) => Math.abs(r.import_eur)), 1);
+  // Reduccio (no Math.max(...spread)): la taula pot dur centenars de milers de files i
+  // escampar-les com a arguments rebenta la pila de la crida.
+  const max = rows.reduce((m, r) => Math.max(m, Math.abs(r.import_eur)), 1);
   const head = COLUMNS.map(
     (c) => `<th class="${c.type === "num" ? "num " : ""}sortable" data-sort="${c.key}">${c.label} ${ind(c.key)}</th>`,
   ).join("");
@@ -301,7 +365,15 @@ function render() {
     state.view === "taula"
       ? tableHtml(rows)
       : state.view === "mapa"
-        ? mapHtml(state.geo, geoAgg(rows), state.mapBy)
+        ? mapHtml(state.geo, {
+            agg: geoAgg(rows),
+            surf: state.surf,
+            mapBy: state.mapBy,
+            layer: state.mapLayer,
+            sel: state.selMuni
+              ? { ine: state.selMuni.ine, name: state.selMuni.name, rows: state.useByIne.get(state.selMuni.ine) }
+              : null,
+          })
         : chartHtml(rows);
   document.getElementById("app").innerHTML = `
     <header class="ex-bar"><div class="ex-bar-inner">
@@ -354,7 +426,10 @@ function creditsHtml() {
 function setupEvents() {
   const app = document.getElementById("app");
   app.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-sort],[data-view],[data-chartby],[data-density],[data-chip-facet],#clear");
+    const t = e.target.closest(
+      "[data-sort],[data-view],[data-chartby],[data-density],[data-chip-facet]," +
+        "[data-maplayer],[data-mapby],[data-muni],#clear,#muni-clear",
+    );
     if (!t) return;
     if (t.dataset.sort) {
       const k = t.dataset.sort;
@@ -364,7 +439,13 @@ function setupEvents() {
         state.sortDir = k === "import_eur" || k === "exercici" ? "desc" : "asc";
       }
     } else if (t.dataset.view) state.view = t.dataset.view;
+    else if (t.dataset.maplayer) state.mapLayer = t.dataset.maplayer;
     else if (t.dataset.mapby) state.mapBy = t.dataset.mapby;
+    else if (t.dataset.muni) {
+      // Tria/desmarca un municipi al mapa per al desglossament d'usos de cultiu.
+      const ine = t.dataset.ine;
+      state.selMuni = state.selMuni && state.selMuni.ine === ine ? null : { ine, name: t.dataset.muni };
+    } else if (t.id === "muni-clear") state.selMuni = null;
     else if (t.dataset.chartby) state.chartBy = t.dataset.chartby;
     else if (t.dataset.density) state.density = t.dataset.density;
     else if (t.dataset.chipFacet) state.sel[t.dataset.chipFacet].delete(t.dataset.chipVal);
@@ -407,7 +488,7 @@ function setupEvents() {
   const showFocus = (e) => {
     const t = e.target.closest(".map-tile");
     const box = document.getElementById("map-focus");
-    if (t && box) box.textContent = `${t.dataset.name} · ${fmtEur0(Number(t.dataset.val))}`;
+    if (t && box) box.textContent = `${t.dataset.name} · ${layerFmt(state.mapLayer)(Number(t.dataset.val))}`;
   };
   app.addEventListener("pointerover", showFocus);
   app.addEventListener("focusin", showFocus);
@@ -432,7 +513,11 @@ function downloadCsv() {
 /* ---------- Arrencada ---------- */
 (async () => {
   try {
-    [state.rows, state.geo] = await Promise.all([loadMart(), loadGeo(GEO_URL)]);
+    const [marts, geo] = await Promise.all([loadMarts(), loadGeo(GEO_URL)]);
+    state.rows = marts.rows;
+    state.surf = buildSurf(marts.surfRows);
+    state.useByIne = buildUse(marts.useRows);
+    state.geo = geo;
     setupEvents();
     render();
   } catch (err) {
