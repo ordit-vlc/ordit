@@ -21,15 +21,19 @@ const SOURCE = {
   estat: "confirmat",
 };
 
-const COLUMNS = [
+// Dimensions de la taula: agrupables i llevables. Les ACTIVES son el GROUP BY; en llevar-ne
+// una, la taula suma per damunt d'ella (les files col.lapsen); en afegir-la, es desglossa.
+// L'ordre aci es l'ordre de columnes. La columna de VALOR (import_eur) sempre hi es, sumada
+// i no llevable.
+const DIMENSIONS = [
   { key: "nom_beneficiari", label: "Beneficiari", type: "text", strong: true },
   { key: "municipi", label: "Municipi", type: "text" },
   { key: "comarca", label: "Comarca", type: "text" },
   { key: "mesura", label: "Mesura", type: "text" },
   { key: "fons", label: "Fons", type: "text" },
   { key: "exercici", label: "Exercici", type: "num" },
-  { key: "import_eur", label: "Import (€)", type: "num", strong: true },
 ];
+const VALUE = { key: "import_eur", label: "Import (€)", type: "num", strong: true };
 
 const FACETS = [
   { key: "exercici", title: "Exercici", search: false },
@@ -55,6 +59,8 @@ const state = {
     mesura: new Set(),
   },
   facetSearch: { comarca: "", municipi: "", mesura: "" },
+  // Dimensions actives (GROUP BY de la taula). Per defecte totes -> maxima granularitat.
+  dims: new Set(DIMENSIONS.map((d) => d.key)),
   sortKey: "import_eur",
   sortDir: "desc",
   view: "taula", // taula | mapa | grafic
@@ -222,6 +228,27 @@ function aggregate(rows, key) {
   return [...agg.entries()].map(([k, v]) => ({ k, v })).sort((a, b) => b.v - a.v);
 }
 
+// Agrupa les files filtrades per les dimensions actives (GROUP BY) i suma import_eur. Cap
+// dimensio activa -> una sola fila de total general. Filtrar i agrupar son coses distintes:
+// les files ja venen filtrades; aci nomes s'agrupen. Tot en memoria, cap crida de xarxa.
+function groupRows(rows, dimKeys) {
+  if (!dimKeys.length) {
+    return [{ import_eur: rows.reduce((a, r) => a + r.import_eur, 0) }];
+  }
+  const groups = new Map();
+  for (const r of rows) {
+    const key = dimKeys.map((d) => r[d]).join("\u0001"); // separador de control, no apareix als valors
+    let g = groups.get(key);
+    if (!g) {
+      g = { import_eur: 0 };
+      for (const d of dimKeys) g[d] = r[d];
+      groups.set(key, g);
+    }
+    g.import_eur += r.import_eur;
+  }
+  return [...groups.values()];
+}
+
 /* ---------- Render ---------- */
 const esc = (s) =>
   String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -284,46 +311,68 @@ function chipsHtml() {
   return `<div class="cluster" style="margin-bottom:var(--s-4)">${chips.join("")}</div>`;
 }
 
+// Cel.la d'una dimensio segons el seu tipus (beneficiari fort, mesura ampla, fons en
+// pastilla, exercici numeric). El valor pot ser undefined si la dimensio no esta agrupada,
+// pero aci nomes es pinten columnes ACTIVES, aixi que sempre hi es.
+function dimCellHtml(col, r) {
+  if (col.key === "fons") return `<td><span class="badge">${esc(r.fons)}</span></td>`;
+  if (col.key === "mesura") return `<td class="cell-mesura">${esc(r.mesura)}</td>`;
+  const cls = col.strong ? "cell-strong" : col.type === "num" ? "num" : "";
+  return `<td${cls ? ` class="${cls}"` : ""}>${esc(r[col.key])}</td>`;
+}
+
 function tableHtml(rows) {
   const ind = (k) => (state.sortKey === k ? `<span class="sort-ind">${state.sortDir === "asc" ? "▲" : "▼"}</span>` : "");
-  // Reduccio (no Math.max(...spread)): la taula pot dur centenars de milers de files i
-  // escampar-les com a arguments rebenta la pila de la crida.
-  const max = rows.reduce((m, r) => Math.max(m, Math.abs(r.import_eur)), 1);
-  const head = COLUMNS.map(
-    (c) => `<th class="${c.type === "num" ? "num " : ""}sortable" data-sort="${c.key}">${c.label} ${ind(c.key)}</th>`,
-  ).join("");
-  const shown = rows.slice(0, TABLE_LIMIT);
+  // Filtrar i agrupar son coses distintes: `rows` ja ve filtrat; aci s'agrupa per les
+  // dimensions ACTIVES (GROUP BY) i es suma l'import. Despres s'ordena i es talla a top-N.
+  const dimKeys = DIMENSIONS.filter((d) => state.dims.has(d.key)).map((d) => d.key);
+  const cols = [...DIMENSIONS.filter((d) => state.dims.has(d.key)), VALUE];
+  const grouped = sortRows(groupRows(rows, dimKeys));
+  const max = grouped.reduce((m, r) => Math.max(m, Math.abs(r.import_eur)), 1);
+  const head = cols
+    .map((c) => `<th class="${c.type === "num" ? "num " : ""}sortable" data-sort="${c.key}">${c.label} ${ind(c.key)}</th>`)
+    .join("");
+  const shown = grouped.slice(0, TABLE_LIMIT);
   const body =
     shown
       .map((r) => {
         const bar = `<div class="cellbar"><i style="width:${(Math.abs(r.import_eur) / max) * 100}%"></i></div>`;
-        return `<tr>
-        <td class="cell-strong">${esc(r.nom_beneficiari)}</td>
-        <td>${esc(r.municipi)}</td>
-        <td>${esc(r.comarca)}</td>
-        <td class="cell-mesura">${esc(r.mesura)}</td>
-        <td><span class="badge">${esc(r.fons)}</span></td>
-        <td class="num">${r.exercici}</td>
-        <td class="num cell-strong">${fmtEur(r.import_eur)}${bar}</td>
-      </tr>`;
+        const valCell = `<td class="num cell-strong">${fmtEur(r.import_eur)}${bar}</td>`;
+        const dimCells = cols
+          .filter((c) => c.key !== "import_eur")
+          .map((c) => dimCellHtml(c, r))
+          .join("");
+        return `<tr>${dimCells}${valCell}</tr>`;
       })
       .join("") ||
-    `<tr><td colspan="${COLUMNS.length}" style="text-align:center;padding:var(--s-7);color:var(--ink-3)">Cap ajuda coincideix amb els filtres.</td></tr>`;
+    `<tr><td colspan="${cols.length}" style="text-align:center;padding:var(--s-7);color:var(--ink-3)">Cap ajuda coincideix amb els filtres.</td></tr>`;
+  const unit = dimKeys.length === DIMENSIONS.length ? "files" : dimKeys.length ? "grups" : "total";
   const note =
-    rows.length > TABLE_LIMIT
-      ? `mostrant ${TABLE_LIMIT} de ${fmtInt(rows.length)} files (l'agregat i els KPI usen totes)`
-      : `${fmtInt(rows.length)} files`;
-  return `<div class="ex-densitat cluster" style="justify-content:flex-end;margin-bottom:var(--s-3)">
-      <span class="mono">Densitat</span>
-      <div class="seg">
-        <button data-density="compacte" class="${state.density === "compacte" ? "active" : ""}" aria-pressed="${state.density === "compacte"}">Compacte</button>
-        <button data-density="comode" class="${state.density === "comode" ? "active" : ""}" aria-pressed="${state.density === "comode"}">Comode</button>
+    grouped.length > TABLE_LIMIT
+      ? `mostrant ${TABLE_LIMIT} de ${fmtInt(grouped.length)} ${unit} (l'agregat i els KPI usen tot el filtrat)`
+      : `${fmtInt(grouped.length)} ${unit}`;
+  // Toggles de dimensio (multi-actiu): llevar/afegir = reagrupar, no nomes amagar.
+  const dimToggles = DIMENSIONS.map(
+    (d) => `<button data-dim="${d.key}" class="${state.dims.has(d.key) ? "active" : ""}" aria-pressed="${state.dims.has(d.key)}">${d.label}</button>`,
+  ).join("");
+  const sortedLabel = cols.find((c) => c.key === state.sortKey)?.label || VALUE.label;
+  return `<div class="ex-tablebar">
+      <div class="cluster" style="gap:.5rem;flex-wrap:wrap">
+        <span class="mono" style="color:var(--ink-2)">Agrupa per</span>
+        <div class="seg seg-wrap" role="group" aria-label="Dimensions agrupables">${dimToggles}</div>
+      </div>
+      <div class="ex-densitat cluster">
+        <span class="mono">Densitat</span>
+        <div class="seg">
+          <button data-density="compacte" class="${state.density === "compacte" ? "active" : ""}" aria-pressed="${state.density === "compacte"}">Compacte</button>
+          <button data-density="comode" class="${state.density === "comode" ? "active" : ""}" aria-pressed="${state.density === "comode"}">Comode</button>
+        </div>
       </div>
     </div>
     <div class="table-wrap"><table class="data${state.density === "compacte" ? " compact" : ""}">
       <thead><tr>${head}</tr></thead><tbody>${body}</tbody>
     </table></div>
-    <div class="pager" style="margin-top:var(--s-4)"><span class="info">${note} · ordenat per ${esc(COLUMNS.find((c) => c.key === state.sortKey)?.label || state.sortKey)} (${state.sortDir})</span>${provHtml(false)}</div>`;
+    <div class="pager" style="margin-top:var(--s-4)"><span class="info">${note} · ordenat per ${esc(sortedLabel)} (${state.sortDir})</span>${provHtml(false)}</div>`;
 }
 
 function chartHtml(rows) {
@@ -356,7 +405,9 @@ const MARK = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke
   <line x1="3" y1="9" x2="3" y2="20"/><line x1="7.5" y1="5" x2="7.5" y2="20"/><line x1="12" y1="3" x2="12" y2="20"/><line x1="16.5" y1="5" x2="16.5" y2="20"/><line x1="21" y1="9" x2="21" y2="20"/></svg>`;
 
 function render() {
-  const rows = sortRows(filteredRows());
+  // Files filtrades (sense ordenar): la taula agrupa i ordena pel seu compte; el mapa, els
+  // KPI i el grafic no depenen de l'ordre. Evita ordenar centenars de milers de files debades.
+  const rows = filteredRows();
   const facets = FACETS.map(facetHtml).join("");
   const content =
     state.view === "taula"
@@ -431,7 +482,7 @@ function setupEvents() {
   const app = document.getElementById("app");
   app.addEventListener("click", (e) => {
     const t = e.target.closest(
-      "[data-sort],[data-view],[data-chartby],[data-density],[data-chip-facet]," +
+      "[data-sort],[data-view],[data-chartby],[data-density],[data-chip-facet],[data-dim]," +
         "[data-maplayer],[data-mapby],[data-muni],#clear,#muni-clear",
     );
     if (!t) return;
@@ -441,6 +492,15 @@ function setupEvents() {
       else {
         state.sortKey = k;
         state.sortDir = k === "import_eur" || k === "exercici" ? "desc" : "asc";
+      }
+    } else if (t.dataset.dim) {
+      // Lleva/afig una dimensio del GROUP BY de la taula (reagrega).
+      const k = t.dataset.dim;
+      state.dims.has(k) ? state.dims.delete(k) : state.dims.add(k);
+      // Si s'ordenava per una dimensio que s'acaba de llevar, torna a ordenar per import.
+      if (!state.dims.has(state.sortKey) && state.sortKey !== "import_eur") {
+        state.sortKey = "import_eur";
+        state.sortDir = "desc";
       }
     } else if (t.dataset.view) state.view = t.dataset.view;
     else if (t.dataset.maplayer) state.mapLayer = t.dataset.maplayer;

@@ -66,6 +66,20 @@ body {
   margin-bottom: var(--s-4);
 }
 
+/* Barra de controls de la taula: toggles de dimensio (agrupa per) i densitat. */
+.ex-tablebar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-3);
+}
+/* Un segment de botons que pot ajustar-se a diverses linies (toggles multi-actius). */
+.seg.seg-wrap {
+  flex-wrap: wrap;
+}
+
 /* Cerca dins d'una faceta (municipi, mesura). */
 .facet-search {
   width: 100%;
