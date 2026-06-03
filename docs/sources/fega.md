@@ -21,10 +21,13 @@ Garantia Agrària), en compliment del Reglament (UE) 2021/2116.
 
 - **Contenidor**: ZIP (~33-34 MiB per exercici) amb **un sol fitxer** `.txt`
   (~286-296 MiB descomprimit).
-- **Codificació**: **Windows-1252** (latin-1 amb bytes CP1252 dispersos: cometa
-  tipogràfica `0x91` i algun byte de control `0x81`/`0x8d`). Sense BOM. DuckDB **no** el
-  llig com a latin-1 estricte, així que la ingestió el **normalitza a UTF-8**
-  (`*.utf8.txt`, pas tècnic, sense filtrar res); staging consumeix l'UTF-8.
+- **Codificació**: **mixta**. Majoritàriament latin-1 (un byte per caràcter, p. ex. `à`
+  = `0xE0`), però alguns camps ja venen en **UTF-8** (p. ex. `Í` = `0xC3 0x8D`) i hi ha
+  cometes tipogràfiques de CP1252 (`0x91`). Sense BOM. DuckDB no el llig directament, així
+  que la ingestió el **normalitza a UTF-8 net** (`*.utf8.txt`, pas tècnic, sense filtrar
+  res): descodifica com a **latin-1** (lossless, cap byte perdut) i **repara** el mojibake
+  d'UTF-8 mal interpretat i els especials de CP1252 (equivalent dirigit a ftfy), en lloc
+  d'una transcodificació cega. Staging consumeix l'UTF-8.
 - **Final de línia**: CRLF.
 - **Delimitador**: punt i coma `;`. **El `;` final només hi és el 2024** (14 camps); el
   **2025 no en porta** (13 camps). Staging ho absorbeix amb `null_padding`.

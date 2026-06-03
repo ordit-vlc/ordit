@@ -1,7 +1,7 @@
 """Proves de l'extractor de FEGA. Tota la xarxa esta mockejada: cap crida real.
 
-Cobreix la baixada (mockejada), la descompressio i la normalitzacio d'encoding
-CP1252 -> UTF-8, mes la idempotencia.
+Cobreix la baixada (mockejada), la descompressio i la normalitzacio d'encoding mixt
+(latin-1 + UTF-8 mal interpretat + especials CP1252), mes la idempotencia.
 """
 
 import io
@@ -12,10 +12,16 @@ import pytest
 
 from ingest.fega import download as dl
 
-# Contingut de mostra amb un byte CP1252 cru (0x91 = cometa tipografica esquerra) per
-# provar la normalitzacio. NOMES entitats ficticies.
+# Mostra amb els tres casos d'encoding mixt del fitxer real de FEGA (NOMES ficticis):
+#   - "I" amb accent agut ja en UTF-8: bytes 0xC3 0x8D (el cas conegut "AGRICOLA").
+#   - "a" amb accent greu en latin-1: byte 0xE0.
+#   - cometa tipografica de CP1252: byte 0x91.
 _TXT_NAME = "Beneficiarios_municipio_ejercicio_financiero_2024.txt"
-_SAMPLE_BYTES = b"BENEFICIARIO;IMPORTE_EUROS\r\nCOOP L\x91EXEMPLE;1.234,56\r\n"
+_SAMPLE_BYTES = (
+    b"BENEFICIARIO;MUNICIPIO;IMPORTE_EUROS\r\n"
+    b"COOP VALENCIANA AGR\xc3\x8dCOLA DEL BAJO TURIA;46165 - Bugarra;1.234,56\r\n"
+    b"COOP L\x91EXEMPLE D'ALM\xe0SSERA;46000 - Test;2,00\r\n"
+)
 
 
 def _fake_zip_bytes() -> bytes:
@@ -55,9 +61,17 @@ def test_download_one_baixa_descomprimeix_i_normalitza(no_network, tmp_path: Pat
 
     assert utf8.name.endswith(".utf8.txt")
     text = utf8.read_text(encoding="utf-8")
-    # El byte CP1252 0x91 s'ha de decodificar com a U+2018 (cometa esquerra), no trencar.
-    assert "COOP L‘EXEMPLE" in text
+    # El cas conegut: l'UTF-8 mal interpretat es repara (no "AGRÃ�COLA").
+    assert "AGRÍCOLA DEL BAJO TURIA" in text
+    # latin-1 i cometa CP1252 alhora, sense trencar.
+    assert "COOP L‘EXEMPLE D'ALMàSSERA" in text
     assert (tmp_path / _TXT_NAME).exists()  # el .txt original es conserva
+
+
+def test_decode_mixed_repara_encoding_mixt():
+    # UTF-8 (0xC3 0x8D = Í) + latin-1 (0xE0 = à) + CP1252 (0x91 = ‘) en una sola cadena.
+    raw = b"AGR\xc3\x8dCOLA;Alm\xe0ssera;L\x91Olleria"
+    assert dl.decode_mixed(raw) == "AGRÍCOLA;Almàssera;L‘Olleria"
 
 
 def test_download_one_es_idempotent(no_network, tmp_path: Path):
