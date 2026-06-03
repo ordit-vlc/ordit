@@ -110,24 +110,39 @@ function breakdownHtml(sel) {
       <p class="mono" style="color:var(--ink-3)">Sense superficie de cultiu de SIGPAC per a este municipi.</p>
     </div>`;
   }
-  const rows = [...sel.rows].sort((a, b) => b.superficie_ha - a.superficie_ha);
-  const total = rows.reduce((a, r) => a + r.superficie_ha, 0);
-  const max = Math.max(...rows.map((r) => r.superficie_ha), 1);
-  const list = rows
-    .map((r, i) => {
-      const w = (r.superficie_ha / max) * 100;
-      const mark = r.es_agrari ? "" : ` <span class="mb-noagr" title="us no agrari">no agrari</span>`;
-      return `<div class="mb-row">
-        <span class="mb-us" title="${esc(r.us)}">${esc(r.us)}${mark}</span>
-        <div class="mb-track"><i style="width:${w}%;background:var(${CATS[i % CATS.length]})"></i></div>
-        <span class="mb-val tnum">${fmtHa(r.superficie_ha)}</span></div>`;
-    })
-    .join("");
+  // El total "de cultiu" suma NOMES els usos agraris (es_agrari), de manera que quadra amb
+  // la superficie_agraria_ha del llistat i la coropleta. Els usos no agraris (aigua, urba,
+  // improductiu, forestal...) es mostren a banda com a subtotal, mai dins del total.
+  const sorted = [...sel.rows].sort((a, b) => b.superficie_ha - a.superficie_ha);
+  const agraris = sorted.filter((r) => r.es_agrari);
+  const noAgraris = sorted.filter((r) => !r.es_agrari);
+  // Total de cultiu: la superficie_agraria_ha autoritativa (mateixa font que el llistat i la
+  // coropleta), per a quadrar exacte. Nomes si no arriba, es resumeix dels usos agraris.
+  const sumAgraris = agraris.reduce((a, r) => a + r.superficie_ha, 0);
+  const totalCultiu = sel.totalCultiu ?? sumAgraris;
+  const totalNoAgrari = noAgraris.reduce((a, r) => a + r.superficie_ha, 0);
+  // Escala de barres compartida (max sobre tots els usos) per a comparar-los honestament.
+  const max = sorted.reduce((m, r) => Math.max(m, r.superficie_ha), 1);
+  const rowHtml = (r, i, cat) => {
+    const w = (r.superficie_ha / max) * 100;
+    return `<div class="mb-row">
+      <span class="mb-us" title="${esc(r.us)}">${esc(r.us)}</span>
+      <div class="mb-track"><i style="width:${w}%;background:var(${cat})"></i></div>
+      <span class="mb-val tnum">${fmtHa(r.superficie_ha)}</span></div>`;
+  };
+  const cultiuList = agraris.length
+    ? agraris.map((r, i) => rowHtml(r, i, CATS[i % CATS.length])).join("")
+    : `<p class="mono" style="color:var(--ink-3)">Sense usos agraris a SIGPAC.</p>`;
+  const noAgrariBlock = noAgraris.length
+    ? `<div class="mb-divider mono">No agrari (fora del total de cultiu) · subtotal ${fmtHa(totalNoAgrari)}</div>
+       <div class="mb-list mb-noagr-list">${noAgraris.map((r) => rowHtml(r, 0, "--neutral")).join("")}</div>`
+    : "";
   return `<div class="map-breakdown">
     <div class="mb-head"><span class="mb-title">${esc(sel.name)}</span>
       <button class="btn btn-ghost btn-sm" id="muni-clear" aria-label="Tanca el desglossament">✕</button></div>
-    <div class="mb-sub mono">Superficie per us de cultiu · SIGPAC 2025 · total ${fmtHa(total)}</div>
-    <div class="mb-list">${list}</div>
+    <div class="mb-sub mono">Superficie de cultiu · SIGPAC 2025 · total ${fmtHa(totalCultiu)}</div>
+    <div class="mb-list">${cultiuList}</div>
+    ${noAgrariBlock}
   </div>`;
 }
 

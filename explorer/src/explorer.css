@@ -276,9 +276,15 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.mb-noagr {
-  font-family: var(--font-mono);
+/* Separador del subtotal d'usos no agraris (fora del total de cultiu). */
+.mb-divider {
+  margin-top: var(--s-3);
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--line);
   font-size: var(--t-2xs);
+  color: var(--ink-3);
+}
+.mb-noagr-list .mb-us {
   color: var(--ink-3);
 }
 .mb-track {

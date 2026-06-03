@@ -371,7 +371,14 @@ function render() {
             mapBy: state.mapBy,
             layer: state.mapLayer,
             sel: state.selMuni
-              ? { ine: state.selMuni.ine, name: state.selMuni.name, rows: state.useByIne.get(state.selMuni.ine) }
+              ? {
+                  ine: state.selMuni.ine,
+                  name: state.selMuni.name,
+                  rows: state.useByIne.get(state.selMuni.ine),
+                  // Total de cultiu autoritatiu: la mateixa superficie_agraria_ha del llistat
+                  // i la coropleta (font unica), no una resuma en JS dels usos.
+                  totalCultiu: state.surf.byIne.get(state.selMuni.ine)?.sup,
+                }
               : null,
           })
         : chartHtml(rows);
