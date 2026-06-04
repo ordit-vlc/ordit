@@ -38,17 +38,24 @@ const DIMENSIONS = [
 const VALUE = { key: "import_eur", label: "Import (€)", type: "num", strong: true };
 
 // Etiquetes de l'estat d'enllac amb el registre de cooperatives (un possible MAI es llig
-// com a fet). Vegeu int_enllac_cooperatives.
+// com a fet). Vegeu int_enllac (enllac corporatiu general: cooperatives + SAT).
 const ESTAT_LABELS = {
   match: "Confirmat (match)",
   possible: "Candidat (possible)",
   "no-match": "Sense enllac",
 };
+// Font del registre on s'ha enllacat (cooperatives ensenya CIF; SAT, numero de registre).
+const FONT_LABELS = {
+  cooperatives: "Cooperatives (CIF)",
+  sat: "SAT (num. registre)",
+  "no-enllac": "Sense enllac",
+};
 
 const FACETS = [
   { key: "exercici", title: "Exercici", search: false },
   { key: "fons", title: "Fons", search: false },
-  { key: "estat_enllac", title: "Enllac cooperatives", search: false, labels: ESTAT_LABELS },
+  { key: "font_enllac", title: "Enllac a un registre", search: false, labels: FONT_LABELS },
+  { key: "estat_enllac", title: "Estat de l'enllac", search: false, labels: ESTAT_LABELS },
   { key: "comarca", title: "Comarca", search: true },
   { key: "municipi", title: "Municipi", search: true },
   { key: "mesura", title: "Mesura", search: true },
@@ -61,12 +68,13 @@ const state = {
   surf: { byIne: new Map(), byComarca: new Map() }, // creuat SIGPAC x FEGA per municipi
   useByIne: new Map(), // desglossament de superficie per us, per codi_ine
   canonLabel: new Map(), // clau_beneficiari -> nom_canonic (etiqueta representativa)
-  linkByClau: new Map(), // clau_beneficiari -> {estat, cif, clauReg} (enllac cooperatives)
+  linkByClau: new Map(), // clau_beneficiari -> {estat, font, cif, clauReg} (enllac corporatiu)
   geo: null,
   query: "",
   sel: {
     exercici: new Set(),
     fons: new Set(),
+    font_enllac: new Set(),
     estat_enllac: new Set(),
     comarca: new Set(),
     municipi: new Set(),
@@ -138,7 +146,8 @@ async function loadMarts() {
             coalesce(comarca, '(sense comarca)') as comarca,
             provincia, codi_postal, codi_ine, mesura,
             cast(import_eur as double) as import_eur, fons, exercici,
-            group_cif, group_name, estat_enllac, cif, clau_registral
+            group_cif, group_name, estat_enllac,
+            coalesce(font_enllac, 'no-enllac') as font_enllac, cif, clau_registral
      from 'ajudes.parquet'`,
   );
   const superficie = await conn.query(
@@ -343,15 +352,21 @@ function chipsHtml() {
 // Cel.la d'una dimensio segons el seu tipus (beneficiari fort, mesura ampla, fons en
 // pastilla, exercici numeric). El valor pot ser undefined si la dimensio no esta agrupada,
 // pero aci nomes es pinten columnes ACTIVES, aixi que sempre hi es.
-// Badge d'enllac amb el registre de cooperatives. match = confirmat (verd); possible =
-// candidat (ambre); MAI es llig un possible com a fet. Mostra CIF i clau registral.
+// Badge d'enllac corporatiu. La font determina l'identificador mostrat: cooperatives -> CIF,
+// SAT -> numero de registre. match = confirmat (verd); possible = candidat (ambre); MAI es
+// llig un possible com a fet.
 function linkBadgeHtml(clau) {
   const link = state.linkByClau.get(clau);
   if (!link) return "";
+  const coop = link.font === "cooperatives";
   const cls = link.estat === "match" ? "badge-ok" : "badge-avis";
-  const etiqueta = link.estat === "match" ? "✓ Coop." : "Coop.?";
-  const title = `Enllac al Registre de Cooperatives de la CV · ${ESTAT_LABELS[link.estat]} · CIF ${link.cif}${link.clauReg ? " · " + link.clauReg : ""}`;
-  return ` <span class="badge ${cls} link-badge" title="${esc(title)}">${etiqueta} ${esc(link.cif)}</span>`;
+  const sigla = coop ? "Coop." : "SAT";
+  const ident = coop ? link.cif : link.clauReg; // CIF (coop) o num. de registre (SAT)
+  const etiqueta = link.estat === "match" ? `✓ ${sigla}` : `${sigla}?`;
+  const idLabel = coop ? "CIF" : "Num. registre";
+  const registre = coop ? "Cooperatives" : "SAT";
+  const title = `Enllac al Registre de ${registre} de la CV · ${ESTAT_LABELS[link.estat]} · ${idLabel} ${ident}`;
+  return ` <span class="badge ${cls} link-badge" title="${esc(title)}">${etiqueta} ${esc(ident)}</span>`;
 }
 
 function dimCellHtml(col, r) {
@@ -624,7 +639,7 @@ function setupEvents() {
 
 function downloadCsv() {
   const rows = sortRows(filteredRows());
-  const cols = ["nom_beneficiari", "clau_beneficiari", "nom_canonic", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name", "estat_enllac", "cif", "clau_registral"];
+  const cols = ["nom_beneficiari", "clau_beneficiari", "nom_canonic", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name", "estat_enllac", "font_enllac", "cif", "clau_registral"];
   const escCsv = (v) => {
     const s = v == null ? "" : String(v);
     return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -648,7 +663,14 @@ function downloadCsv() {
     // Etiqueta representativa i enllac per clau canonica (constants per clau a tot el mart).
     for (const r of marts.rows) {
       state.canonLabel.set(r.clau_beneficiari, r.nom_canonic);
-      if (r.cif) state.linkByClau.set(r.clau_beneficiari, { estat: r.estat_enllac, cif: r.cif, clauReg: r.clau_registral });
+      if (r.font_enllac === "cooperatives" || r.font_enllac === "sat") {
+        state.linkByClau.set(r.clau_beneficiari, {
+          estat: r.estat_enllac,
+          font: r.font_enllac,
+          cif: r.cif,
+          clauReg: r.clau_registral,
+        });
+      }
     }
     state.geo = geo;
     setupEvents();
