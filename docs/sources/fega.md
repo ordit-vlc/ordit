@@ -106,6 +106,54 @@ Cada fila és **una línia per mesura** d'un beneficiari, no un beneficiari agre
   automàtica per heurística**. La invariant es blinda amb el test dbt
   `assert_noms_normalitzats` (cap nom del crosswalk pot sobreviure sense corregir al mart).
 
+## Clau canònica de beneficiari (identitat sense CIF)
+
+Com que el fitxer **no porta CIF/NIF**, la identitat d'entitat depén del nom, i el mateix
+beneficiari apareix amb variacions de forma jurídica i d'espais **sobretot entre exercicis**
+(p. ex. `GREENMED SL` el 2024 i `GREENMED S. L.` el 2025 són la mateixa empresa). Per a no
+partir-ne el total en agrupar, es deriva una **clau canònica** (`canonical_key` a `int_fega`,
+`clau_beneficiari` al mart) amb la macro [`canon_beneficiari`](../../ordit_dbt/macros/canon_beneficiari.sql).
+És una **heurística, precision-first**: davant del dubte, **no fusiona** (sense CIF no podem
+confirmar identitat). El **nom d'origen es preserva** (`nom_beneficiari`); el canònic és una
+columna nova, mai una sobreescriptura.
+
+Regla (una sola passada, normalització simple i agressiva):
+
+**Plega accents** (`strip_accents`) + **majúscules** + **elimina TOT allò que no siga
+alfanumèric** (espais i puntuació inclosos). Sense llista de formes jurídiques: eliminar
+espais i puntuació ja unifica per si sol les variants per espaiat/punts:
+
+- `GREENMED SL` / `GREENMED S.L.` / `GREENMED S. L.` → `GREENMEDSL`
+- `GREEN FRUITS COOP. V.` / `GREENFRUITS COOP. V.` → `GREENFRUITSCOOPV`
+
+**Precision-first per construcció**: la clau només col·lapsa si la seqüència de lletres i
+xifres coincideix. `FOO SL` ≠ `FOO SA` i `FOO` ≠ `FOO SL` (no es pot fusionar per error allò
+que difereix en alguna lletra o xifra).
+
+**Etiqueta representativa** per clau (`nom_canonic`): la variant del nom d'origen **més
+freqüent** (per nombre de files), desempatant per la **més completa** (més llarga) i després
+alfabèticament. L'explorador **agrupa beneficiaris per la clau** i mostra esta etiqueta.
+
+**Limitacions** (és heurístic, es toleren residus):
+
+- **No unifica equivalències d'abreviatura amb lletres distintes** (p. ex. `S. Coop. V.` vs
+  `SCV`, o `NÚMERO` vs `N`): per a la clau són seqüències de lletres diferents. És el preu de
+  simplificar; a la pràctica, en el conjunt real de la CV, **cap** parell d'esta mena
+  apareixia escrit de les dues formes, així que la simplificació **no perd cap fusió** que
+  fera la versió anterior (curada).
+- Sense CIF, dues entitats homònimes (mateix nom i forma) col·lapsarien; és el preu de
+  precision-first vs. el risc invers (partir una entitat). L'enllaç fort amb el BORME (Fase 3
+  completa) és el que aportarà el CIF.
+- Un mateix beneficiari pot rebre ajudes en **diversos municipis**, i el municipi ve
+  **parcialment sense resoldre**; per això **no** s'aplica cap porta de població (un filtre
+  dur partiria duplicats reals, fins i tot podria desfer `GREENMED`). Només es mesura el cost.
+- Efecte mesurat sobre el conjunt real (juny 2026): **63.274 → 63.067** claus (−207, 0,33 %);
+  **+7** fusions respecte de la versió curada (variants d'espaiat: `GREEN FRUITS`/`GREENFRUITS`,
+  `AGRO SAN CARLOS`/`AGROSANCARLOS`…), **0** perdudes. De les 207 fusions, **9 no comparteixen
+  cap municipi** (majoritàriament variants d'accent del mateix nom en municipis distints o amb
+  municipi sense resoldre). La invariant `clau_beneficiari`/`nom_canonic` **no nul·la** es
+  prova a dbt; la normalització, a `tests/test_clau_beneficiari.py` (fixtures sintètiques).
+
 ## Estat del contracte
 
 El contracte provisional inicial **no casava** amb este esquema (sense `NIF`, sense

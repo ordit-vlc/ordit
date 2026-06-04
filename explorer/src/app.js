@@ -26,7 +26,9 @@ const SOURCE = {
 // L'ordre aci es l'ordre de columnes. La columna de VALOR (import_eur) sempre hi es, sumada
 // i no llevable.
 const DIMENSIONS = [
-  { key: "nom_beneficiari", label: "Beneficiari", type: "text", strong: true },
+  // Beneficiari: s'agrupa per la CLAU canonica (col.lapsa variants de forma de la mateixa
+  // entitat); es mostra l'etiqueta representativa (nom_canonic), no la clau crua.
+  { key: "clau_beneficiari", label: "Beneficiari", type: "text", strong: true, display: "nom_canonic" },
   { key: "municipi", label: "Municipi", type: "text" },
   { key: "comarca", label: "Comarca", type: "text" },
   { key: "mesura", label: "Mesura", type: "text" },
@@ -49,6 +51,7 @@ const state = {
   rows: [],
   surf: { byIne: new Map(), byComarca: new Map() }, // creuat SIGPAC x FEGA per municipi
   useByIne: new Map(), // desglossament de superficie per us, per codi_ine
+  canonLabel: new Map(), // clau_beneficiari -> nom_canonic (etiqueta representativa)
   geo: null,
   query: "",
   sel: {
@@ -119,7 +122,7 @@ async function loadMarts() {
 
   const conn = await db.connect();
   const ajudes = await conn.query(
-    `select nom_beneficiari,
+    `select nom_beneficiari, clau_beneficiari, nom_canonic,
             coalesce(municipi, '(sense resoldre)') as municipi,
             coalesce(comarca, '(sense comarca)') as comarca,
             provincia, codi_postal, codi_ine, mesura,
@@ -303,7 +306,7 @@ function facetHtml(f) {
 }
 
 function kpiHtml(rows) {
-  const benef = new Set(rows.map((r) => r.nom_beneficiari)).size;
+  const benef = new Set(rows.map((r) => r.clau_beneficiari)).size;
   const munis = new Set(rows.map((r) => r.municipi)).size;
   const total = rows.reduce((a, r) => a + r.import_eur, 0);
   return `<div class="ex-kpis">
@@ -331,8 +334,10 @@ function chipsHtml() {
 function dimCellHtml(col, r) {
   if (col.key === "fons") return `<td><span class="badge">${esc(r.fons)}</span></td>`;
   if (col.key === "mesura") return `<td class="cell-mesura">${esc(r.mesura)}</td>`;
+  // Columnes amb etiqueta representativa (p. ex. beneficiari: clau -> nom_canonic).
+  const text = col.display ? (state.canonLabel.get(r[col.key]) ?? r[col.key]) : r[col.key];
   const cls = col.strong ? "cell-strong" : col.type === "num" ? "num" : "";
-  return `<td${cls ? ` class="${cls}"` : ""}>${esc(r[col.key])}</td>`;
+  return `<td${cls ? ` class="${cls}"` : ""}>${esc(text)}</td>`;
 }
 
 function tableHtml(rows) {
@@ -391,13 +396,16 @@ function tableHtml(rows) {
 
 function chartHtml(rows) {
   const by = state.chartBy;
-  const data = aggregate(rows, by === "municipi" ? "municipi" : "nom_beneficiari").slice(0, 15);
+  // "Top receptors" agrega per clau canonica (no pel nom cru) i mostra l'etiqueta representativa.
+  const byBenef = by !== "municipi";
+  const data = aggregate(rows, byBenef ? "clau_beneficiari" : "municipi").slice(0, 15);
+  const label = (k) => (byBenef ? (state.canonLabel.get(k) ?? k) : k);
   const max = Math.max(...data.map((d) => Math.abs(d.v)), 1);
   const cats = ["--cat-1", "--cat-2", "--cat-3", "--cat-4", "--cat-5", "--cat-6"];
   const bars = data
     .map(
       (d, i) => `<div class="barrow" style="grid-template-columns:220px 1fr auto">
-      <span class="bl" title="${esc(d.k)}">${esc(d.k)}</span>
+      <span class="bl" title="${esc(label(d.k))}">${esc(label(d.k))}</span>
       <div class="bartrack"><div class="barfill" style="width:${(Math.abs(d.v) / max) * 100}%;background:var(${cats[i % cats.length]})"></div></div>
       <span class="bt tnum">${fmtEur(d.v)}</span></div>`,
     )
@@ -591,7 +599,7 @@ function setupEvents() {
 
 function downloadCsv() {
   const rows = sortRows(filteredRows());
-  const cols = ["nom_beneficiari", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name"];
+  const cols = ["nom_beneficiari", "clau_beneficiari", "nom_canonic", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name"];
   const escCsv = (v) => {
     const s = v == null ? "" : String(v);
     return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -612,6 +620,8 @@ function downloadCsv() {
     state.rows = marts.rows;
     state.surf = buildSurf(marts.surfRows);
     state.useByIne = buildUse(marts.useRows);
+    // Etiqueta representativa per clau canonica (constant per clau a tot el mart).
+    for (const r of marts.rows) state.canonLabel.set(r.clau_beneficiari, r.nom_canonic);
     state.geo = geo;
     setupEvents();
     render();

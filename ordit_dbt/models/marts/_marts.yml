@@ -9,6 +9,20 @@ models:
       del codi postal; els no resolts mantenen codi_postal pero municipi/comarca son NULL.
     columns:
       - name: nom_beneficiari
+        description: Nom del beneficiari tal com arriba de FEGA (procedencia preservada).
+        tests:
+          - not_null
+      - name: clau_beneficiari
+        description: >
+          Clau canonica d'identitat de beneficiari (heuristica, precision-first): plega
+          variants de forma juridica/espais de la mateixa entitat. FEGA no porta CIF, aixi
+          que es basa en el nom. Vegeu la macro canon_beneficiari i docs/sources/fega.md.
+        tests:
+          - not_null
+      - name: nom_canonic
+        description: >
+          Etiqueta representativa per clau canonica (variant mes freqüent, desempat per la
+          mes completa). Nomes per a mostrar; agrupar es fa per clau_beneficiari.
         tests:
           - not_null
       - name: codi_ine

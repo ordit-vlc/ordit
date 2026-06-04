@@ -5,3 +5,8 @@ ES#00000001;;València/Valencia;46XXX - XXXXX;I.1   Ayuda básica a la renta;;;;
 NOM FICTICI DE PROVA;;Alacant/Alicante;03014 - Exemple de Mar;I.6   Ayuda a la renta asociada;OE2;;;800,00;0;0;0;800,00;
 ENTITAT DE MADRID SL;;Madrid;28079 - Madrid;VI.4   Inversiones en activos físicos;;;;0;100,00;0;0;100,00;
 VALENCIANA;;València/Valencia;46001 - Valencia;VI.25   Asistencia técnica;;;;0;5000,00;0;0;5000,00;
+MAS FICTICI SL;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;1000,00;0;0;0;1000,00;
+MAS FICTICI SA;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;2000,00;0;0;0;2000,00;
+HORT EXEMPLE S.L.U.;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;300,00;0;0;0;300,00;
+MAS FICTICI;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;500,00;0;0;0;500,00;
+GREEN FRUITS COOP. V.;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;700,00;0;0;0;700,00;

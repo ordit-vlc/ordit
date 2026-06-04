@@ -16,7 +16,7 @@
 
 with long as (
     select
-        beneficiary_name, postal_code, codi_ine, municipi, comarca, provincia,
+        beneficiary_name, canonical_key, postal_code, codi_ine, municipi, comarca, provincia,
         measure, financial_year, group_cif, group_name,
         'FEAGA' as fons,
         amount_feaga as import_eur
@@ -26,27 +26,67 @@ with long as (
     union all
 
     select
-        beneficiary_name, postal_code, codi_ine, municipi, comarca, provincia,
+        beneficiary_name, canonical_key, postal_code, codi_ine, municipi, comarca, provincia,
         measure, financial_year, group_cif, group_name,
         'FEADER' as fons,
         amount_feader as import_eur
     from {{ ref("int_fega") }}
     where amount_feader <> 0
+),
+
+-- Etiqueta representativa per clau canonica: la variant del nom d'origen mes FREQUENT (per
+-- nombre de files), desempatant per la mes COMPLETA (mes llarga) i despres alfabeticament.
+-- Es nomes per a mostrar; el nom d'origen es preserva a cada fila (nom_beneficiari).
+representant as (
+    select canonical_key, nom_canonic
+    from (
+        select
+            canonical_key,
+            beneficiary_name as nom_canonic,
+            row_number() over (
+                partition by canonical_key
+                order by count(*) desc, length(beneficiary_name) desc, beneficiary_name
+            ) as rn
+        from {{ ref("int_fega") }}
+        group by canonical_key, beneficiary_name
+    )
+    where rn = 1
+),
+
+agg as (
+    select
+        beneficiary_name as nom_beneficiari,
+        any_value(canonical_key) as clau_beneficiari,
+        any_value(codi_ine) as codi_ine,
+        any_value(municipi) as municipi,
+        any_value(comarca) as comarca,
+        any_value(provincia) as provincia,
+        postal_code as codi_postal,
+        measure as mesura,
+        sum(import_eur) as import_eur,
+        fons,
+        financial_year as exercici,
+        any_value(group_cif) as group_cif,
+        any_value(group_name) as group_name
+    from long
+    group by beneficiary_name, postal_code, measure, fons, financial_year
+    having sum(import_eur) <> 0
 )
 
 select
-    beneficiary_name as nom_beneficiari,
-    any_value(codi_ine) as codi_ine,
-    any_value(municipi) as municipi,
-    any_value(comarca) as comarca,
-    any_value(provincia) as provincia,
-    postal_code as codi_postal,
-    measure as mesura,
-    sum(import_eur) as import_eur,
-    fons,
-    financial_year as exercici,
-    any_value(group_cif) as group_cif,
-    any_value(group_name) as group_name
-from long
-group by beneficiary_name, postal_code, measure, fons, financial_year
-having sum(import_eur) <> 0
+    agg.nom_beneficiari,
+    agg.clau_beneficiari,
+    r.nom_canonic,
+    agg.codi_ine,
+    agg.municipi,
+    agg.comarca,
+    agg.provincia,
+    agg.codi_postal,
+    agg.mesura,
+    agg.import_eur,
+    agg.fons,
+    agg.exercici,
+    agg.group_cif,
+    agg.group_name
+from agg
+left join representant r on r.canonical_key = agg.clau_beneficiari

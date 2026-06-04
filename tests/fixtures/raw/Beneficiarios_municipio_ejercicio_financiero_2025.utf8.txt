@@ -2,3 +2,6 @@ BENEFICIARIO;GRUPO_EMPRESA;PROVINCIA;MUNICIPIO;MEDIDA;OBJETIVO_ESP;FEC_INI;FEC_F
 FUNDACIO DEMOSTRACIO;;València/Valencia;46900 - Exemple de Serra;II.1   Cooperación para el desarrollo;OE2|OE5;02/08/2023;30/11/2023;0;800,00;0;0;800,00
 COOPERATIVA EXEMPLE COOP. V.;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;1500,00;0;0;0;1500,00
 COMUNITAT DE BENS EXEMPLE CB;;Alacant/Alicante;03065 - Exemple de Riu;I.1   Ayuda básica a la renta;OE1;;;450,00;0;0;0;450,00
+MAS FICTICI S. L.;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;1100,00;0;0;0;1100,00
+HORT EXEMPLE SLU;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;350,00;0;0;0;350,00
+GREENFRUITS COOP. V.;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;750,00;0;0;0;750,00
