@@ -42,6 +42,12 @@ build:
 link:
     uv run python -m linkage.coverage
 
+# Enllac determinista FEGA x Directori de Cooperatives de la CV (Fase 3, primera font real).
+# Per nom canonic + municipi; arrossega el CIF. Requereix la ingesta:
+#   uv run python -m ingest.cooperatives.download
+link-cooperatives:
+    uv run python -m linkage.cooperatives
+
 # Export de marts -> Parquet a data/dist (publicar el teixit).
 publish:
     uv run python -m publish.export
