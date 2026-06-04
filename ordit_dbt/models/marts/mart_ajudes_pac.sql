@@ -88,12 +88,14 @@ select
     agg.exercici,
     agg.group_cif,
     agg.group_name,
-    -- Enllac amb el Registre de Cooperatives de la CV (Fase 3). estat_enllac sempre present
-    -- (match/possible/no-match); cif i clau_registral nomes per match/possible (el premi:
-    -- FEGA no porta CIF). Mai un enllac dur: possible es un candidat, no una afirmacio.
+    -- Enllac corporatiu GENERAL (Fase 3): cooperatives + SAT en columnes compartides.
+    -- estat_enllac sempre present (match/possible/no-match); font_enllac diu de quin registre
+    -- ve (cooperatives/sat/NULL); clau_registral = clau de cooperatives o numero de SAT; cif
+    -- NOMES de cooperatives (identificador fort). Mai un enllac dur: possible es candidat.
     e.estat_enllac,
+    e.font_enllac,
     e.cif,
     e.clau_registral
 from agg
 left join representant r on r.canonical_key = agg.clau_beneficiari
-left join {{ ref("int_enllac_cooperatives") }} e on e.canonical_key = agg.clau_beneficiari
+left join {{ ref("int_enllac") }} e on e.canonical_key = agg.clau_beneficiari

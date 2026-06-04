@@ -19,7 +19,7 @@ models:
     description: >
       Enllac determinista FEGA <-> Registre de Cooperatives de la CV per clau canonica
       (canon_beneficiari) + municipi. Una fila per canonical_key amb estat_enllac
-      (match/possible/no-match), cif i clau registral de la cooperativa. Capa interna.
+      (match/possible/no-match), cif i clau registral de la cooperativa. Capa interna, font.
     columns:
       - name: canonical_key
         tests:
@@ -31,6 +31,35 @@ models:
           - accepted_values:
               arguments:
                 values: ["match", "possible", "no-match"]
+
+  - name: int_enllac_sat
+    description: >
+      Enllac determinista FEGA <-> Registre de SAT de la CV per nucli-SAT del nom (sat_core)
+      + numero de registre encastat al nom + municipi. Nomes el subconjunt SAT de FEGA. Una
+      fila per canonical_key amb estat_enllac i clau_registral (= numero de registre; sense
+      CIF). Capa interna, font.
+    columns:
+      - name: canonical_key
+        tests:
+          - not_null
+          - unique
+      - name: estat_enllac
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["match", "possible", "no-match"]
+
+  - name: int_enllac
+    description: >
+      Enllac corporatiu GENERAL: combina cooperatives i SAT en un sol resultat per
+      canonical_key (estat_enllac, font_enllac, clau_registral, cif), triant la millor font
+      (match > possible; a igualtat, cooperatives perque aporta CIF). Capa interna.
+    columns:
+      - name: canonical_key
+        tests:
+          - not_null
+          - unique
 
   - name: int_sigpac_municipi
     description: >

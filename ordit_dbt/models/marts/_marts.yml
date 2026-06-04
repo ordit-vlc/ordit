@@ -65,25 +65,34 @@ models:
           - not_null
       - name: estat_enllac
         description: >
-          Estat de l'enllac amb el Registre de Cooperatives de la CV (Fase 3, determinista):
-          match (clau canonica + municipi), possible (clau igual amb municipi distint o nucli)
-          o no-match. Sempre present; mai un enllac dur. Vegeu int_enllac_cooperatives.
+          Estat de l'enllac corporatiu (Fase 3, determinista): match (nom canonic/nucli +
+          municipi), possible (nom igual amb municipi distint, nucli o numero de registre) o
+          no-match. Sempre present; mai un enllac dur. Vegeu int_enllac.
         tests:
           - not_null
           - accepted_values:
               arguments:
                 values: ["match", "possible", "no-match"]
+      - name: font_enllac
+        description: >
+          Font del registre on s'ha enllacat: 'cooperatives' o 'sat'; NULL si no-match. Un
+          beneficiari casa amb una sola font segons la seua classe. La coherencia amb
+          estat_enllac es prova a assert_font_enllac_coherent.
       - name: cif
         description: >
-          CIF de la cooperativa enllacada (NULL si no-match). El premi de l'enllac: FEGA no
-          porta CIF. Integritat referencial cap a staging_cooperatives (els NULL s'ignoren).
+          CIF de la cooperativa enllacada (NOMES font_enllac='cooperatives'; la SAT no porta
+          CIF). NULL altrament. El premi de l'enllac: FEGA no porta CIF. Integritat
+          referencial cap a staging_cooperatives (els NULL s'ignoren).
         tests:
           - relationships:
               arguments:
                 to: ref('staging_cooperatives')
                 field: cif
       - name: clau_registral
-        description: Clau registral de la cooperativa enllacada (NULL si no-match).
+        description: >
+          Identificador registral de l'entitat enllacada: clau registral (cooperatives) o
+          numero de registre (SAT), segons font_enllac. NULL si no-match. Integritat
+          referencial de SAT a assert_clau_registral_sat.
 
   - name: mart_superficie_cultiu_municipi
     description: >
