@@ -10,3 +10,4 @@ MAS FICTICI SA;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a
 HORT EXEMPLE S.L.U.;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;300,00;0;0;0;300,00;
 MAS FICTICI;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;500,00;0;0;0;500,00;
 GREEN FRUITS COOP. V.;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;700,00;0;0;0;700,00;
+SAT 9999 EXEMPLE FICTICI;;València/Valencia;46250 - Exemple de Dalt;I.1   Ayuda básica a la renta;OE1;;;900,00;0;0;0;900,00;

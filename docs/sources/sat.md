@@ -49,3 +49,12 @@ Contracte: [`contracts/sat.py`](../../contracts/sat.py).
   possible).
 - **Encoding UTF-8 net** (no com cooperatives). ~1 registre malformat (`AGRICOLA TIÃË`)
   d'origen, tolerat: no es repara perquè la resta del fitxer és correcte.
+
+## Enllaç al teixit
+
+L'enllaç viu dins de dbt: `staging_sat` → `int_enllac_sat` (nucli-SAT + número de registre +
+municipi). El resultat es combina amb el de cooperatives a **`int_enllac`** (enllaç corporatiu
+**general**), que alimenta les columnes compartides del mart `mart_ajudes_pac`: `estat_enllac`,
+`font_enllac` (`cooperatives`/`sat`/NULL), `clau_registral` (clau de cooperatives o número de
+SAT) i `cif` (només cooperatives). No s'acumulen columnes per font. L'eina de mesura reusable
+és `linkage/sat.py` (`just link-sat`).
