@@ -37,9 +37,18 @@ const DIMENSIONS = [
 ];
 const VALUE = { key: "import_eur", label: "Import (€)", type: "num", strong: true };
 
+// Etiquetes de l'estat d'enllac amb el registre de cooperatives (un possible MAI es llig
+// com a fet). Vegeu int_enllac_cooperatives.
+const ESTAT_LABELS = {
+  match: "Confirmat (match)",
+  possible: "Candidat (possible)",
+  "no-match": "Sense enllac",
+};
+
 const FACETS = [
   { key: "exercici", title: "Exercici", search: false },
   { key: "fons", title: "Fons", search: false },
+  { key: "estat_enllac", title: "Enllac cooperatives", search: false, labels: ESTAT_LABELS },
   { key: "comarca", title: "Comarca", search: true },
   { key: "municipi", title: "Municipi", search: true },
   { key: "mesura", title: "Mesura", search: true },
@@ -52,11 +61,13 @@ const state = {
   surf: { byIne: new Map(), byComarca: new Map() }, // creuat SIGPAC x FEGA per municipi
   useByIne: new Map(), // desglossament de superficie per us, per codi_ine
   canonLabel: new Map(), // clau_beneficiari -> nom_canonic (etiqueta representativa)
+  linkByClau: new Map(), // clau_beneficiari -> {estat, cif, clauReg} (enllac cooperatives)
   geo: null,
   query: "",
   sel: {
     exercici: new Set(),
     fons: new Set(),
+    estat_enllac: new Set(),
     comarca: new Set(),
     municipi: new Set(),
     mesura: new Set(),
@@ -127,7 +138,7 @@ async function loadMarts() {
             coalesce(comarca, '(sense comarca)') as comarca,
             provincia, codi_postal, codi_ine, mesura,
             cast(import_eur as double) as import_eur, fons, exercici,
-            group_cif, group_name
+            group_cif, group_name, estat_enllac, cif, clau_registral
      from 'ajudes.parquet'`,
   );
   const superficie = await conn.query(
@@ -297,7 +308,7 @@ function facetHtml(f) {
     .map(
       ([v, n]) => `<label class="facet-opt">
         <input type="checkbox" data-facet="${f.key}" value="${esc(v)}" ${sel.has(v) ? "checked" : ""} />
-        <span class="opt-label">${esc(v)}</span><span class="opt-count">${n}</span></label>`,
+        <span class="opt-label">${esc(f.labels?.[v] ?? v)}</span><span class="opt-count">${n}</span></label>`,
     )
     .join("");
   const more = opts.length > shown.length ? `<div class="facet-more mono">+${opts.length - shown.length} mes…</div>` : "";
@@ -321,7 +332,8 @@ function chipsHtml() {
   const chips = [];
   for (const f of FACETS) {
     for (const v of state.sel[f.key]) {
-      chips.push(`<span class="chip">${esc(v)}<button data-chip-facet="${f.key}" data-chip-val="${esc(v)}" aria-label="Lleva ${esc(v)}">✕</button></span>`);
+      const label = f.labels?.[v] ?? v;
+      chips.push(`<span class="chip">${esc(label)}<button data-chip-facet="${f.key}" data-chip-val="${esc(v)}" aria-label="Lleva ${esc(label)}">✕</button></span>`);
     }
   }
   if (!chips.length) return "";
@@ -331,13 +343,26 @@ function chipsHtml() {
 // Cel.la d'una dimensio segons el seu tipus (beneficiari fort, mesura ampla, fons en
 // pastilla, exercici numeric). El valor pot ser undefined si la dimensio no esta agrupada,
 // pero aci nomes es pinten columnes ACTIVES, aixi que sempre hi es.
+// Badge d'enllac amb el registre de cooperatives. match = confirmat (verd); possible =
+// candidat (ambre); MAI es llig un possible com a fet. Mostra CIF i clau registral.
+function linkBadgeHtml(clau) {
+  const link = state.linkByClau.get(clau);
+  if (!link) return "";
+  const cls = link.estat === "match" ? "badge-ok" : "badge-avis";
+  const etiqueta = link.estat === "match" ? "✓ Coop." : "Coop.?";
+  const title = `Enllac al Registre de Cooperatives de la CV · ${ESTAT_LABELS[link.estat]} · CIF ${link.cif}${link.clauReg ? " · " + link.clauReg : ""}`;
+  return ` <span class="badge ${cls} link-badge" title="${esc(title)}">${etiqueta} ${esc(link.cif)}</span>`;
+}
+
 function dimCellHtml(col, r) {
   if (col.key === "fons") return `<td><span class="badge">${esc(r.fons)}</span></td>`;
   if (col.key === "mesura") return `<td class="cell-mesura">${esc(r.mesura)}</td>`;
   // Columnes amb etiqueta representativa (p. ex. beneficiari: clau -> nom_canonic).
   const text = col.display ? (state.canonLabel.get(r[col.key]) ?? r[col.key]) : r[col.key];
+  // Al beneficiari, afig el badge d'enllac (CIF + estat) si esta enllacat.
+  const badge = col.key === "clau_beneficiari" ? linkBadgeHtml(r[col.key]) : "";
   const cls = col.strong ? "cell-strong" : col.type === "num" ? "num" : "";
-  return `<td${cls ? ` class="${cls}"` : ""}>${esc(text)}</td>`;
+  return `<td${cls ? ` class="${cls}"` : ""}>${esc(text)}${badge}</td>`;
 }
 
 function tableHtml(rows) {
@@ -599,7 +624,7 @@ function setupEvents() {
 
 function downloadCsv() {
   const rows = sortRows(filteredRows());
-  const cols = ["nom_beneficiari", "clau_beneficiari", "nom_canonic", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name"];
+  const cols = ["nom_beneficiari", "clau_beneficiari", "nom_canonic", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name", "estat_enllac", "cif", "clau_registral"];
   const escCsv = (v) => {
     const s = v == null ? "" : String(v);
     return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -620,8 +645,11 @@ function downloadCsv() {
     state.rows = marts.rows;
     state.surf = buildSurf(marts.surfRows);
     state.useByIne = buildUse(marts.useRows);
-    // Etiqueta representativa per clau canonica (constant per clau a tot el mart).
-    for (const r of marts.rows) state.canonLabel.set(r.clau_beneficiari, r.nom_canonic);
+    // Etiqueta representativa i enllac per clau canonica (constants per clau a tot el mart).
+    for (const r of marts.rows) {
+      state.canonLabel.set(r.clau_beneficiari, r.nom_canonic);
+      if (r.cif) state.linkByClau.set(r.clau_beneficiari, { estat: r.estat_enllac, cif: r.cif, clauReg: r.clau_registral });
+    }
     state.geo = geo;
     setupEvents();
     render();

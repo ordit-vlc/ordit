@@ -368,3 +368,10 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Badge d'enllac amb el registre de cooperatives a la cel.la de beneficiari (CIF + estat). */
+.link-badge {
+  font-size: var(--t-2xs);
+  vertical-align: middle;
+  white-space: nowrap;
+}
