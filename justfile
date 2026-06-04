@@ -36,9 +36,11 @@ ingest:
 build:
     cd ordit_dbt && uv run dbt build
 
-# Passada d'entity resolution / nuar (Fase 3+).
+# Spike de viabilitat de l'enllac FEGA x BORME per nom (Fase 3, pas 1). Mesura cobertura i
+# escup l'informe + una mostra per etiquetar. Cap enllac dur. Requereix la llosa de BORME:
+#   uv run python -m ingest.borme.download --start 2024-01-01 --end 2024-12-31
 link:
-    @echo "Sense enllac encara (Fase 3+)."
+    uv run python -m linkage.coverage
 
 # Export de marts -> Parquet a data/dist (publicar el teixit).
 publish:
