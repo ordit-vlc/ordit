@@ -87,6 +87,13 @@ select
     agg.fons,
     agg.exercici,
     agg.group_cif,
-    agg.group_name
+    agg.group_name,
+    -- Enllac amb el Registre de Cooperatives de la CV (Fase 3). estat_enllac sempre present
+    -- (match/possible/no-match); cif i clau_registral nomes per match/possible (el premi:
+    -- FEGA no porta CIF). Mai un enllac dur: possible es un candidat, no una afirmacio.
+    e.estat_enllac,
+    e.cif,
+    e.clau_registral
 from agg
 left join representant r on r.canonical_key = agg.clau_beneficiari
+left join {{ ref("int_enllac_cooperatives") }} e on e.canonical_key = agg.clau_beneficiari

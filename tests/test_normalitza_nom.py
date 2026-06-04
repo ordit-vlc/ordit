@@ -21,6 +21,8 @@ DBT_DIR = ROOT / "ordit_dbt"
 SYNTH_GLOB = str(
     ROOT / "tests" / "fixtures" / "raw" / "Beneficiarios_municipio_ejercicio_financiero_*.utf8.txt"
 )
+# El mart depen de l'enllac amb cooperatives (staging_cooperatives) -> fixtures CI-safe.
+COOP_GLOB = str(ROOT / "tests" / "fixtures" / "cooperatives_raw" / "*.jsonl")
 REAL_DB = ROOT / "data" / "ordit.duckdb"
 
 
@@ -44,7 +46,7 @@ def synth_marts_db(tmp_path_factory) -> Path:
             "--profiles-dir",
             ".",
             "--vars",
-            f"{{fega_raw_glob: '{SYNTH_GLOB}'}}",
+            f"{{fega_raw_glob: '{SYNTH_GLOB}', cooperatives_raw_glob: '{COOP_GLOB}'}}",
         ],
         cwd=DBT_DIR,
         env=env,

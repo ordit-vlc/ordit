@@ -62,16 +62,25 @@ No-go: el fitxer de SIGPAC massa gran per processar al build plane dins de memò
 
 ---
 
-## Fase 3 — Entity resolution (FEGA x BORME)
+## Fase 3 — Entity resolution (FEGA x fonts corporatives)
 
-Objectiu: enllaçar els beneficiaris persones jurídiques de FEGA amb el graf corporatiu
-del BORME.
+Objectiu: enllaçar els beneficiaris persones jurídiques de FEGA amb les fonts corporatives
+valencianes per a guanyar identificador fort (CIF) i graf. Un spike de viabilitat (FEGA x
+BORME per nom) va mostrar que **BORME tot sol no basta**: només cobreix les societats
+mercantils (SL/SA), mentre que la major part dels diners agraris va a **cooperatives** i
+**SAT**, en altres registres. Les fonts corporatives són, doncs, **cooperatives + SAT +
+BORME**, no BORME en solitari.
 
-Lliurable:
-- `linkage/` amb splink sobre raó social / CIF normalitzats.
-- La sortida emet match / possible / no-match amb scores de confiança, mai afirmacions
-  dures.
-- Una mostra d'avaluació etiquetada per mesurar la precisió.
+Lliurable (per ordre de valor agrari i qualitat d'identificador):
+- **Cooperatives de la CV** (GVA, CC-BY, amb CIF): enllaç determinista per clau canònica +
+  municipi, ja al teixit (`int_enllac_cooperatives`, columnes `estat_enllac`/`cif`/
+  `clau_registral` al mart). Injecta a FEGA el CIF que no porta.
+- **SAT de la CV** (GVA, CC-BY) i **BORME multi-any** (BOE): fonts següents.
+- La sortida emet **match / possible / no-match** amb traçabilitat per enllaç, mai
+  afirmacions dures. `splink` (enllaç probabilístic) queda **diferit**: el matching
+  determinista per nom canònic és ja precís; s'avaluarà quan múltiples fonts sorolloses
+  generen ambigüitat real.
+- Una mostra d'avaluació etiquetada per mesurar la precisió per font.
 
 Go: precisió >= 70% a la mostra etiquetada a mà.
 

@@ -63,6 +63,27 @@ models:
       - name: exercici
         tests:
           - not_null
+      - name: estat_enllac
+        description: >
+          Estat de l'enllac amb el Registre de Cooperatives de la CV (Fase 3, determinista):
+          match (clau canonica + municipi), possible (clau igual amb municipi distint o nucli)
+          o no-match. Sempre present; mai un enllac dur. Vegeu int_enllac_cooperatives.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["match", "possible", "no-match"]
+      - name: cif
+        description: >
+          CIF de la cooperativa enllacada (NULL si no-match). El premi de l'enllac: FEGA no
+          porta CIF. Integritat referencial cap a staging_cooperatives (els NULL s'ignoren).
+        tests:
+          - relationships:
+              arguments:
+                to: ref('staging_cooperatives')
+                field: cif
+      - name: clau_registral
+        description: Clau registral de la cooperativa enllacada (NULL si no-match).
 
   - name: mart_superficie_cultiu_municipi
     description: >

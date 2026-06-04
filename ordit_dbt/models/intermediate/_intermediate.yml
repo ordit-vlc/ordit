@@ -15,6 +15,23 @@ models:
         tests:
           - not_null
 
+  - name: int_enllac_cooperatives
+    description: >
+      Enllac determinista FEGA <-> Registre de Cooperatives de la CV per clau canonica
+      (canon_beneficiari) + municipi. Una fila per canonical_key amb estat_enllac
+      (match/possible/no-match), cif i clau registral de la cooperativa. Capa interna.
+    columns:
+      - name: canonical_key
+        tests:
+          - not_null
+          - unique
+      - name: estat_enllac
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["match", "possible", "no-match"]
+
   - name: int_sigpac_municipi
     description: >
       Recintes SIGPAC agregats per municipi-catastro, us i grup de cultiu, resolts a

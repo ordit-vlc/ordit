@@ -51,7 +51,7 @@ jobs:
         run: >
           uv run dbt build
           --profiles-dir .
-          --vars "{fega_raw_glob: '../tests/fixtures/raw/Beneficiarios_municipio_ejercicio_financiero_*.utf8.txt', sigpac_agg_path: '../tests/fixtures/sigpac_agg_sample.csv'}"
+          --vars "{fega_raw_glob: '../tests/fixtures/raw/Beneficiarios_municipio_ejercicio_financiero_*.utf8.txt', sigpac_agg_path: '../tests/fixtures/sigpac_agg_sample.csv', cooperatives_raw_glob: '../tests/fixtures/cooperatives_raw/*.jsonl'}"
 
   contracts:
     runs-on: ubuntu-latest

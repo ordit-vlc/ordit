@@ -41,3 +41,13 @@ Contracte: [`contracts/cooperatives.py`](../../contracts/cooperatives.py).
   no està limitada per finestra (a diferència de BORME).
 - **Totes les classes.** Inclou totes les cooperatives (treball associat, agràries, habitatge…),
   no només agràries; l'enllaç amb FEGA és per nom canònic + municipi, independent de la classe.
+
+## Enllaç al teixit
+
+L'enllaç determinista FEGA ↔ cooperatives viu dins de dbt: `staging_cooperatives` (capa
+interna) → `int_enllac_cooperatives` (clau canònica + municipi, estat match/possible/no-match)
+→ columnes `estat_enllac`, `cif` i `clau_registral` al mart `mart_ajudes_pac`. Es poblen per
+match i possible (mai un enllaç dur); no-match deixa `cif`/`clau_registral` nul·les i preserva
+tots els receptors. L'eina de mesura reusable és `linkage/cooperatives.py` (`just
+link-cooperatives`).
+
