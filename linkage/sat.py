@@ -19,8 +19,6 @@ from pathlib import Path
 
 import duckdb
 
-from linkage.coverage import canon
-
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("linkage.sat")
 
@@ -76,10 +74,12 @@ def load_sat(con: duckdb.DuckDBPyConnection, sat_dir: Path = SAT_DIR) -> int:
 def build_classified(con: duckdb.DuckDBPyConnection) -> None:
     """Construeix `classified` (un registre per entitat SAT de FEGA). Requereix `fega` i
     `sat_raw`."""
+    # El numero de registre es la clau UNICA -> senyal fort (match). El nucli-SAT del nom
+    # (lossy) es nomes aproximat (possible). El municipi es conserva per a la mostra.
     con.execute(f"""
         create or replace temp view sat as
         select distinct nom as sat_nom, num_reg, municipi as sat_muni,
-               {sat_core("nom")} as namekey, {canon("municipi")} as muni_ck
+               {sat_core("nom")} as namekey
         from sat_raw where {sat_core("nom")} is not null
     """)
     con.execute(f"""
@@ -89,53 +89,40 @@ def build_classified(con: duckdb.DuckDBPyConnection) -> None:
                any_value({regnum("nom_canonic")}) as regnum
         from fega where {sat_subset("nom_canonic")} group by clau
     """)
-    con.execute(f"""
-        create or replace temp view fega_muni as
-        select distinct clau, {canon("municipi")} as muni_ck
-        from fega where {sat_subset("nom_canonic")} and municipi is not null
-    """)
-    # Candidats per nucli-SAT del nom (>=4 caracters), amb si el municipi coincideix.
-    con.execute("""
-        create or replace temp view name_cand as
-        select e.clau, s.sat_nom, s.num_reg, s.sat_muni,
-               exists (select 1 from fega_muni m where m.clau = e.clau and m.muni_ck = s.muni_ck)
-                   as muni_ok
-        from fega_ent e join sat s on s.namekey = e.namekey and length(e.namekey) >= 4
-    """)
-    con.execute("""
-        create or replace temp view name_agg as
-        select clau, count(distinct sat_nom) as n_name, bool_or(muni_ok) as has_muni,
-               arg_max(num_reg, muni_ok::int) as num_reg,
-               arg_max(sat_nom, muni_ok::int) as sat_nom,
-               arg_max(sat_muni, muni_ok::int) as sat_muni
-        from name_cand group by clau
-    """)
-    # Candidats per numero de registre (nomes per a entitats sense candidat de nom).
+    # Candidats per NUMERO DE REGISTRE (clau unica) -> fort.
     con.execute("""
         create or replace temp view reg_agg as
-        select e.clau, count(distinct s.sat_nom) as n_reg,
+        select e.clau, count(distinct s.num_reg) as n_reg,
                any_value(s.num_reg) as num_reg, any_value(s.sat_nom) as sat_nom,
                any_value(s.sat_muni) as sat_muni
         from fega_ent e
         join sat s on try_cast(s.num_reg as bigint) = try_cast(e.regnum as bigint)
-        where e.regnum is not null and e.clau not in (select clau from name_agg)
+        where e.regnum is not null
+        group by e.clau
+    """)
+    # Candidats per nucli-SAT del nom (>=4 caracters) -> aproximat.
+    con.execute("""
+        create or replace temp view name_agg as
+        select e.clau, count(distinct s.sat_nom) as n_name,
+               any_value(s.num_reg) as num_reg, any_value(s.sat_nom) as sat_nom,
+               any_value(s.sat_muni) as sat_muni
+        from fega_ent e join sat s on s.namekey = e.namekey and length(e.namekey) >= 4
         group by e.clau
     """)
     con.execute("""
         create or replace temp view classified as
         select
             e.clau, e.nom, e.import_eur, e.muni_fega,
-            case when n.has_muni then 'match'
-                 when n.clau is not null then 'possible'
-                 when r.clau is not null then 'possible'
+            case when r.clau is not null then 'match'  -- numero de registre coincident
+                 when n.clau is not null then 'possible'  -- nucli del nom (aproximat)
                  else 'no-match' end as tipus,
-            coalesce(n.num_reg, r.num_reg) as num_registre,
-            coalesce(n.sat_nom, r.sat_nom) as sat_nom,
-            coalesce(n.sat_muni, r.sat_muni) as sat_muni,
-            coalesce(n.n_name, r.n_reg, 0) as n_cand
+            coalesce(r.num_reg, n.num_reg) as num_registre,
+            coalesce(r.sat_nom, n.sat_nom) as sat_nom,
+            coalesce(r.sat_muni, n.sat_muni) as sat_muni,
+            coalesce(r.n_reg, n.n_name, 0) as n_cand
         from fega_ent e
-        left join name_agg n on n.clau = e.clau
         left join reg_agg r on r.clau = e.clau
+        left join name_agg n on n.clau = e.clau
     """)
 
 

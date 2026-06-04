@@ -14,13 +14,13 @@
 
 with coop as (
     select
-        canonical_key, estat_enllac as estat, clau_registral, cif,
+        canonical_key, estat_enllac as estat, clau_registral, cif, enllac_exacte, n_candidats,
         case estat_enllac when 'match' then 2 when 'possible' then 1 else 0 end as rang
     from {{ ref("int_enllac_cooperatives") }}
 ),
 sat as (
     select
-        canonical_key, estat_enllac as estat, clau_registral,
+        canonical_key, estat_enllac as estat, clau_registral, enllac_exacte, n_candidats,
         case estat_enllac when 'match' then 2 when 'possible' then 1 else 0 end as rang
     from {{ ref("int_enllac_sat") }}
 )
@@ -42,6 +42,17 @@ select
         when s.rang > 0 then s.clau_registral
     end as clau_registral,
     -- El CIF nomes ve de cooperatives.
-    case when c.rang >= s.rang and c.rang > 0 then c.cif end as cif
+    case when c.rang >= s.rang and c.rang > 0 then c.cif end as cif,
+    -- exacte i candidats de la font triada (per a l'invariant del possible).
+    case
+        when c.rang >= s.rang and c.rang > 0 then c.enllac_exacte
+        when s.rang > 0 then s.enllac_exacte
+        else false
+    end as enllac_exacte,
+    case
+        when c.rang >= s.rang and c.rang > 0 then c.n_candidats
+        when s.rang > 0 then s.n_candidats
+        else 0
+    end as n_candidats
 from coop c
 join sat s on s.canonical_key = c.canonical_key

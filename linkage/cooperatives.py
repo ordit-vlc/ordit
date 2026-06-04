@@ -60,45 +60,31 @@ def build_classified(con: duckdb.DuckDBPyConnection) -> None:
 
     Requereix les vistes `fega` (nom, nom_canonic, import_eur, clau, municipi) i `coop_raw`.
     """
-    # Cooperativa = clau canonica (clau_beneficiari ja es canonica) + nucli + municipi canonic.
+    # El registre certifica denominacions UNIQUES: nom canonic exacte + candidat unic = match,
+    # siga quin siga el municipi (la diferencia de municipi es quasi sempre grafia bilingue del
+    # mateix poble). El municipi es conserva nomes per a la mostra, no discrimina l'estat.
     con.execute(f"""
         create or replace temp view coop as
         select distinct nom as coop_nom, cif, clau_reg, municipi as coop_muni,
-               {canon("nom")} as ck, {core("nom")} as core, {canon("municipi")} as muni_ck
+               {canon("nom")} as ck, {core("nom")} as core
         from coop_raw where {canon("nom")} is not null
     """)
-    # Entitats cooperatives de FEGA i els seus municipis (poden ser-ne diversos).
     con.execute(f"""
         create or replace temp view fega_ent as
         select clau, any_value(nom_canonic) as nom, sum(import_eur) as import_eur,
                max(municipi) as muni_fega, any_value({core("nom_canonic")}) as core
         from fega where {cooperativa("nom_canonic")} group by clau
     """)
-    con.execute(f"""
-        create or replace temp view fega_muni as
-        select distinct clau, {canon("municipi")} as muni_ck
-        from fega where {cooperativa("nom_canonic")} and municipi is not null
-    """)
-    # Candidats per clau canonica, amb si el municipi coincideix.
-    con.execute("""
-        create or replace temp view cand_ck as
-        select e.clau, c.coop_nom, c.cif, c.clau_reg, c.coop_muni,
-               exists (select 1 from fega_muni m where m.clau = e.clau and m.muni_ck = c.muni_ck)
-                   as muni_ok
-        from fega_ent e join coop c on c.ck = e.clau
-    """)
+    # Candidats per clau canonica EXACTA: n_ck = nombre de cooperatives distintes (normal: 1).
     con.execute("""
         create or replace temp view ck_agg as
-        select clau,
-               count(distinct coop_nom) as n_ck,
-               bool_or(muni_ok) as has_muni,
-               arg_max(cif, muni_ok::int) as cif,
-               arg_max(clau_reg, muni_ok::int) as clau_reg,
-               arg_max(coop_nom, muni_ok::int) as coop_nom,
-               arg_max(coop_muni, muni_ok::int) as coop_muni
-        from cand_ck group by clau
+        select e.clau, count(distinct c.coop_nom) as n_ck,
+               any_value(c.cif) as cif, any_value(c.clau_reg) as clau_reg,
+               any_value(c.coop_nom) as coop_nom, any_value(c.coop_muni) as coop_muni
+        from fega_ent e join coop c on c.ck = e.clau
+        group by e.clau
     """)
-    # Candidats per nucli (nomes per a entitats sense match de clau).
+    # Candidats per nucli (aproximat), nomes per a entitats sense candidat de clau exacta.
     con.execute("""
         create or replace temp view core_agg as
         select e.clau, count(distinct c.coop_nom) as n_core,
@@ -112,9 +98,9 @@ def build_classified(con: duckdb.DuckDBPyConnection) -> None:
         create or replace temp view classified as
         select
             e.clau, e.nom, e.import_eur, e.muni_fega,
-            case when k.has_muni then 'match'
-                 when k.clau is not null then 'possible'
-                 when c.clau is not null then 'possible'
+            case when k.clau is not null and k.n_ck = 1 then 'match'
+                 when k.clau is not null then 'possible'  -- exacte pero ambigu (n_ck > 1)
+                 when c.clau is not null then 'possible'  -- nucli (aproximat)
                  else 'no-match' end as tipus,
             coalesce(k.cif, c.cif) as cif,
             coalesce(k.clau_reg, c.clau_reg) as clau_reg,
