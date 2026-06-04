@@ -48,6 +48,12 @@ link:
 link-cooperatives:
     uv run python -m linkage.cooperatives
 
+# Enllac determinista FEGA x Registre de SAT de la CV (Fase 3, segona font). Per nucli-SAT
+# del nom + numero de registre + municipi. Mesura + mostra; encara NO al mart. Requereix:
+#   uv run python -m ingest.sat.download
+link-sat:
+    uv run python -m linkage.sat
+
 # Export de marts -> Parquet a data/dist (publicar el teixit).
 publish:
     uv run python -m publish.export
