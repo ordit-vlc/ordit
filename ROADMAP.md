@@ -148,3 +148,51 @@ Infra: box de Hetzner efímer més gran per al processament de rasters, creat pe
 destruït. Mai al box de producció.
 
 Go: un senyal reproduïble d'abandó o de dany validat contra una zona coneguda.
+
+---
+
+## Horitzó — L'atles del teixit productiu (direcció diferida, no és una fase)
+
+> Esta secció **no és una fase amb porta go/no-go**: és la direcció a llarg termini decidida,
+> registrada ací perquè no es perda. El pla de fases actiu **no canvia** i continuem amb les
+> fases vigents. El detall es treballarà quan arribem al pont.
+
+**Visió.** L'objectiu final d'Ordit és un atles del teixit productiu complet del País Valencià,
+centrat en les entitats que creen més valor.
+
+**Valor en tres eixos.** El valor d'una entitat es mesura per donar faena (ocupació), generar
+beneficis i atraure capital de fora. Amb això, la PAC es reenmarca: és **un** canal d'entrada de
+capital exterior entre molts, no l'eix del projecte.
+
+**Reorientació d'arquitectura.** L'eix passa a ser l'**entitat canònica**: una taula d'entitats
+on cada font aporta atributs, i la PAC esdevé un atribut més, no la columna vertebral. L'entity
+resolution ja feta (clau canònica + enllaços amb CIF o codi de registre) és el teixit connectiu
+d'esta reorientació: no es refà, només es reorienta.
+
+**Panorama de fonts (la realitat oberta/tancada).** El descobriment clau és que els tres eixos
+**no estan igual d'oberts**:
+
+- **Capital de fora** — eix ric i obert. La BDNS (Base de Datos Nacional de Subvenciones) publica
+  totes les subvencions públiques espanyoles a nivell d'entitat, amb API i —a confirmar en un
+  spike— el NIF/CIF del beneficiari, cosa que FEGA no porta. És la primera expansió natural quan
+  toque: aporta entitats noves, mesura de capital i clau CIF de colp. Al tram autonòmic, el dataset
+  obert de la GVA d'ajudes i subvencions concedides. Candidats europeus a spike: CORDIS, Kohesio
+  (FEDER/FSE) i els llistats de Next Generation/PRTR. Capital privat de fora: exportacions
+  (Datacomex) i inversió estrangera (DataInvex), però **agregats** per sector i província, no per
+  entitat.
+- **Ocupació** — mig tancada. L'afiliació a la Seguretat Social ve agregada per municipi i CNAE, no
+  per empresa; els empleats per entitat viuen als comptes anuals. Senyal indirecte obert a
+  ERO/ERTO i a les ajudes de Labora.
+- **Beneficis** — tancada, el coll d'ampolla. La facturació, el benefici i l'actiu són als comptes
+  anuals dipositats al Registre Mercantil: legalment públics, però document a document i de pagament
+  al CORPME, sense descàrrega massiva oberta. Els agregadors comercials (SABI, Informa, eInforma)
+  costen diners i xoquen amb republicar en CC-BY. Caldrà un spike dedicat: ¿hi ha una via compatible
+  amb dades obertes a escala, o l'eix "beneficis" es queda en mostra o agregat?
+
+**Matís conceptual.** Captar una subvenció és capital que entra, però no equival a valor de mercat
+creat. Convé distingir el capital públic (subvencions: obert) del capital privat o de mercat
+(inversió, exportació, benefici: difícil i sovint només agregat).
+
+**Tancament.** És horitzó, no compromís. El detall —inclòs un registre de fonts candidates a
+l'estil de `docs/sources` amb banderes oberta?/entitat?/CIF?/llicència/cadència— es farà quan
+arribem al pont. De moment, continuem amb el pla de fases vigent.
