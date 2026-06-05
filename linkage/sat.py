@@ -6,10 +6,12 @@ el Nº REGISTRO del directori. Emet sempre estat (match/possible/no-match) i tra
 un enllac dur. Sense CIF: s'arrossega el numero de registre com a identificador registral.
 Mesura + mostra; NO toca el mart ni l'explorador. Reutilitza canon() de linkage/coverage.py.
 
-Estats:
-  - match    = numero de registre coincident (clau unica; nucli numeric, ignorant el sufix CV).
-  - possible = nomes nucli-SAT del nom igual (aproximat), sense numero coincident.
-  - no-match = res.
+Principi: el numero que FEGA encasta al nom pot estar MAL ESCRIT -> nom + municipi son
+l'autoritat, el numero nomes corrobora. Es puntua cada candidat (nom 4 + numero 2 + municipi 1).
+  - confirmat = una sola entrada amb la millor puntuacio.
+  - ambigu    = empat al cim (>=2 entrades igual de plausibles).
+  - no-match  = res.
+metode: codi / rescat (numero erroni rescatat pel nom) / nom+municipi / nucli.
 """
 
 from __future__ import annotations
@@ -37,18 +39,21 @@ def sat_subset(col: str) -> str:
     )
 
 
-def sat_core(col: str) -> str:
-    """Nucli-SAT: nom sense els tokens de forma/registre (SAT/NUM/N/CV...) ni numeros.
-
-    FEGA encasta "SAT <num>" al nom de forma inconsistent; el directori porta la denominacio
-    neta. El nucli alinea els dos costats. Dues passades per als tokens consecutius.
+def sat_namekey(col: str) -> str:
+    """Clau de nom robusta per a SAT: lleva els tokens de forma/registre (SAT/NUM/N/CV...) i
+    qualsevol token que comence per digit (numeros purs i numero+ambit "265CV"), parteix en
+    paraules, les ORDENA i les concatena. Aixi neutralitza la inversio d'article i l'ordre de
+    paraules ("LA SOLANA" = "SOLANA, LA"). Replica sat_namekey() de la macro dbt.
     """
     s = f"' ' || upper(strip_accents({col})) || ' '"
     s = f"regexp_replace({s}, '[^A-Z0-9]', ' ', 'g')"
     s = f"regexp_replace({s}, ' ({SAT_TOKENS}) ', ' ', 'g')"
     s = f"regexp_replace({s}, ' ({SAT_TOKENS}) ', ' ', 'g')"
-    s = f"regexp_replace({s}, ' [0-9]+ ', ' ', 'g')"
-    return f"nullif(regexp_replace({s}, '[^A-Z0-9]', '', 'g'), '')"
+    s = f"regexp_replace({s}, ' [0-9][A-Z0-9]* ', ' ', 'g')"
+    return (
+        "nullif(array_to_string(list_sort(list_filter("
+        f"string_split_regex(trim({s}), '[^A-Z0-9]+'), x -> length(x) >= 1)), ''), '')"
+    )
 
 
 def regnum(col: str) -> str:
@@ -71,87 +76,82 @@ def load_sat(con: duckdb.DuckDBPyConnection, sat_dir: Path = SAT_DIR) -> int:
     return con.execute("select count(*) from sat_raw").fetchone()[0]
 
 
+def _muni_norm(col: str) -> str:
+    return f"nullif(regexp_replace(upper(strip_accents({col})), '[^A-Z0-9]', '', 'g'), '')"
+
+
 def build_classified(con: duckdb.DuckDBPyConnection) -> None:
     """Construeix `classified` (un registre per entitat SAT de FEGA). Requereix `fega` i
-    `sat_raw`."""
-    # El numero de registre es la clau UNICA -> senyal fort (match). El nucli-SAT del nom
-    # (lossy) es nomes aproximat (possible). El municipi es conserva per a la mostra.
+    `sat_raw`.
+
+    El numero que FEGA encasta al nom pot estar MAL ESCRIT, aixi que NO es clau infal·lible. El
+    senyal mes robust es NOM + MUNICIPI; el numero nomes corrobora. Es puntua cada entrada del
+    directori candidata (nom 4 + numero 2 + municipi 1) i guanya la de millor puntuacio:
+    confirmat si nomes una hi empata al cim, ambigu si >=2, no-match si cap.
+    """
     con.execute(f"""
-        create or replace temp view sat as
+        create or replace temp view dir as
         select distinct nom as sat_nom, num_reg, municipi as sat_muni,
-               {sat_core("nom")} as namekey
-        from sat_raw where {sat_core("nom")} is not null
+               try_cast(regexp_replace(num_reg, '[^0-9]', '', 'g') as bigint) as num_core,
+               {sat_namekey("nom")} as namekey, {_muni_norm("municipi")} as muni
+        from sat_raw
     """)
     con.execute(f"""
         create or replace temp view fega_ent as
         select clau, any_value(nom_canonic) as nom, sum(import_eur) as import_eur,
-               max(municipi) as muni_fega, any_value({sat_core("nom_canonic")}) as namekey,
-               any_value({regnum("nom_canonic")}) as regnum
+               max(municipi) as muni_fega, any_value({sat_namekey("nom_canonic")}) as namekey,
+               any_value({regnum("nom_canonic")}) as regnum, max({_muni_norm("municipi")}) as muni
         from fega where {sat_subset("nom_canonic")} group by clau
     """)
-    # Candidats per NUMERO DE REGISTRE (clau unica) -> fort. El directori el porta amb sufix
-    # d'ambit ("498CV") i FEGA encasta nomes el numero ("498"); es compara el NUCLI NUMERIC.
-    # El nucli numeric pot conflar dos registres distints (nacional "15" vs autonomic "15CV"):
-    # el NOM desambigua (si nomes una entrada casa tambe pel nucli-SAT del nom, eixa es la bona).
+    # Candidata si casa pel NOM (tokens ordenats) o pel NUMERO. Tres senyals per separat.
     con.execute("""
-        create or replace temp view code_cand as
-        select e.clau, s.num_reg, s.sat_nom, s.sat_muni,
-               (s.namekey is not null and length(s.namekey) >= 4 and length(e.namekey) >= 4
-                and (contains(e.namekey, s.namekey) or contains(s.namekey, e.namekey)))
-                   as name_ok
-        from fega_ent e
-        join sat s
-            on try_cast(regexp_replace(s.num_reg, '[^0-9]', '', 'g') as bigint)
-               = try_cast(e.regnum as bigint)
-        where e.regnum is not null
+        create or replace temp view cand as
+        select f.clau, f.regnum as fega_regnum, d.num_reg, d.sat_nom, d.sat_muni,
+               (f.namekey is not null and length(f.namekey) >= 4 and d.namekey = f.namekey)
+                   as name_ok,
+               (f.regnum is not null and d.num_core = try_cast(f.regnum as bigint)) as num_ok,
+               (f.muni is not null and d.muni is not null and length(f.muni) >= 4
+                and (contains(d.muni, f.muni) or contains(f.muni, d.muni))) as muni_ok
+        from fega_ent f join dir d
+          on (f.namekey is not null and length(f.namekey) >= 4 and d.namekey = f.namekey)
+          or (f.regnum is not null and d.num_core = try_cast(f.regnum as bigint))
+    """)
+    # Puntuacio: nom 4 (autoritat) + numero 2 (corroboracio) + municipi 1 (desempat).
+    con.execute("""
+        create or replace temp view scored as
+        select *, (case when name_ok then 4 else 0 end)
+                   + (case when num_ok then 2 else 0 end)
+                   + (case when muni_ok then 1 else 0 end) as score
+        from cand
     """)
     con.execute("""
-        create or replace temp view code_rank as
-        select clau, num_reg, sat_nom, sat_muni, name_ok,
-               count(*) over (partition by clau) as n_total,
-               sum(case when name_ok then 1 else 0 end) over (partition by clau) as n_nameok
-        from code_cand
+        create or replace temp view ranked as
+        select *, max(score) over (partition by clau) as best,
+               row_number() over (partition by clau order by score desc, num_ok desc, num_reg)
+                   as rn
+        from scored
     """)
     con.execute("""
-        create or replace temp view reg_agg as
-        select clau,
-               case when n_total = 1 or n_nameok = 1 then 1 else n_total end as n_reg,
-               arg_max(num_reg, case when name_ok then 2 when n_total = 1 then 1 else 0 end)
-                   as num_reg,
-               arg_max(sat_nom, case when name_ok then 2 when n_total = 1 then 1 else 0 end)
-                   as sat_nom,
-               arg_max(sat_muni, case when name_ok then 2 when n_total = 1 then 1 else 0 end)
-                   as sat_muni
-        from code_rank
-        group by clau, n_total, n_nameok
+        create or replace temp view ranked2 as
+        select *, count(*) filter (where score = best) over (partition by clau) as n_top
+        from ranked
     """)
-    # Candidats per nucli-SAT del nom (>=4 caracters) -> aproximat.
-    con.execute("""
-        create or replace temp view name_agg as
-        select e.clau, count(distinct s.sat_nom) as n_name,
-               any_value(s.num_reg) as num_reg, any_value(s.sat_nom) as sat_nom,
-               any_value(s.sat_muni) as sat_muni
-        from fega_ent e join sat s on s.namekey = e.namekey and length(e.namekey) >= 4
-        group by e.clau
-    """)
+    con.execute("create or replace temp view winner as select * from ranked2 where rn = 1")
     con.execute("""
         create or replace temp view classified as
         select
             e.clau, e.nom, e.import_eur, e.muni_fega,
-            case when r.clau is not null and r.n_reg = 1 then 'confirmat'  -- codi unic
-                 when r.clau is not null then 'ambigu'  -- codi amb >1 candidat
-                 when n.clau is not null and n.n_name = 1 then 'confirmat'  -- nucli unic
-                 when n.clau is not null then 'ambigu'  -- nucli amb >1 candidat
-                 else 'no-match' end as tipus,
-            case when r.clau is not null then 'codi'
-                 when n.clau is not null then 'nucli' end as metode,
-            coalesce(r.num_reg, n.num_reg) as num_registre,
-            coalesce(r.sat_nom, n.sat_nom) as sat_nom,
-            coalesce(r.sat_muni, n.sat_muni) as sat_muni,
-            coalesce(r.n_reg, n.n_name, 0) as n_cand
+            case when w.clau is null then 'no-match'
+                 when w.n_top = 1 then 'confirmat' else 'ambigu' end as tipus,
+            case when w.clau is null then null
+                 when w.num_ok then 'codi'  -- el numero corrobora
+                 when w.fega_regnum is not null then 'rescat'  -- numero erroni; nom el rescata
+                 when w.muni_ok then 'nom+municipi'  -- sense numero; nom + municipi
+                 else 'nucli' end as metode,  -- sense numero ni municipi; nomes nom
+            w.num_reg as num_registre, w.sat_nom, w.sat_muni,
+            coalesce(w.n_top, 0) as n_cand
         from fega_ent e
-        left join reg_agg r on r.clau = e.clau
-        left join name_agg n on n.clau = e.clau
+        left join winner w on w.clau = e.clau
     """)
 
 

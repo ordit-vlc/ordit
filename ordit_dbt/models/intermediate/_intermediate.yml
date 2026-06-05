@@ -36,12 +36,12 @@ models:
 
   - name: int_enllac_sat
     description: >
-      Enllac determinista FEGA <-> Registre de SAT de la CV. El numero de registre es la clau
-      unica: confirmat = candidat UNIC (n_candidats = 1), per codi (numero de registre, nucli
-      numeric ignorant el sufix "CV") o per nucli-SAT del nom (sat_core); ambigu = n_candidats
-      > 1. metode_enllac (codi/nucli) registra el COM. Nomes el subconjunt SAT de FEGA. Una
-      fila per canonical_key amb estat_enllac, clau_registral, metode_enllac, enllac_exacte i
-      n_candidats.
+      Enllac determinista FEGA <-> Registre de SAT de la CV. El numero que FEGA encasta al nom
+      pot estar mal escrit, aixi que NOM + MUNICIPI son l'autoritat i el numero nomes corrobora.
+      Es puntua cada entrada candidata (nom 4 + numero 2 + municipi 1): confirmat = una sola al
+      cim; ambigu = empat (>=2). metode_enllac (codi/rescat/nom+municipi/nucli) registra el COM.
+      Nomes el subconjunt SAT de FEGA. Una fila per canonical_key amb estat_enllac,
+      clau_registral, metode_enllac, enllac_exacte i n_candidats.
     columns:
       - name: canonical_key
         tests:

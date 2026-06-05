@@ -81,13 +81,16 @@ models:
           estat_enllac es prova a assert_font_enllac_coherent.
       - name: metode_enllac
         description: >
-          Com s'ha casat l'enllac (traçabilitat per a auditoria, "cap fet sense font traçable"):
-          'exacte' (nom canonic, cooperatives), 'codi' (numero de registre, SAT) o 'nucli' (nom
-          aproximat). NULL si no-match. No es dubte: tot enllac amb candidat unic es confirmat.
+          Com s'ha casat l'enllac (traçabilitat per a auditoria, "cap fet sense font traçable").
+          Cooperatives: 'exacte' (nom canonic) o 'nucli' (nucli aproximat). SAT (nom + municipi
+          son l'autoritat; el numero nomes corrobora): 'codi' (el numero coincideix), 'rescat'
+          (FEGA duia un numero erroni i el nom (+municipi) l'ha rescatat), 'nom+municipi' (sense
+          numero, casa per nom i municipi) o 'nucli' (sense numero ni municipi, nomes nom). NULL
+          si no-match. No es dubte: tot enllac amb candidat unic es confirmat.
         tests:
           - accepted_values:
               arguments:
-                values: ["exacte", "codi", "nucli"]
+                values: ["exacte", "codi", "nucli", "rescat", "nom+municipi"]
       - name: cif
         description: >
           CIF de la cooperativa enllacada (NOMES font_enllac='cooperatives'; la SAT no porta

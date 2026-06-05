@@ -49,6 +49,8 @@ const ESTAT_LABELS = {
 const METODE_LABELS = {
   exacte: "nom exacte",
   codi: "numero de registre",
+  rescat: "nom i municipi (numero erroni a la font)",
+  "nom+municipi": "nom i municipi",
   nucli: "nom aproximat",
 };
 // Font del registre on s'ha enllacat (cooperatives ensenya CIF; SAT, numero de registre).

@@ -1,13 +1,13 @@
 """Logica d'enllac FEGA <-> SAT (linkage/sat.py), sense dades reals (CI-safe).
 
-Un candidat UNIC es la mateixa entitat -> confirmat = n_candidats = 1 (per codi o per nucli);
-ambigu = n_candidats > 1. El nucli numeric pot conflar dos registres (nacional "55" vs
-autonomic "55CV"): el NOM desambigua si nomes una entrada hi casa.
+Nom + municipi son l'autoritat; el numero nomes corrobora (pot estar mal escrit a FEGA). Es
+puntua cada candidat (nom 4 + numero 2 + municipi 1): confirmat si nomes un empata al cim,
+ambigu si >=2, no-match si cap. metode: codi / nom+municipi / rescat / nucli.
 """
 
 import duckdb
 
-from linkage.sat import measure
+from linkage.sat import build_classified, measure
 
 
 def _con():
@@ -15,24 +15,25 @@ def _con():
     con.execute(
         "create table fega(clau varchar, nom_canonic varchar, municipi varchar, import_eur double)"
     )
-    # A: confirmat (codi 9999 unic). D: confirmat (codi, directori amb sufix 7777CV).
-    # F: codi 55 conflà dos registres (55 i 55CV) pero el NOM (BONA EMPRESA) desambigua ->
-    # confirmat. G: codi 88 conflà dos registres i el nom NO casa cap -> ambigu. C: no-match.
+    # A confirmat per codi+nom. B confirmat per nom+municipi amb INVERSIO D'ARTICLE i sense
+    # numero (LA COSTERA = COSTERA, LA). C RESCAT: el numero (200) es erroni; nom+municipi
+    # porten a 888CV. D ambigu: 88 conflà dos registres i ni nom ni municipi desambiguen. E
+    # no-match.
     con.execute("""insert into fega values
         ('A','SAT 9999 EXEMPLE FICTICI','Dalt',100),
-        ('D','SAT 7777 SUFIX EXEMPLE','Lloc D',70),
-        ('F','SAT 55CV BONA EMPRESA','Lloc F',60),
-        ('G','SAT 88 NOM DESCONEGUT','Lloc G',40),
-        ('C','SAT 6666 INEXISTENT','Lloc X',10)
+        ('B','SAT LA COSTERA','Xativa',80),
+        ('C','SAT 200 MARCA NOVA','Vila-real',60),
+        ('D','SAT 88 NOM X','Llocx',40),
+        ('E','SAT 6666 RES','Llocz',10)
     """)
     con.execute("create table sat_raw(nom varchar, num_reg varchar, municipi varchar)")
     con.execute("""insert into sat_raw values
-        ('EXEMPLE FICTICI','9999','DALT'),
-        ('SUFIX EXEMPLE','7777CV','LLOC D'),
-        ('ALTRA COSA','55','UN LLOC'),
-        ('BONA EMPRESA','55CV','LLOC F'),
-        ('PRIMERA','88','UN LLOC'),
-        ('SEGONA','88CV','ALTRE LLOC')
+        ('EXEMPLE FICTICI','9999','Dalt'),
+        ('COSTERA, LA','70','Xativa'),
+        ('MARCA NOVA','888CV','Vila-real'),
+        ('ALTRA EMPRESA','200','Castello'),
+        ('PRIMERA','88','Un Lloc'),
+        ('SEGONA','88CV','Altre Lloc')
     """)
     return con
 
@@ -40,22 +41,19 @@ def _con():
 def test_estat_nova_logica():
     rep = measure(_con())
     assert rep["n"] == 5
-    # confirmat: codi unic (9999), codi+sufix (7777CV), i codi-conflat resolt pel nom (55CV).
-    assert rep["n_confirmat"] == 3
-    assert rep["n_ambigu"] == 1  # codi 88 conflà dos registres i el nom no desambigua
-    assert rep["n_nomatch"] == 1
+    assert rep["n_confirmat"] == 3  # codi (A), nom+municipi amb inversio d'article (B), rescat (C)
+    assert rep["n_ambigu"] == 1  # 88 conflà dos registres i res no desambigua (D)
+    assert rep["n_nomatch"] == 1  # E
 
 
-def test_confirmat_pel_numero_amb_sufix_cv():
-    # El directori porta el numero amb sufix d'ambit ("9999CV"); FEGA encasta nomes "9999".
-    # El nucli numeric ha de casar -> CONFIRMAT (codi unic), encara que el nom no casa gens.
-    con = duckdb.connect()
-    con.execute(
-        "create table fega(clau varchar, nom_canonic varchar, municipi varchar, import_eur double)"
+def test_metode_rescat_i_nom_municipi():
+    con = _con()
+    build_classified(con)
+    rows = dict(
+        con.execute("select clau, metode || ':' || num_registre from classified").fetchall()
     )
-    con.execute("insert into fega values ('A','SAT 9999 NOM QUE NO CASA','Lloc',100)")
-    con.execute("create table sat_raw(nom varchar, num_reg varchar, municipi varchar)")
-    con.execute("insert into sat_raw values ('TOTALMENT DISTINT','9999CV','Altre')")
-    rep = measure(con)
-    assert rep["n_confirmat"] == 1
-    assert rep["n_ambigu"] == 0
+    # C: el numero de FEGA (200) era erroni; nom+municipi rescaten el registre real 888CV.
+    assert rows["C"] == "rescat:888CV"
+    # B: inversio d'article resolta per la clau de tokens ordenats; sense numero -> nom+municipi.
+    assert rows["B"] == "nom+municipi:70"
+    assert rows["A"].startswith("codi:")
