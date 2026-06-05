@@ -64,25 +64,33 @@ No-go: el fitxer de SIGPAC massa gran per processar al build plane dins de memò
 
 ## Fase 3 — Entity resolution (FEGA x fonts corporatives)
 
-Objectiu: enllaçar els beneficiaris persones jurídiques de FEGA amb les fonts corporatives
-valencianes per a guanyar identificador fort (CIF) i graf. Un spike de viabilitat (FEGA x
-BORME per nom) va mostrar que **BORME tot sol no basta**: només cobreix les societats
-mercantils (SL/SA), mentre que la major part dels diners agraris va a **cooperatives** i
-**SAT**, en altres registres. Les fonts corporatives són, doncs, **cooperatives + SAT +
-BORME**, no BORME en solitari.
+Objectiu: enllaçar els beneficiaris persona jurídica de FEGA amb la seua identitat registral
+de manera **determinista i traçable**, per a guanyar identificador fort (CIF o número de
+registre) i graf. L'objectiu es manté; el pla concret va canviar després d'un spike.
 
-Lliurable (per ordre de valor agrari i qualitat d'identificador):
-- **Cooperatives de la CV** (GVA, CC-BY, amb CIF): enllaç determinista per clau canònica +
-  municipi, ja al teixit (`int_enllac_cooperatives`, columnes `estat_enllac`/`cif`/
-  `clau_registral` al mart). Injecta a FEGA el CIF que no porta.
-- **SAT de la CV** (GVA, CC-BY) i **BORME multi-any** (BOE): fonts següents.
-- La sortida emet **match / possible / no-match** amb traçabilitat per enllaç, mai
-  afirmacions dures. `splink` (enllaç probabilístic) queda **diferit**: el matching
-  determinista per nom canònic és ja precís; s'avaluarà quan múltiples fonts sorolloses
+Spike de viabilitat (FEGA x BORME per nom) → **no-go com a eix**: la secció A del BORME no porta
+CIF i només cobreix societats mercantils (SL/SA), mentre que el gros del teixit agrari viu en
+altres registres —cooperatives (~43 M€) i SAT (~19 M€). La infraestructura de l'spike queda al
+repo i el BORME reapareix a l'Horitzó com a candidat per a la llesca mercantil (ara darrere del
+BDNS, que sí porta CIF). No es va descartar: va redirigir l'estratègia cap a un enllaç
+determinista sobre els registres on de veres està el teixit.
+
+Lliurable (enllaç **determinista**, no `splink`):
+- Clau canònica de beneficiari per **nom** (FEGA no porta CIF), que col·lapsa variants de forma.
+- **Directori de Cooperatives** (GVA, CC-BY, amb CIF): enllaç per clau canònica + municipi;
+  injecta a FEGA el CIF que no porta.
+- **Registre de SAT** (GVA, CC-BY; sense CIF, identificador = número de registre): **nom +
+  municipi** són l'autoritat i el número només corrobora (pot estar mal escrit a la font).
+- Estats **confirmat / ambigu**: candidat únic → confirmat; ≥ 2 plausibles → ambigu; cap →
+  no-match. Amb traçabilitat per enllaç (`metode_enllac`), en lloc del match/possible/no-match
+  amb scores del pla original. `splink` queda **diferit** fins que múltiples fonts sorolloses
   generen ambigüitat real.
-- Una mostra d'avaluació etiquetada per mesurar la precisió per font.
+- Una mostra d'avaluació etiquetada a mà per a mesurar la precisió per font.
 
-Go: precisió >= 70% a la mostra etiquetada a mà.
+Resultat actual: **254 entitats confirmades** (84 cooperatives + 170 SAT), **0 ambigu**.
+
+Go: precisió >= 70% a la mostra etiquetada a mà; el llindar segueix sent condició per a
+promoure enllaços al mart.
 
 No-go: si la precisió < 70%, no publiques l'enllaç. Publica primer el conjunt net de
 FEGA + SIGPAC (ja valuós) i revisa l'enllaç més avant.

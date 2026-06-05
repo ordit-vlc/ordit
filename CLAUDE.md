@@ -216,8 +216,9 @@ la dada sencera), així que la maquinària de protecció de dades s'ha **retirad
   i filtre, anonimització, supressió de cel·les xicotetes (N < 5), ponderació de l'interés
   públic (cas Schecke) i revisió legal (DPO/advocat). Vegeu la fase de Compliance al
   [`ROADMAP.md`](ROADMAP.md). Fins llavors, res no ix del build plane local.
-- **Entity resolution (Fase 3)**: mai un enllaç dur sense un llindar de confiança
-  defensable; emet estats match / possible / no-match amb traçabilitat per enllaç.
+- **Entity resolution (Fase 3)**: mai un enllaç dur sense base defensable —candidat únic per
+  unicitat de denominació més CIF (cooperatives) o número de registre (SAT)—; emet estats
+  confirmat / ambigu amb traçabilitat per enllaç (`metode_enllac`).
 - **Açò no és assessorament legal.** La decisió de tractar dades personals de fonts
   públiques per a anàlisi privada és de l'humà com a responsable de les dades.
 
