@@ -89,11 +89,13 @@ select
     agg.group_cif,
     agg.group_name,
     -- Enllac corporatiu GENERAL (Fase 3): cooperatives + SAT en columnes compartides.
-    -- estat_enllac sempre present (match/possible/no-match); font_enllac diu de quin registre
-    -- ve (cooperatives/sat/NULL); clau_registral = clau de cooperatives o numero de SAT; cif
-    -- NOMES de cooperatives (identificador fort). Mai un enllac dur: possible es candidat.
+    -- estat_enllac sempre present (confirmat/ambigu/no-match); font_enllac diu de quin registre
+    -- ve (cooperatives/sat/NULL); metode_enllac registra el COM (exacte/codi/nucli) per a
+    -- auditoria; clau_registral = clau de cooperatives o numero de SAT; cif NOMES de
+    -- cooperatives. Un candidat unic es la mateixa entitat (confirmat); ambigu = >1 candidat.
     e.estat_enllac,
     e.font_enllac,
+    e.metode_enllac,
     e.cif,
     e.clau_registral
 from agg

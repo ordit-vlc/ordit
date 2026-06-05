@@ -91,17 +91,39 @@ def build_classified(con: duckdb.DuckDBPyConnection) -> None:
     """)
     # Candidats per NUMERO DE REGISTRE (clau unica) -> fort. El directori el porta amb sufix
     # d'ambit ("498CV") i FEGA encasta nomes el numero ("498"); es compara el NUCLI NUMERIC.
+    # El nucli numeric pot conflar dos registres distints (nacional "15" vs autonomic "15CV"):
+    # el NOM desambigua (si nomes una entrada casa tambe pel nucli-SAT del nom, eixa es la bona).
     con.execute("""
-        create or replace temp view reg_agg as
-        select e.clau, count(distinct s.num_reg) as n_reg,
-               any_value(s.num_reg) as num_reg, any_value(s.sat_nom) as sat_nom,
-               any_value(s.sat_muni) as sat_muni
+        create or replace temp view code_cand as
+        select e.clau, s.num_reg, s.sat_nom, s.sat_muni,
+               (s.namekey is not null and length(s.namekey) >= 4 and length(e.namekey) >= 4
+                and (contains(e.namekey, s.namekey) or contains(s.namekey, e.namekey)))
+                   as name_ok
         from fega_ent e
         join sat s
             on try_cast(regexp_replace(s.num_reg, '[^0-9]', '', 'g') as bigint)
                = try_cast(e.regnum as bigint)
         where e.regnum is not null
-        group by e.clau
+    """)
+    con.execute("""
+        create or replace temp view code_rank as
+        select clau, num_reg, sat_nom, sat_muni, name_ok,
+               count(*) over (partition by clau) as n_total,
+               sum(case when name_ok then 1 else 0 end) over (partition by clau) as n_nameok
+        from code_cand
+    """)
+    con.execute("""
+        create or replace temp view reg_agg as
+        select clau,
+               case when n_total = 1 or n_nameok = 1 then 1 else n_total end as n_reg,
+               arg_max(num_reg, case when name_ok then 2 when n_total = 1 then 1 else 0 end)
+                   as num_reg,
+               arg_max(sat_nom, case when name_ok then 2 when n_total = 1 then 1 else 0 end)
+                   as sat_nom,
+               arg_max(sat_muni, case when name_ok then 2 when n_total = 1 then 1 else 0 end)
+                   as sat_muni
+        from code_rank
+        group by clau, n_total, n_nameok
     """)
     # Candidats per nucli-SAT del nom (>=4 caracters) -> aproximat.
     con.execute("""
@@ -116,9 +138,13 @@ def build_classified(con: duckdb.DuckDBPyConnection) -> None:
         create or replace temp view classified as
         select
             e.clau, e.nom, e.import_eur, e.muni_fega,
-            case when r.clau is not null then 'match'  -- numero de registre coincident
-                 when n.clau is not null then 'possible'  -- nucli del nom (aproximat)
+            case when r.clau is not null and r.n_reg = 1 then 'confirmat'  -- codi unic
+                 when r.clau is not null then 'ambigu'  -- codi amb >1 candidat
+                 when n.clau is not null and n.n_name = 1 then 'confirmat'  -- nucli unic
+                 when n.clau is not null then 'ambigu'  -- nucli amb >1 candidat
                  else 'no-match' end as tipus,
+            case when r.clau is not null then 'codi'
+                 when n.clau is not null then 'nucli' end as metode,
             coalesce(r.num_reg, n.num_reg) as num_registre,
             coalesce(r.sat_nom, n.sat_nom) as sat_nom,
             coalesce(r.sat_muni, n.sat_muni) as sat_muni,
@@ -133,31 +159,31 @@ def measure(con: duckdb.DuckDBPyConnection) -> dict:
     build_classified(con)
     row = con.execute("""
         select count(*) n, sum(import_eur) imp,
-               count(*) filter (where tipus='match') n_m,
-               count(*) filter (where tipus='possible') n_p,
+               count(*) filter (where tipus='confirmat') n_c,
+               count(*) filter (where tipus='ambigu') n_a,
                count(*) filter (where tipus='no-match') n_nm,
-               sum(import_eur) filter (where tipus='match') imp_m,
-               sum(import_eur) filter (where tipus='possible') imp_p
+               sum(import_eur) filter (where tipus='confirmat') imp_c,
+               sum(import_eur) filter (where tipus='ambigu') imp_a
         from classified
     """).fetchone()
-    n, imp, n_m, n_p, n_nm, imp_m, imp_p = (x or 0 for x in row)
+    n, imp, n_c, n_a, n_nm, imp_c, imp_a = (x or 0 for x in row)
     amb = con.execute("""
-        select count(*) filter (where tipus in ('match','possible')) tot,
-               count(*) filter (where tipus in ('match','possible') and n_cand > 1) ambig
+        select count(*) filter (where tipus in ('confirmat','ambigu')) tot,
+               count(*) filter (where tipus='ambigu') ambig
         from classified
     """).fetchone()
     amb_ex = con.execute("""
         select nom, sat_nom, n_cand, round(import_eur) imp from classified
-        where tipus in ('match','possible') and n_cand > 1 order by import_eur desc limit 8
+        where tipus='ambigu' order by import_eur desc limit 8
     """).fetchall()
     return {
         "n": n,
         "imp": imp,
-        "n_match": n_m,
-        "n_possible": n_p,
+        "n_confirmat": n_c,
+        "n_ambigu": n_a,
         "n_nomatch": n_nm,
-        "imp_match": imp_m,
-        "imp_possible": imp_p,
+        "imp_confirmat": imp_c,
+        "imp_ambigu": imp_a,
         "ambig_total": amb[0] or 0,
         "ambig_n": amb[1] or 0,
         "ambig_examples": amb_ex,
@@ -168,11 +194,11 @@ def write_sample(con: duckdb.DuckDBPyConnection, path: Path = SAMPLE_CSV, n: int
     path.parent.mkdir(parents=True, exist_ok=True)
     con.execute(f"""
         copy (
-            select nom as fega_nom, sat_nom, tipus,
+            select nom as fega_nom, sat_nom, tipus, metode,
                    muni_fega as municipi_fega, sat_muni as municipi_sat,
                    n_cand as candidats_sat, num_registre as numero_registre,
                    round(import_eur) as import_eur, '' as veredicte_humà
-            from classified where tipus in ('match','possible')
+            from classified where tipus in ('confirmat','ambigu')
             order by tipus, import_eur desc limit {n}
         ) to '{path.as_posix()}' (header, delimiter ',')
     """)
@@ -181,17 +207,17 @@ def write_sample(con: duckdb.DuckDBPyConnection, path: Path = SAMPLE_CSV, n: int
 
 def _fmt(r: dict) -> str:
     nn = r["n"] or 1
-    cov_n = 100 * (r["n_match"] + r["n_possible"]) / nn
-    cov_e = 100 * (r["imp_match"] + r["imp_possible"]) / r["imp"] if r["imp"] else 0
+    cov_n = 100 * (r["n_confirmat"] + r["n_ambigu"]) / nn
+    cov_e = 100 * (r["imp_confirmat"] + r["imp_ambigu"]) / r["imp"] if r["imp"] else 0
     amb_pct = 100 * r["ambig_n"] / r["ambig_total"] if r["ambig_total"] else 0
-    pm, pp, pnm = 100 * r["n_match"] / nn, 100 * r["n_possible"] / nn, 100 * r["n_nomatch"] / nn
+    pc, pa, pnm = 100 * r["n_confirmat"] / nn, 100 * r["n_ambigu"] / nn, 100 * r["n_nomatch"] / nn
     lines = [
-        "=== ENLLAC FEGA x SAT de la CV (nucli-SAT + numero de registre + municipi) ===",
+        "=== ENLLAC FEGA x SAT de la CV (numero de registre + nucli-SAT del nom) ===",
         f"\nSUBCONJUNT SAT de FEGA: {r['n']:,} entitats, {r['imp']:,.0f} EUR",
-        f"  match    {r['n_match']:>4,}  ({pm:.1f}%)  {r['imp_match']:>13,.0f} EUR",
-        f"  possible {r['n_possible']:>4,}  ({pp:.1f}%)  {r['imp_possible']:>13,.0f} EUR",
-        f"  no-match {r['n_nomatch']:>4,}  ({pnm:.1f}%)",
-        f"  => cobertura (match+possible): {cov_n:.1f}% entitats, {cov_e:.1f}% euros",
+        f"  confirmat {r['n_confirmat']:>4,}  ({pc:.1f}%)  {r['imp_confirmat']:>13,.0f} EUR",
+        f"  ambigu    {r['n_ambigu']:>4,}  ({pa:.1f}%)  {r['imp_ambigu']:>13,.0f} EUR",
+        f"  no-match  {r['n_nomatch']:>4,}  ({pnm:.1f}%)",
+        f"  => cobertura (confirmat+ambigu): {cov_n:.1f}% entitats, {cov_e:.1f}% euros",
         f"\nAMBIGUITAT (nom >1 SAT): {r['ambig_n']:,}/{r['ambig_total']:,} ({amb_pct:.1f}%)",
     ]
     for nom, sat_nom, n_cand, imp in r["ambig_examples"]:

@@ -18,10 +18,10 @@ models:
   - name: int_enllac_cooperatives
     description: >
       Enllac determinista FEGA <-> Registre de Cooperatives de la CV. Com el registre
-      certifica denominacions uniques, match = nom canonic EXACTE i candidat UNIC per CIF
-      (una coop duplicada al directori amb mateix CIF val 1, no inflia el possible); possible
-      = nucli aproximat o exacte ambigu (>1 CIF distint). Una fila per canonical_key amb
-      estat_enllac, cif, clau_registral, enllac_exacte i n_candidats.
+      certifica denominacions uniques, un candidat UNIC (per CIF) es la mateixa entitat:
+      confirmat = n_candidats = 1 (siga exacte o nucli aproximat); ambigu = n_candidats > 1.
+      metode_enllac (exacte/nucli) registra el COM per a auditoria. Una fila per canonical_key
+      amb estat_enllac, cif, clau_registral, metode_enllac, enllac_exacte i n_candidats.
     columns:
       - name: canonical_key
         tests:
@@ -32,15 +32,16 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ["match", "possible", "no-match"]
+                values: ["confirmat", "ambigu", "no-match"]
 
   - name: int_enllac_sat
     description: >
       Enllac determinista FEGA <-> Registre de SAT de la CV. El numero de registre es la clau
-      unica: match = numero de registre coincident (nucli numeric, ignorant el sufix d'ambit
-      "CV" del directori); possible = nucli-SAT del nom (sat_core, aproximat) sense numero
-      coincident. Nomes el subconjunt SAT de FEGA. Una fila per
-      canonical_key amb estat_enllac, clau_registral (= numero), enllac_exacte i n_candidats.
+      unica: confirmat = candidat UNIC (n_candidats = 1), per codi (numero de registre, nucli
+      numeric ignorant el sufix "CV") o per nucli-SAT del nom (sat_core); ambigu = n_candidats
+      > 1. metode_enllac (codi/nucli) registra el COM. Nomes el subconjunt SAT de FEGA. Una
+      fila per canonical_key amb estat_enllac, clau_registral, metode_enllac, enllac_exacte i
+      n_candidats.
     columns:
       - name: canonical_key
         tests:
@@ -51,13 +52,13 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ["match", "possible", "no-match"]
+                values: ["confirmat", "ambigu", "no-match"]
 
   - name: int_enllac
     description: >
       Enllac corporatiu GENERAL: combina cooperatives i SAT en un sol resultat per
-      canonical_key (estat_enllac, font_enllac, clau_registral, cif), triant la millor font
-      (match > possible; a igualtat, cooperatives perque aporta CIF). Capa interna.
+      canonical_key (estat_enllac, font_enllac, metode_enllac, clau_registral, cif), triant la
+      millor font (confirmat > ambigu; a igualtat, cooperatives perque aporta CIF). Capa interna.
     columns:
       - name: canonical_key
         tests:

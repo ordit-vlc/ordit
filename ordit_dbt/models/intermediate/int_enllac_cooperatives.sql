@@ -5,13 +5,16 @@
 -- distinta, encara que el municipi diferisca (quasi sempre grafia bilingue del MATEIX poble:
 -- BICORB/BICORP, Toris/Turis, Xest/Cheste). Per aixo el municipi NO discrimina aci.
 --
+-- Decisio de l'humà (responsable de les dades): un candidat UNIC es la mateixa entitat
+-- (unicitat de denominacio + CIF), tant si casa exacte com per nucli aproximat. L'unica
+-- incertesa real es l'ambiguitat (un nom casant amb mes d'una entitat).
 -- Estats (ROADMAP Fase 3, mai un enllac dur):
---   match    = nom canonic EXACTE i candidat UNIC (n_candidats = 1), siga quin siga el municipi.
---   possible = NOMES els genuinament incerts: nucli igual (core_beneficiari, aproximat) o un
---              nom canonic exacte que casa amb MES D'UNA cooperativa (n_candidats > 1).
---   no-match = cap candidat.
--- Arrossega cif i clau registral (el premi: injecta a FEGA el CIF que no te). Una fila per
--- canonical_key.
+--   confirmat = candidat UNIC (n_candidats = 1), siga exacte o nucli aproximat.
+--   ambigu    = n_candidats > 1 (l'unic estat no confirmat).
+--   no-match  = cap candidat.
+-- metode_enllac registra COM s'ha casat (exacte / nucli) per a auditoria ("cap fet sense font
+-- traçable"); no es dubte. Arrossega cif i clau registral (el premi: injecta a FEGA el CIF
+-- que no te). Una fila per canonical_key.
 {{ config(materialized="table") }}
 
 with coop as (
@@ -64,13 +67,19 @@ core_agg as (
 select
     k.canonical_key,
     case
-        when a.canonical_key is not null and a.n_candidats = 1 then 'match'
-        when a.canonical_key is not null then 'possible'  -- exacte pero ambigu (n_candidats > 1)
-        when c.canonical_key is not null then 'possible'  -- nucli (aproximat)
+        when a.canonical_key is not null and a.n_candidats = 1 then 'confirmat'  -- exacte unic
+        when a.canonical_key is not null then 'ambigu'  -- exacte amb >1 candidat
+        when c.canonical_key is not null and c.n_core = 1 then 'confirmat'  -- nucli unic
+        when c.canonical_key is not null then 'ambigu'  -- nucli amb >1 candidat
         else 'no-match'
     end as estat_enllac,
     coalesce(a.cif, c.cif) as cif,
     coalesce(a.clau_reg, c.clau_reg) as clau_registral,
+    -- traçabilitat del COM: exacte (nom canonic) o nucli (core, aproximat).
+    case
+        when a.canonical_key is not null then 'exacte'
+        when c.canonical_key is not null then 'nucli'
+    end as metode_enllac,
     -- exacte = casa pel nom canonic exacte (no pel nucli aproximat).
     (a.canonical_key is not null) as enllac_exacte,
     coalesce(a.n_candidats, c.n_core, 0) as n_candidats

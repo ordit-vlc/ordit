@@ -37,12 +37,19 @@ const DIMENSIONS = [
 ];
 const VALUE = { key: "import_eur", label: "Import (€)", type: "num", strong: true };
 
-// Etiquetes de l'estat d'enllac amb el registre de cooperatives (un possible MAI es llig
-// com a fet). Vegeu int_enllac (enllac corporatiu general: cooperatives + SAT).
+// Etiquetes de l'estat d'enllac amb un registre (cooperatives o SAT). Un candidat unic es la
+// mateixa entitat (confirmat); l'unica incertesa es l'ambiguitat. Vegeu int_enllac.
 const ESTAT_LABELS = {
-  match: "Confirmat (match)",
-  possible: "Candidat (possible)",
+  confirmat: "Confirmat",
+  ambigu: "Ambigu",
   "no-match": "Sense enllac",
+};
+// Com s'ha casat l'enllac (traçabilitat per a auditoria): exacte (nom), codi (numero de
+// registre), nucli (nom aproximat). Viu a la dada; la vista mostra tot confirmat.
+const METODE_LABELS = {
+  exacte: "nom exacte",
+  codi: "numero de registre",
+  nucli: "nom aproximat",
 };
 // Font del registre on s'ha enllacat (cooperatives ensenya CIF; SAT, numero de registre).
 const FONT_LABELS = {
@@ -146,7 +153,7 @@ async function loadMarts() {
             coalesce(comarca, '(sense comarca)') as comarca,
             provincia, codi_postal, codi_ine, mesura,
             cast(import_eur as double) as import_eur, fons, exercici,
-            group_cif, group_name, estat_enllac,
+            group_cif, group_name, estat_enllac, metode_enllac,
             coalesce(font_enllac, 'no-enllac') as font_enllac, cif, clau_registral
      from 'ajudes.parquet'`,
   );
@@ -354,8 +361,8 @@ function chipsHtml() {
 // pero aci nomes es pinten columnes ACTIVES, aixi que sempre hi es.
 // Badge d'enllac corporatiu, ESTIL UNIC i DISCRET (sense color de confiança): la cel.la
 // nomes mostra l'identificador (CIF de cooperatives o numero de registre de SAT) amb la
-// sigla de la font. La confianca (match/possible) NO es perd: viu al tooltip i a la faceta
-// "Estat de l'enllac". Aixi la taula queda homogenia.
+// sigla de la font. L'estat (confirmat/ambigu) i el COM de la traçabilitat viuen al tooltip
+// i a la faceta "Estat de l'enllac". Aixi la taula queda homogenia.
 function linkBadgeHtml(clau) {
   const link = state.linkByClau.get(clau);
   if (!link) return "";
@@ -364,7 +371,8 @@ function linkBadgeHtml(clau) {
   const ident = coop ? link.cif : link.clauReg; // CIF (coop) o num. de registre (SAT)
   const idLabel = coop ? "CIF" : "Num. registre";
   const registre = coop ? "Cooperatives" : "SAT";
-  const title = `Enllac al Registre de ${registre} de la CV · ${ESTAT_LABELS[link.estat]} · ${idLabel} ${ident}`;
+  const com = METODE_LABELS[link.metode] ? ` (${METODE_LABELS[link.metode]})` : "";
+  const title = `Enllac al Registre de ${registre} de la CV · ${ESTAT_LABELS[link.estat]}${com} · ${idLabel} ${ident}`;
   return ` <span class="badge badge-neutral link-badge" title="${esc(title)}">${sigla} ${esc(ident)}</span>`;
 }
 
@@ -638,7 +646,7 @@ function setupEvents() {
 
 function downloadCsv() {
   const rows = sortRows(filteredRows());
-  const cols = ["nom_beneficiari", "clau_beneficiari", "nom_canonic", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name", "estat_enllac", "font_enllac", "cif", "clau_registral"];
+  const cols = ["nom_beneficiari", "clau_beneficiari", "nom_canonic", "codi_ine", "municipi", "comarca", "provincia", "codi_postal", "mesura", "fons", "exercici", "import_eur", "group_cif", "group_name", "estat_enllac", "metode_enllac", "font_enllac", "cif", "clau_registral"];
   const escCsv = (v) => {
     const s = v == null ? "" : String(v);
     return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -666,6 +674,7 @@ function downloadCsv() {
         state.linkByClau.set(r.clau_beneficiari, {
           estat: r.estat_enllac,
           font: r.font_enllac,
+          metode: r.metode_enllac,
           cif: r.cif,
           clauReg: r.clau_registral,
         });

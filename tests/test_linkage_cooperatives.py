@@ -1,7 +1,7 @@
 """Logica d'enllac FEGA <-> cooperatives (linkage/cooperatives.py), sense dades reals.
 
-Sintetic (CI-safe): nova logica d'estat -> match = nom canonic EXACTE i candidat UNIC (siga
-quin siga el municipi); possible = nucli (aproximat) o exacte ambigu (>1 cooperativa).
+Sintetic (CI-safe): un candidat UNIC es la mateixa entitat -> confirmat = n_candidats = 1
+(siga exacte o nucli aproximat); ambigu = n_candidats > 1 (un nom amb >1 entitat).
 """
 
 import duckdb
@@ -14,9 +14,9 @@ def _con():
     con.execute(
         "create table fega(clau varchar, nom_canonic varchar, municipi varchar, import_eur double)"
     )
-    # match: exacte+unic (EXEMPLE); match tot i municipi distint (MAS FICTICI); match tot i
-    # duplicat de font amb mateix CIF (DUPLICADA, 2 files F005); possible: exacte ambigu amb 2
-    # CIF distints (AMBIG); no-match (TERCERA).
+    # confirmat: exacte+unic (EXEMPLE); confirmat tot i municipi distint (MAS FICTICI);
+    # confirmat tot i duplicat de font amb mateix CIF (DUPLICADA, 2 files F005); ambigu: 2 CIF
+    # distints comparteixen el nom (AMBIG); no-match (TERCERA).
     con.execute("""insert into fega values
         ('COOPERATIVAEXEMPLECOOPV','COOPERATIVA EXEMPLE COOP. V.','Exemple de Dalt',100),
         ('MASFICTICICOOPV','MAS FICTICI COOP V','Altre Lloc',50),
@@ -43,18 +43,19 @@ def _con():
 def test_estat_nova_logica():
     rep = measure(_con())
     assert rep["n"] == 5
-    assert rep["n_match"] == 3  # exacte+unic, municipi distint, i duplicat de font (mateix CIF)
-    assert rep["n_possible"] == 1  # AMBIG: nom canonic casa amb 2 CIF distints
+    # confirmat = candidat unic: exacte+unic, municipi distint, i duplicat de font (mateix CIF).
+    assert rep["n_confirmat"] == 3
+    assert rep["n_ambigu"] == 1  # AMBIG: nom canonic casa amb 2 CIF distints (n_candidats > 1)
     assert rep["n_nomatch"] == 1
 
 
 def test_duplicat_de_font_per_cif():
-    # Una coop DUPLICADA al directori (mateix CIF, puntuacio distinta) NO es ambigua -> match.
+    # Una coop DUPLICADA al directori (mateix CIF, puntuacio distinta) NO es ambigua -> confirmat.
     rep = measure(_con())
     assert rep["ambig_n"] == 1  # nomes AMBIG (2 CIF distints), no el duplicat de mateix CIF
 
 
 def test_cif_guanyat():
     rep = measure(_con())
-    # match (3) + possible (1) arrosseguen el CIF de la cooperativa.
+    # confirmat (3) + ambigu (1) arrosseguen el CIF de la cooperativa.
     assert rep["n_cif"] == 4

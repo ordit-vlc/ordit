@@ -39,3 +39,4 @@ logs/
 # CLAUDE.md SI es committeja (es documentacio del projecte).
 .claude/settings.local.json
 .claude/*.local.json
+.claude/launch.json
