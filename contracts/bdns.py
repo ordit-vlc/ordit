@@ -5,9 +5,11 @@ subvencio a nivell d'entitat. A diferencia de FEGA, porta el NIF/CIF del benefic
 INCRUSTAT al camp `beneficiario` ("<NIF/CIF> <NOM>"), el premi que fa la BDNS l'eix natural
 de l'eix "capital de fora". Vegeu docs/sources/bdns.md.
 
-Mode privat (CLAUDE.md §8): es valida i s'ingereix la dada sencera. Les persones fisiques
-espanyoles venen ja anonimitzades en origen (el camp `beneficiario` porta `*`); no ho fem
-nosaltres i no ho podem desfer.
+Mode privat (CLAUDE.md §8): es valida i s'ingereix la dada sencera. El BDNS publica les
+persones fisiques amb el seu NIF (DNI o NIE), no sota lletra de CIF; els casos de proteccio
+especial no es registren (RD 130/2019). Al tall CV 2023 en son ~0 (vegeu docs/sources/bdns.md):
+NO venen emmascarades dins dels CIF. L'`*` que apareix en alguns registres es un artefacte del
+NOM, no una anonimitzacio de l'identificador.
 
 Identificadors interns en angles (capa ordit); els alies apunten als noms de camp de la font
 (camelCase castella, documentats tal qual: es procedencia). El renom a valencia es fa a marts.
@@ -21,8 +23,10 @@ from pydantic import BaseModel, Field, computed_field
 
 # NIF/CIF espanyol: 9 alfanumerics al principi del camp `beneficiario`, separat del nom per
 # un espai. Lletra inicial A-W (excepte I/K/L/M/O/T) -> persona juridica (CIF) o ens public;
-# X/Y/Z -> NIE (fisica estrangera). Les fisiques espanyoles venen emmascarades amb `*` i no
-# casen ací (queden amb nif_cif=None), com volem.
+# DNI de persona fisica -> 8 digits + lletra (comença per digit); NIE -> X/Y/Z + digits +
+# lletra. Al tall CV 2023 tots els identificadors comencen per lletra de CIF (cap digit
+# inicial, cap `*`): no hi ha fisiques emmascarades. La regex extrau el token de 9 caracters;
+# si mai en vinguera un d'emmascarat amb `*`, no casaria (nif_cif=None), que es el desitjat.
 _NIF_CIF = re.compile(r"^([0-9A-Z]{9})\s+(.+)$")
 _CIF_LETTERS = set("ABCDEFGHJNPQRSUVW")  # persona juridica / ens public
 
