@@ -189,3 +189,49 @@ models:
       - name: exercici
         tests:
           - not_null
+
+  - name: mart_concessions_bdns
+    description: >
+      Concessions de subvencions de la BDNS a la Comunitat Valenciana, TOTS els
+      beneficiaris (mode privat, cap filtre ni anonimitzacio). Una fila per concessio.
+      Esquema public en valencia ASCII. El premi respecte a FEGA: cada concessio porta el
+      NIF/CIF del beneficiari (nif_cif), la clau forta per al backbone d'entitat (Fase 6).
+      Vegeu docs/sources/bdns.md.
+    columns:
+      - name: codi_concessio
+        description: Codi de concessio de la BDNS (p. ex. SB..., GR...).
+        tests:
+          - not_null
+          - unique
+      - name: data_concessio
+        tests:
+          - not_null
+      - name: exercici
+        description: Any de la concessio (extret de data_concessio).
+        tests:
+          - not_null
+      - name: nif_cif
+        description: >
+          NIF/CIF del beneficiari incrustat a la font ("<NIF/CIF> <NOM>"). NULL nomes si no
+          s'ha pogut extraure (mai observat al real). Codis ZZ...Z per a entitats sense NIF
+          estandard. La clau forta que FEGA no porta.
+      - name: nom_beneficiari
+        description: Nom del beneficiari sense el NIF/CIF inicial ni l'artefacte * del nom.
+        tests:
+          - not_null
+      - name: es_persona_juridica
+        description: True si el NIF/CIF es de persona juridica o ens public (clau forta).
+        tests:
+          - not_null
+      - name: instrument
+        description: Instrument de l'ajuda (SUBVENCIÓN, GARANTÍA, PRÉSTAMO...).
+        tests:
+          - not_null
+      - name: import_eur
+        description: Import concedit en euros.
+        tests:
+          - not_null
+      - name: ajuda_equivalent_eur
+        description: Ajuda equivalent en euros (subsidi real en garanties/prestecs).
+        tests:
+          - not_null
