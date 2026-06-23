@@ -27,8 +27,8 @@ just build     # dbt build (des de la Fase 1)
 | Arreplegar les madeixes (raw) | `just ingest` | Fase 1 |
 | Teixir (staging → marts) | `just build` | Fase 1 |
 | Nuar (entity resolution) | `just link` | Fase 3+ |
-| Publicar el teixit (GeoParquet) | `just publish` | Fase 4 |
-| Servir l'explorador | `just serve` | Fase 4 |
+| Publicar el teixit (GeoParquet) | `just publish` | Fase H2 |
+| Servir l'explorador | `just serve` | Fase H2 |
 | Explorar el raw sencer en local | `just explore-raw` | sempre |
 
 ## Mode raw local (`just explore-raw`)
@@ -72,7 +72,7 @@ el desglossament de superfície per ús de cultiu. Cap backend ni cap crida de x
 
 Caddy multi-tenant: Ordit te el seu snippet a `/etc/caddy/conf.d/*.caddy`, importat pel
 Caddyfile mestre. Patro validate-then-rollback + smoke test amb reintents (el mateix que
-TopQuaranta i Cercol). _A documentar quan arribe la Fase 4._
+TopQuaranta i Cercol). _A documentar quan arribe la Fase H2._
 
 ## Recuperacio
 
