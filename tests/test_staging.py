@@ -39,6 +39,11 @@ def staging_db(tmp_path_factory) -> Path:
             "build",
             "--select",
             "staging_fega",
+            # Nomes el model, sense tests indirectes: este guard inspecciona columnes de
+            # staging, no els marts. Sense aixo, dbt (indirect-selection eager) arrossegaria
+            # tests singulars que referencien staging_fega pero tambe marts no construits ací.
+            "--indirect-selection",
+            "empty",
             "--profiles-dir",
             ".",
             "--vars",
