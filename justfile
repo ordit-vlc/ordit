@@ -28,6 +28,7 @@ contracts:
 # (sense geometria) i regenera el crosswalk catastro -> INE des de l'Excel de FEGA.
 ingest:
     uv run python -m ingest.fega.download
+    uv run python -m ingest.bdns.download
     uv run python -m ingest.sigpac.download
     uv run python -m ingest.sigpac.aggregate
     uv run python -m ingest.sigpac.build_crosswalk
