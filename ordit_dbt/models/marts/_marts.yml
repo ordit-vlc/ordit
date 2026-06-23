@@ -215,3 +215,56 @@ models:
         description: Ajuda equivalent en euros (subsidi real en garanties/prestecs).
         tests:
           - not_null
+
+  - name: mart_entitat_canonica
+    description: >
+      Backbone d'entitat canonica per CIF (pas additiu cap a l'Horitzo "entitat al centre";
+      NO refa l'enllac de la Fase 3). Una fila per entitat: identificada per CIF quan en te
+      (cooperatives + BDNS, join exacte), o per numero de registre SAT quan no (SAT no porta
+      CIF, s'enllaca per nom canonic). Esquema public en valencia ASCII. Mode privat: dada
+      sencera. Vegeu int_entitat_cif i docs/sources/bdns.md.
+    columns:
+      - name: clau_entitat
+        description: Clau de l'entitat ('CIF:<cif>' o 'SAT:<numero>').
+        tests:
+          - not_null
+          - unique
+      - name: cif
+        description: CIF de l'entitat (NULL per a SAT sense CIF recuperable).
+      - name: nom_canonic
+        tests:
+          - not_null
+      - name: en_cooperatives
+        tests:
+          - not_null
+      - name: en_bdns
+        tests:
+          - not_null
+      - name: en_sat
+        tests:
+          - not_null
+      - name: n_fonts
+        description: Nombre de fonts obertes que corroboren l'entitat (1-3).
+        tests:
+          - not_null
+      - name: n_concessions_bdns
+        tests:
+          - not_null
+      - name: import_bdns_eur
+        description: Suma d'euros de concessions BDNS de l'entitat (0 si no apareix a BDNS).
+        tests:
+          - not_null
+      - name: estat_enllac
+        description: >
+          confirmat (>= 2 fonts), ambigu (SAT que casa per nom amb > 1 CIF), unic (1 font).
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["confirmat", "ambigu", "unic"]
+      - name: metode_enllac
+        description: Com s'han enllacat les fonts ('cif', 'nom', 'cif+nom'); NULL si una font.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["cif", "nom", "cif+nom"]
